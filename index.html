@@ -27,7 +27,9 @@
 .rootmovie .speck{fill:#d7b991;opacity:.28}
 @keyframes rootDraw{0%,8%{stroke-dashoffset:260;opacity:.25}55%,82%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:.18}}
 @keyframes seedPulse{0%,100%{transform:scale(.96)}55%{transform:scale(1.04)}}
-</style></head><body><main class="phone">
+.authstatus{font-size:12px;color:var(--muted)}
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head><body><main class="phone">
 <section id="intro" class="screen on">
   <div class="intro-top"><div class="brand" onclick="go('intro')" title="Back to opening"><span class="mark"><i></i><i></i></span>SAME SIDE</div></div>
   <div class="video-hero" aria-label="A flower growing and blooming">
@@ -47,6 +49,9 @@
 </section>
 <section id="how" class="screen"><button class="link" style="width:auto;padding:0 0 14px;text-align:left" onclick="go('intro')">← Opening</button><div class="brand" onclick="go('intro')" title="Back to opening"><span class="mark"><i></i><i></i></span>SAME SIDE</div><h1 class="title">How it works</h1><div class="cards"><div class="card how"><div class="num">1</div><div><b>One action per day</b><p class="soft">Small habits that shift your relationship, day by day</p></div></div><div class="card how"><div class="num">2</div><div><b id="step2Title">Your side of the surprise</b><p class="soft" id="step2Text">You each get your own action, without knowing what the other got</p></div></div><div class="card how"><div class="num">3</div><div><b>Grow your virtual garden</b><p class="soft">Let your relationship bloom</p></div></div></div><button class="btn" onclick="go('paths')">Continue</button></section>
 <section id="paths" class="screen"><button class="link" style="width:auto;padding:0 0 14px;text-align:left" onclick="go('how')">← Back</button><div class="brand" onclick="go('intro')" title="Back to opening"><span class="mark"><i></i><i></i></span>SAME SIDE</div><div class="kicker">Choose your path</div><h1 class="title">Where would you like to start?</h1><p class="soft">Every relationship falls into patterns. Choose one you'd like to shift.</p><div class="pathgrid"><button class="pathcard available" onclick="go('setup')"><div class="pathrow"><div><h3>🌿 The Routine</h3><p>Bring back attention, warmth and spontaneity when everyday life starts running on autopilot.</p></div><span class="pathprice included">Included</span></div><div class="pathmeta">4-week path · Start here →</div></button><div class="pathcard locked"><div class="pathrow"><div><h3>💬 The Same Fight</h3><p>Shift the pattern behind arguments that keep repeating.</p></div><span class="pathprice">🔒 €14.99</span></div><div class="pathmeta">4-week path</div></div><div class="pathcard locked"><div class="pathrow"><div><h3>↔ The Distance</h3><p>Find your way back to feeling close and connected.</p></div><span class="pathprice">🔒 €14.99</span></div><div class="pathmeta">4-week path</div></div><div class="pathcard locked"><div class="pathrow"><div><h3>✨ The Spark</h3><p>Bring more affection, playfulness and intimacy into everyday life.</p></div><span class="pathprice">🔒 €14.99</span></div><div class="pathmeta">4-week path</div></div><div class="pathcard locked"><div class="pathrow"><div><h3>👂 The Communication Gap</h3><p>Make more room to listen, understand and feel heard.</p></div><span class="pathprice">🔒 €14.99</span></div><div class="pathmeta">4-week path</div></div><div class="pathcard locked"><div class="pathrow"><div><h3>⚖ The Imbalance</h3><p>Reset the everyday effort that can start to feel one-sided.</p></div><span class="pathprice">🔒 €14.99</span></div><div class="pathmeta">4-week path</div></div><div class="pathcard locked"><div class="pathrow"><div><h3>🤝 The Trust Gap</h3><p>Build consistency, openness and reassurance through small actions.</p></div><span class="pathprice">🔒 €14.99</span></div><div class="pathmeta">4-week path</div></div><div class="pathcard locked"><div class="pathrow"><div><h3>🧭 The Next Chapter</h3><p>Reconnect around what you want to build and experience together.</p></div><span class="pathprice">🔒 €14.99</span></div><div class="pathmeta">4-week path</div></div></div><div class="quizcta"><h3>Not sure where to start?</h3><p class="soft">Take a quick 10-question check-in and we’ll suggest a path to begin with.</p><button class="btn secondary" onclick="startQuiz()">Take the questionnaire →</button></div></section><section id="quiz" class="screen"><button class="link" style="width:auto;padding:0 0 14px;text-align:left" onclick="quizBack()">← Back</button><div class="brand" onclick="go('intro')"><span class="mark"><i></i><i></i></span>SAME SIDE</div><div class="quizcount" id="quizCount"></div><div class="quizbar"><i id="quizProgress"></i></div><div class="kicker">A quick check-in</div><h1 class="title" id="quizQuestion"></h1><p class="soft">Choose what feels closest right now.</p><div id="quizOptions"></div></section><section id="quizResult" class="screen"><button class="link" style="width:auto;padding:0 0 14px;text-align:left" onclick="go('paths')">← All paths</button><div class="brand" onclick="go('intro')"><span class="mark"><i></i><i></i></span>SAME SIDE</div><div class="kicker">A place to begin</div><h1 class="title">Your suggested path</h1><p class="soft">This isn’t a diagnosis — just a starting point based on your answers.</p><div class="resultcard"><div class="resulticon" id="resultIcon"></div><h2 id="resultTitle"></h2><p class="soft" id="resultText"></p><div class="pathmeta" id="resultMeta"></div></div><button class="btn" id="resultBtn"></button><button class="link" onclick="go('paths')">Choose a different path</button></section><section id="setup" class="screen"><button class="link" style="width:auto;padding:0 0 14px;text-align:left" onclick="go('paths')">← Back</button><div class="brand" onclick="go('intro')" title="Back to opening"><span class="mark"><i></i><i></i></span>SAME SIDE</div><div class="progress"><i class="on"></i><i class="on"></i><i class="on"></i></div><div class="kicker">Help us make this feel like you.</div><h1 class="title">What do you miss most?</h1><p class="soft">Choose a few. This shapes the moves you get.</p><div class="options" id="setupOpts"></div><button class="btn" onclick="startApp()">Start the shift</button></section>
+<section id="auth" class="screen"><div class="brand"><span class="mark"><i></i><i></i></span>SAME SIDE</div><div class="kicker">Your private space</div><h1 class="title">Sign in to continue</h1><p class="soft">Enter your email and we’ll send you a secure sign-in link. No password needed.</p><input id="authEmail" class="input" type="email" autocomplete="email" placeholder="you@example.com"><button class="btn" id="sendOtpBtn" onclick="sendMagicLink()">Email me a sign-in link</button><p class="soft" id="authMessage" style="font-size:13px"></p></section>
+<section id="verify" class="screen"><div class="brand"><span class="mark"><i></i><i></i></span>SAME SIDE</div><div class="kicker">Check your email</div><h1 class="title">Your link is on its way</h1><p class="soft" id="verifyEmailText"></p><p class="soft">Open the email from Supabase and tap the sign-in link. You’ll return here automatically.</p><button class="btn secondary" onclick="go('auth')">Use a different email</button><p class="soft" id="verifyMessage" style="font-size:13px"></p></section>
+<section id="pairing" class="screen"><div class="brand"><span class="mark"><i></i><i></i></span>SAME SIDE</div><div class="kicker">Joining</div><h1 class="title">Join your partner</h1><p class="soft">Your moves stay private. What you create together grows in the same garden.</p><button class="btn" onclick="acceptPendingInvite()">Join Same Side</button><p class="soft" id="pairMessage"></p></section>
 <section id="home" class="screen"><div class="brand" onclick="go('intro')" title="Back to opening"><span class="mark"><i></i><i></i></span>SAME SIDE</div><div id="viewer" class="viewer"></div><div class="kicker">Week 1 · Notice each other again</div><h1 class="title">Today</h1><div class="task"><div class="row"><span class="tag" id="taskTag">YOUR MOVE</span><span class="pill" id="mins">2 min</span></div><h2 id="taskTitle"></h2><p class="soft" id="taskBody"></p><button class="btn" id="acceptBtn" onclick="acceptTask()">I’ll do this</button><button class="link" id="rerollBtn" onclick="reroll()">Give me another</button></div><div class="week"><h2>This week</h2><p class="soft">Attention · appreciation · presence</p><div id="weekList"></div></div></section>
 <section id="garden" class="screen"><div class="brand" onclick="go('intro')" title="Back to opening"><span class="mark"><i></i><i></i></span>SAME SIDE</div><div class="row"><div><h1 class="title" style="margin-bottom:4px">Our Garden</h1><p class="soft" id="gardenDay" style="margin-top:0">Day 1</p></div><button class="pill" style="border:0;cursor:pointer" onclick="replayGrowth()">▶ Replay growth</button></div><p class="soft">Every move adds something new.</p><div id="gardenScene" class="gardenbox"><div class="sun"></div><div class="cloud"></div><div class="rain"></div><div class="hill"></div><div id="plants"></div></div><div id="weatherCopy"></div><div id="memories"></div></section>
 <section id="us" class="screen"><div class="brand" onclick="go('intro')" title="Back to opening"><span class="mark"><i></i><i></i></span>SAME SIDE</div><h1 class="title">Roots</h1><h2 style="font-size:24px;margin:6px 0 8px">There’s more growing here than you can see</h2><p class="soft">Small actions leave traces. Over time, your roots reveal what seems to bring you closer.</p><div class="rootsviz" aria-label="Roots slowly growing through soil"><svg class="rootmovie" viewBox="0 0 390 220" preserveAspectRatio="none"><g opacity=".55"><circle class="speck" cx="22" cy="86" r="2"/><circle class="speck" cx="53" cy="132" r="1.5"/><circle class="speck" cx="82" cy="98" r="1.2"/><circle class="speck" cx="112" cy="174" r="2"/><circle class="speck" cx="146" cy="115" r="1.4"/><circle class="speck" cx="181" cy="191" r="1.7"/><circle class="speck" cx="225" cy="105" r="1.4"/><circle class="speck" cx="260" cy="154" r="2"/><circle class="speck" cx="301" cy="91" r="1.3"/><circle class="speck" cx="335" cy="181" r="1.7"/><circle class="speck" cx="370" cy="126" r="1.4"/><circle class="speck" cx="42" cy="196" r="1.2"/><circle class="speck" cx="321" cy="143" r="1.1"/></g><ellipse class="seed" cx="195" cy="53" rx="14" ry="9"/><path class="root rA" d="M195 61 C194 82 188 94 191 113 C194 133 181 149 184 172 C186 190 177 202 173 216"/><path class="root rB" d="M191 105 C169 111 158 126 143 139 C130 151 116 157 103 175 C94 188 84 198 69 210"/><path class="root rC" d="M191 119 C214 125 224 141 239 151 C255 162 266 178 281 190 C291 198 304 204 319 214"/><path class="root rD" d="M181 150 C165 157 158 170 150 181 C143 191 135 200 125 214"/><path class="root rE" d="M239 151 C247 143 255 132 263 121 C270 112 278 105 289 99"/><path class="root rF" d="M143 139 C133 130 123 120 111 114 C101 109 92 105 82 96"/><path class="root rG" d="M281 190 C299 186 313 176 329 170 C342 165 353 156 366 146"/></svg></div><div class="card usblock" id="rootsAffirm"><div class="tag">TAKING ROOT</div><h3 style="font-size:20px;margin:10px 0 6px">Something has started</h3><p class="soft" style="margin-bottom:0">Making room for one intentional moment is already a shift from autopilot.</p></div><div class="usblock"><h2 style="margin-bottom:6px">What could your relationship use a little more of this week?</h2><p class="soft" style="margin-top:0">Choose up to two.</p><div id="rootsChoices" class="chips"></div><p class="soft" id="rootsPrivacy" style="font-size:13px;margin-top:14px"></p></div><div id="rootsResponse" class="card usblock" style="display:none"></div><div id="rootsInvite" class="card usblock" style="display:none"><b>One side is enough to start</b><p class="soft">Your partner can add their own perspective whenever they’re ready.</p><button class="btn secondary" onclick="joinPartner()">Invite my partner</button></div></section>
@@ -54,7 +59,70 @@
 <nav id="nav" class="nav"><button data-tab="home" onclick="tab('home')">⌂<br>Today</button><button data-tab="garden" onclick="tab('garden')">✿<br>Garden</button><button data-tab="us" onclick="tab('us')">◎<br>Roots</button></nav>
 </main>
 <script>
-window.addEventListener('DOMContentLoaded',()=>{const v=document.getElementById('openingVideo'); if(v){v.muted=true; const play=()=>v.play().catch(()=>{}); play(); document.addEventListener('click',play,{once:true}); document.addEventListener('touchstart',play,{once:true});}});
+const SUPABASE_URL='https://itltgnzhyphkcycltdnl.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_jbxTMlYyKhT8wGB-ZRh-_Q_cGjxs4Tk';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+let ssSession=null, ssRelationship=null, pendingInvite=new URLSearchParams(location.search).get('invite');
+async function bootAuth(){
+ const hashParams=new URLSearchParams(location.hash.replace(/^#/,''));
+ const authError=hashParams.get('error_description') || new URLSearchParams(location.search).get('error_description');
+ const returningFromAuth=location.hash.includes('access_token=') || location.hash.includes('refresh_token=');
+ const {data:{session}}=await sb.auth.getSession(); ssSession=session;
+ if(authError){authMessage.textContent=decodeURIComponent(authError.replace(/\+/g,' '));go('auth');return}
+ if(session && (returningFromAuth || pendingInvite)){
+   history.replaceState({},'',location.pathname + (pendingInvite ? `?invite=${encodeURIComponent(pendingInvite)}` : ''));
+   await afterSignedIn();
+ }
+}
+async function sendMagicLink(){
+ const email=authEmail.value.trim(); if(!email){authMessage.textContent='Enter your email first.';return}
+ authMessage.textContent='Sending…';
+ const redirectUrl=new URL('https://xristoslymper-svg.github.io/SameSide/');
+ if(pendingInvite) redirectUrl.searchParams.set('invite',pendingInvite);
+ const {error}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:true,emailRedirectTo:redirectUrl.toString()}});
+ if(error){authMessage.textContent=error.message;return}
+ sessionStorage.setItem('ss-email',email); verifyEmailText.textContent=`We sent a secure sign-in link to ${email}`; authMessage.textContent=''; go('verify');
+}
+async function afterSignedIn(){
+ await loadRelationship();
+ if(pendingInvite && !ssRelationship){go('pairing');return}
+ if(!ssRelationship){const {error}=await sb.rpc('create_solo_relationship'); if(error && !error.message.includes('already')){alert(error.message);return} await loadRelationship()}
+ await syncModeFromBackend(); go('home');
+}
+async function loadRelationship(){
+ if(!ssSession){ssRelationship=null;return null}
+ const {data,error}=await sb.from('relationship_members').select('relationship_id,member_role,joined_at').eq('user_id',ssSession.user.id).is('left_at',null).maybeSingle();
+ if(error){console.warn(error);return null} ssRelationship=data; return data;
+}
+async function syncModeFromBackend(){
+ if(!ssRelationship)return;
+ const {data}=await sb.from('relationship_members').select('user_id').eq('relationship_id',ssRelationship.relationship_id).is('left_at',null);
+ st.mode=(data||[]).length>=2; save();
+}
+async function requireAuthAndStart(){
+ const {data:{session}}=await sb.auth.getSession(); ssSession=session;
+ if(!session){go('auth');return}
+ await afterSignedIn();
+}
+async function createInvite(){
+ if(!ssSession){go('auth');return}
+ if(!ssRelationship) await loadRelationship();
+ const {data,error}=await sb.rpc('create_relationship_invite',{valid_hours:168});
+ if(error){alert(error.message);return}
+ const u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('invite',data);
+ const text=`Join me on Same Side: ${u.toString()}`;
+ if(navigator.share){try{await navigator.share({title:'Same Side',text:'Join me on Same Side',url:u.toString()});return}catch(e){}}
+ try{await navigator.clipboard.writeText(u.toString());alert('Invite link copied. Send it to your partner.')}catch(e){prompt('Copy this invite link',u.toString())}
+}
+async function acceptPendingInvite(){
+ if(!ssSession){go('auth');return} if(!pendingInvite){pairMessage.textContent='This invite link is missing or invalid.';return}
+ pairMessage.textContent='Joining…';
+ const {data,error}=await sb.rpc('accept_relationship_invite',{raw_token:pendingInvite});
+ if(error){pairMessage.textContent=error.message;return}
+ ssRelationship={relationship_id:data}; pendingInvite=null; history.replaceState({},'',location.pathname); await syncModeFromBackend(); pairMessage.textContent=''; go('home');
+}
+async function signOutSameSide(){await sb.auth.signOut();ssSession=null;ssRelationship=null;go('intro')}
+window.addEventListener('DOMContentLoaded',()=>{bootAuth();const v=document.getElementById('openingVideo'); if(v){v.muted=true; const play=()=>v.play().catch(()=>{}); play(); document.addEventListener('click',play,{once:true}); document.addEventListener('touchstart',play,{once:true});}});
 const tasks=[
 {cat:'attention',title:'Change the first five minutes',body:'When you see each other today, start with something other than logistics. Ask, “How are you actually doing?”',min:2,pair:'a'},
 {cat:'appreciation',title:'Notice something specific',body:'Tell your partner one specific thing you appreciated recently. Keep it concrete.',min:2,pair:'a'},
@@ -110,7 +178,7 @@ function answerQuiz(key){quizScores[key]=(quizScores[key]||0)+1;quizAnswers.push
 function quizBack(){if(quizIndex===0){go('paths');return}const prev=quizAnswers.pop();quizScores[prev]=Math.max(0,(quizScores[prev]||0)-1);quizIndex--;renderQuiz()}
 function showQuizResult(){let best=Object.keys(pathInfo).sort((a,b)=>(quizScores[b]||0)-(quizScores[a]||0))[0]||'routine';let p=pathInfo[best];resultIcon.textContent=p.icon;resultTitle.textContent=p.title;resultText.textContent=p.text;resultMeta.textContent=p.free?'4-week path · Included':'4-week path · €14.99';resultBtn.textContent=p.free?'Start The Routine →':'View this path · €14.99';resultBtn.onclick=p.free?()=>go('setup'):()=>go('paths');go('quizResult')}
 const setup=['Laughing together','Affection','Good conversations','Feeling appreciated','Doing something new','Feeling like a team'];setupOpts.innerHTML=setup.map(x=>`<button class="opt" onclick="chooseWant('${x}',this)">${x}</button>`).join('');
-function chooseWant(x,b){b.classList.toggle('sel');st.wants=st.wants.includes(x)?st.wants.filter(v=>v!==x):[...st.wants,x].slice(0,3)} function setMode(v,b){st.mode=v;b.parentNode.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')} function startApp(){save();go('home')}
+function chooseWant(x,b){b.classList.toggle('sel');st.wants=st.wants.includes(x)?st.wants.filter(v=>v!==x):[...st.wants,x].slice(0,3)} function setMode(v,b){st.mode=v;b.parentNode.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')} function startApp(){save();requireAuthAndStart()}
 function currentTask(){let i=st.active==='A'?st.taskA:st.taskB;return tasks[i%tasks.length]}
 function renderHome(){
  refreshDay();let t=currentTask(),day=programDay()%7,count=completedToday();
@@ -147,7 +215,7 @@ function renderUs(){
  if(st.rootNeeds.length){rootsResponse.innerHTML=`<div class="tag">FOR THIS WEEK</div><h3 style="margin:10px 0 6px">Making room for ${st.rootNeeds.join(st.rootNeeds.length>1?' and ':'')}</h3><p class="soft" style="margin:0">Keep it in mind. You may notice it showing up in a move this week.</p>`}
 }
 function toggleRootNeed(x){if(st.rootNeeds.includes(x))st.rootNeeds=st.rootNeeds.filter(v=>v!==x);else if(st.rootNeeds.length<2)st.rootNeeds.push(x);save();renderUs()}
-function joinPartner(){st.mode=true;save();renderUs()}
+function joinPartner(){createInvite()}
 function tab(id,silent){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('on'));document.getElementById(id).classList.add('on');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('on',x.dataset.tab===id));document.getElementById('nav').classList.add('show');if(id==='home')renderHome();if(id==='garden')renderGarden();if(id==='us')renderUs()}
 </script>
 <script>
