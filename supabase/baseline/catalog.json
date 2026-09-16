@@ -1,0 +1,1744 @@
+{
+  "captured_on": "2026-09-16",
+  "project_ref": "itltgnzhyphkcycltdnl",
+  "postgres_version": "17.6.1.166",
+  "scope": "Application public schema plus platform dependency metadata; no user rows",
+  "enums": null,
+  "tables": [
+    {
+      "owner": "postgres",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+      "relkind": "r",
+      "relname": "garden_events",
+      "reloptions": null,
+      "relrowsecurity": true,
+      "relforcerowsecurity": false
+    },
+    {
+      "owner": "postgres",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+      "relkind": "r",
+      "relname": "profiles",
+      "reloptions": null,
+      "relrowsecurity": true,
+      "relforcerowsecurity": false
+    },
+    {
+      "owner": "postgres",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+      "relkind": "r",
+      "relname": "relationship_invites",
+      "reloptions": null,
+      "relrowsecurity": true,
+      "relforcerowsecurity": false
+    },
+    {
+      "owner": "postgres",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+      "relkind": "r",
+      "relname": "relationship_members",
+      "reloptions": null,
+      "relrowsecurity": true,
+      "relforcerowsecurity": false
+    },
+    {
+      "owner": "postgres",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+      "relkind": "r",
+      "relname": "relationships",
+      "reloptions": null,
+      "relrowsecurity": true,
+      "relforcerowsecurity": false
+    },
+    {
+      "owner": "postgres",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+      "relkind": "r",
+      "relname": "root_preferences",
+      "reloptions": null,
+      "relrowsecurity": true,
+      "relforcerowsecurity": false
+    },
+    {
+      "owner": "postgres",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+      "relkind": "r",
+      "relname": "shared_insights",
+      "reloptions": null,
+      "relrowsecurity": true,
+      "relforcerowsecurity": false
+    },
+    {
+      "owner": "postgres",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+      "relkind": "r",
+      "relname": "task_assignments",
+      "reloptions": null,
+      "relrowsecurity": true,
+      "relforcerowsecurity": false
+    }
+  ],
+  "columns": [
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "garden_events",
+      "udt_schema": "pg_catalog",
+      "column_name": "id",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "gen_random_uuid()",
+      "ordinal_position": 1,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "garden_events",
+      "udt_schema": "pg_catalog",
+      "column_name": "relationship_id",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 2,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "garden_events",
+      "udt_schema": "pg_catalog",
+      "column_name": "created_by",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 3,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "garden_events",
+      "udt_schema": "pg_catalog",
+      "column_name": "source_assignment_id",
+      "is_identity": "NO",
+      "is_nullable": "YES",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 4,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "text",
+      "data_type": "text",
+      "table_name": "garden_events",
+      "udt_schema": "pg_catalog",
+      "column_name": "plant_type",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "'flower'::text",
+      "ordinal_position": 5,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "date",
+      "data_type": "date",
+      "table_name": "garden_events",
+      "udt_schema": "pg_catalog",
+      "column_name": "event_date",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "CURRENT_DATE",
+      "ordinal_position": 6,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "timestamptz",
+      "data_type": "timestamp with time zone",
+      "table_name": "garden_events",
+      "udt_schema": "pg_catalog",
+      "column_name": "created_at",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "now()",
+      "ordinal_position": 7,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "profiles",
+      "udt_schema": "pg_catalog",
+      "column_name": "id",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 1,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "text",
+      "data_type": "text",
+      "table_name": "profiles",
+      "udt_schema": "pg_catalog",
+      "column_name": "display_name",
+      "is_identity": "NO",
+      "is_nullable": "YES",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 2,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "timestamptz",
+      "data_type": "timestamp with time zone",
+      "table_name": "profiles",
+      "udt_schema": "pg_catalog",
+      "column_name": "created_at",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "now()",
+      "ordinal_position": 3,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "timestamptz",
+      "data_type": "timestamp with time zone",
+      "table_name": "profiles",
+      "udt_schema": "pg_catalog",
+      "column_name": "updated_at",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "now()",
+      "ordinal_position": 4,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "relationship_invites",
+      "udt_schema": "pg_catalog",
+      "column_name": "id",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "gen_random_uuid()",
+      "ordinal_position": 1,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "relationship_invites",
+      "udt_schema": "pg_catalog",
+      "column_name": "relationship_id",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 2,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "relationship_invites",
+      "udt_schema": "pg_catalog",
+      "column_name": "created_by",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 3,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "text",
+      "data_type": "text",
+      "table_name": "relationship_invites",
+      "udt_schema": "pg_catalog",
+      "column_name": "token_hash",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 4,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "timestamptz",
+      "data_type": "timestamp with time zone",
+      "table_name": "relationship_invites",
+      "udt_schema": "pg_catalog",
+      "column_name": "expires_at",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 5,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "timestamptz",
+      "data_type": "timestamp with time zone",
+      "table_name": "relationship_invites",
+      "udt_schema": "pg_catalog",
+      "column_name": "accepted_at",
+      "is_identity": "NO",
+      "is_nullable": "YES",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 6,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "relationship_invites",
+      "udt_schema": "pg_catalog",
+      "column_name": "accepted_by",
+      "is_identity": "NO",
+      "is_nullable": "YES",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 7,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "timestamptz",
+      "data_type": "timestamp with time zone",
+      "table_name": "relationship_invites",
+      "udt_schema": "pg_catalog",
+      "column_name": "revoked_at",
+      "is_identity": "NO",
+      "is_nullable": "YES",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 8,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "timestamptz",
+      "data_type": "timestamp with time zone",
+      "table_name": "relationship_invites",
+      "udt_schema": "pg_catalog",
+      "column_name": "created_at",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "now()",
+      "ordinal_position": 9,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "relationship_members",
+      "udt_schema": "pg_catalog",
+      "column_name": "relationship_id",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 1,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "relationship_members",
+      "udt_schema": "pg_catalog",
+      "column_name": "user_id",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 2,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "text",
+      "data_type": "text",
+      "table_name": "relationship_members",
+      "udt_schema": "pg_catalog",
+      "column_name": "member_role",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 3,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "timestamptz",
+      "data_type": "timestamp with time zone",
+      "table_name": "relationship_members",
+      "udt_schema": "pg_catalog",
+      "column_name": "joined_at",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "now()",
+      "ordinal_position": 4,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "timestamptz",
+      "data_type": "timestamp with time zone",
+      "table_name": "relationship_members",
+      "udt_schema": "pg_catalog",
+      "column_name": "left_at",
+      "is_identity": "NO",
+      "is_nullable": "YES",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 5,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "relationships",
+      "udt_schema": "pg_catalog",
+      "column_name": "id",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "gen_random_uuid()",
+      "ordinal_position": 1,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "relationships",
+      "udt_schema": "pg_catalog",
+      "column_name": "created_by",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 2,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "text",
+      "data_type": "text",
+      "table_name": "relationships",
+      "udt_schema": "pg_catalog",
+      "column_name": "active_path",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "'routine'::text",
+      "ordinal_position": 3,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "date",
+      "data_type": "date",
+      "table_name": "relationships",
+      "udt_schema": "pg_catalog",
+      "column_name": "path_started_at",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "CURRENT_DATE",
+      "ordinal_position": 4,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "text",
+      "data_type": "text",
+      "table_name": "relationships",
+      "udt_schema": "pg_catalog",
+      "column_name": "status",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "'active'::text",
+      "ordinal_position": 5,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "timestamptz",
+      "data_type": "timestamp with time zone",
+      "table_name": "relationships",
+      "udt_schema": "pg_catalog",
+      "column_name": "created_at",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "now()",
+      "ordinal_position": 6,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "timestamptz",
+      "data_type": "timestamp with time zone",
+      "table_name": "relationships",
+      "udt_schema": "pg_catalog",
+      "column_name": "updated_at",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "now()",
+      "ordinal_position": 7,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "root_preferences",
+      "udt_schema": "pg_catalog",
+      "column_name": "id",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "gen_random_uuid()",
+      "ordinal_position": 1,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "root_preferences",
+      "udt_schema": "pg_catalog",
+      "column_name": "relationship_id",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 2,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "root_preferences",
+      "udt_schema": "pg_catalog",
+      "column_name": "user_id",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 3,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "int4",
+      "data_type": "integer",
+      "table_name": "root_preferences",
+      "udt_schema": "pg_catalog",
+      "column_name": "week_no",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 4,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "text",
+      "data_type": "text",
+      "table_name": "root_preferences",
+      "udt_schema": "pg_catalog",
+      "column_name": "need",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 5,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "timestamptz",
+      "data_type": "timestamp with time zone",
+      "table_name": "root_preferences",
+      "udt_schema": "pg_catalog",
+      "column_name": "created_at",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "now()",
+      "ordinal_position": 6,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "shared_insights",
+      "udt_schema": "pg_catalog",
+      "column_name": "id",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "gen_random_uuid()",
+      "ordinal_position": 1,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "shared_insights",
+      "udt_schema": "pg_catalog",
+      "column_name": "relationship_id",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 2,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "text",
+      "data_type": "text",
+      "table_name": "shared_insights",
+      "udt_schema": "pg_catalog",
+      "column_name": "insight_type",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 3,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "int4",
+      "data_type": "integer",
+      "table_name": "shared_insights",
+      "udt_schema": "pg_catalog",
+      "column_name": "week_no",
+      "is_identity": "NO",
+      "is_nullable": "YES",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 4,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "text",
+      "data_type": "text",
+      "table_name": "shared_insights",
+      "udt_schema": "pg_catalog",
+      "column_name": "value",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 5,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "timestamptz",
+      "data_type": "timestamp with time zone",
+      "table_name": "shared_insights",
+      "udt_schema": "pg_catalog",
+      "column_name": "created_at",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "now()",
+      "ordinal_position": 6,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "task_assignments",
+      "udt_schema": "pg_catalog",
+      "column_name": "id",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "gen_random_uuid()",
+      "ordinal_position": 1,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "task_assignments",
+      "udt_schema": "pg_catalog",
+      "column_name": "relationship_id",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 2,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "uuid",
+      "data_type": "uuid",
+      "table_name": "task_assignments",
+      "udt_schema": "pg_catalog",
+      "column_name": "user_id",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 3,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "text",
+      "data_type": "text",
+      "table_name": "task_assignments",
+      "udt_schema": "pg_catalog",
+      "column_name": "task_key",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 4,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "date",
+      "data_type": "date",
+      "table_name": "task_assignments",
+      "udt_schema": "pg_catalog",
+      "column_name": "assigned_for_date",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 5,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "bool",
+      "data_type": "boolean",
+      "table_name": "task_assignments",
+      "udt_schema": "pg_catalog",
+      "column_name": "is_bonus",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "false",
+      "ordinal_position": 6,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "text",
+      "data_type": "text",
+      "table_name": "task_assignments",
+      "udt_schema": "pg_catalog",
+      "column_name": "status",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "'assigned'::text",
+      "ordinal_position": 7,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "timestamptz",
+      "data_type": "timestamp with time zone",
+      "table_name": "task_assignments",
+      "udt_schema": "pg_catalog",
+      "column_name": "completed_at",
+      "is_identity": "NO",
+      "is_nullable": "YES",
+      "is_generated": "NEVER",
+      "column_default": null,
+      "ordinal_position": 8,
+      "generation_expression": null
+    },
+    {
+      "udt_name": "timestamptz",
+      "data_type": "timestamp with time zone",
+      "table_name": "task_assignments",
+      "udt_schema": "pg_catalog",
+      "column_name": "created_at",
+      "is_identity": "NO",
+      "is_nullable": "NO",
+      "is_generated": "NEVER",
+      "column_default": "now()",
+      "ordinal_position": 9,
+      "generation_expression": null
+    }
+  ],
+  "indexes": [
+    {
+      "indexdef": "CREATE UNIQUE INDEX garden_event_per_assignment ON public.garden_events USING btree (source_assignment_id) WHERE (source_assignment_id IS NOT NULL)",
+      "indexname": "garden_event_per_assignment",
+      "tablename": "garden_events"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX garden_events_pkey ON public.garden_events USING btree (id)",
+      "indexname": "garden_events_pkey",
+      "tablename": "garden_events"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX profiles_pkey ON public.profiles USING btree (id)",
+      "indexname": "profiles_pkey",
+      "tablename": "profiles"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX relationship_invites_pkey ON public.relationship_invites USING btree (id)",
+      "indexname": "relationship_invites_pkey",
+      "tablename": "relationship_invites"
+    },
+    {
+      "indexdef": "CREATE INDEX relationship_invites_relationship_idx ON public.relationship_invites USING btree (relationship_id)",
+      "indexname": "relationship_invites_relationship_idx",
+      "tablename": "relationship_invites"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX relationship_invites_token_hash_key ON public.relationship_invites USING btree (token_hash)",
+      "indexname": "relationship_invites_token_hash_key",
+      "tablename": "relationship_invites"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX one_active_relationship_per_user ON public.relationship_members USING btree (user_id) WHERE (left_at IS NULL)",
+      "indexname": "one_active_relationship_per_user",
+      "tablename": "relationship_members"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX one_active_role_per_relationship ON public.relationship_members USING btree (relationship_id, member_role) WHERE (left_at IS NULL)",
+      "indexname": "one_active_role_per_relationship",
+      "tablename": "relationship_members"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX relationship_members_pkey ON public.relationship_members USING btree (relationship_id, user_id)",
+      "indexname": "relationship_members_pkey",
+      "tablename": "relationship_members"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX relationships_pkey ON public.relationships USING btree (id)",
+      "indexname": "relationships_pkey",
+      "tablename": "relationships"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX root_preferences_pkey ON public.root_preferences USING btree (id)",
+      "indexname": "root_preferences_pkey",
+      "tablename": "root_preferences"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX root_preferences_relationship_id_user_id_week_no_need_key ON public.root_preferences USING btree (relationship_id, user_id, week_no, need)",
+      "indexname": "root_preferences_relationship_id_user_id_week_no_need_key",
+      "tablename": "root_preferences"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX shared_insights_pkey ON public.shared_insights USING btree (id)",
+      "indexname": "shared_insights_pkey",
+      "tablename": "shared_insights"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX shared_insights_relationship_id_insight_type_week_no_value_key ON public.shared_insights USING btree (relationship_id, insight_type, week_no, value)",
+      "indexname": "shared_insights_relationship_id_insight_type_week_no_value_key",
+      "tablename": "shared_insights"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX task_assignments_pkey ON public.task_assignments USING btree (id)",
+      "indexname": "task_assignments_pkey",
+      "tablename": "task_assignments"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX task_assignments_relationship_id_user_id_assigned_for_date__key ON public.task_assignments USING btree (relationship_id, user_id, assigned_for_date, task_key)",
+      "indexname": "task_assignments_relationship_id_user_id_assigned_for_date__key",
+      "tablename": "task_assignments"
+    },
+    {
+      "indexdef": "CREATE INDEX task_assignments_user_date_idx ON public.task_assignments USING btree (user_id, assigned_for_date)",
+      "indexname": "task_assignments_user_date_idx",
+      "tablename": "task_assignments"
+    }
+  ],
+  "schemas": [
+    {
+      "owner": "pg_database_owner",
+      "nspacl": "{pg_database_owner=UC/pg_database_owner,=U/pg_database_owner,postgres=U/pg_database_owner,anon=U/pg_database_owner,authenticated=U/pg_database_owner,service_role=U/pg_database_owner}",
+      "nspname": "public"
+    },
+    {
+      "owner": "postgres",
+      "nspacl": "{postgres=UC/postgres,anon=U/postgres,authenticated=U/postgres,service_role=U/postgres,dashboard_user=UC/postgres}",
+      "nspname": "extensions"
+    }
+  ],
+  "policies": [
+    {
+      "cmd": "SELECT",
+      "qual": "is_relationship_member(relationship_id)",
+      "roles": [
+        "public"
+      ],
+      "tablename": "garden_events",
+      "permissive": "PERMISSIVE",
+      "policyname": "garden_relationship_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(id = auth.uid())",
+      "roles": [
+        "public"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "profiles_self_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "(id = auth.uid())",
+      "roles": [
+        "public"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "profiles_self_update",
+      "schemaname": "public",
+      "with_check": "(id = auth.uid())"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(created_by = auth.uid())",
+      "roles": [
+        "public"
+      ],
+      "tablename": "relationship_invites",
+      "permissive": "PERMISSIVE",
+      "policyname": "invites_creator_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "is_relationship_member(relationship_id)",
+      "roles": [
+        "public"
+      ],
+      "tablename": "relationship_members",
+      "permissive": "PERMISSIVE",
+      "policyname": "relationship_members_same_relationship_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "is_relationship_member(id)",
+      "roles": [
+        "public"
+      ],
+      "tablename": "relationships",
+      "permissive": "PERMISSIVE",
+      "policyname": "relationships_members_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "(user_id = auth.uid())",
+      "roles": [
+        "public"
+      ],
+      "tablename": "root_preferences",
+      "permissive": "PERMISSIVE",
+      "policyname": "roots_self_delete",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "public"
+      ],
+      "tablename": "root_preferences",
+      "permissive": "PERMISSIVE",
+      "policyname": "roots_self_insert",
+      "schemaname": "public",
+      "with_check": "((user_id = auth.uid()) AND is_relationship_member(relationship_id))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(user_id = auth.uid())",
+      "roles": [
+        "public"
+      ],
+      "tablename": "root_preferences",
+      "permissive": "PERMISSIVE",
+      "policyname": "roots_self_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "is_relationship_member(relationship_id)",
+      "roles": [
+        "public"
+      ],
+      "tablename": "shared_insights",
+      "permissive": "PERMISSIVE",
+      "policyname": "insights_relationship_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(user_id = auth.uid())",
+      "roles": [
+        "public"
+      ],
+      "tablename": "task_assignments",
+      "permissive": "PERMISSIVE",
+      "policyname": "tasks_self_select",
+      "schemaname": "public",
+      "with_check": null
+    }
+  ],
+  "triggers": [
+    {
+      "tgname": "on_auth_user_created",
+      "nspname": "auth",
+      "relname": "users",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION handle_new_user()"
+    }
+  ],
+  "functions": [
+    {
+      "owner": "postgres",
+      "proacl": "{postgres=X/postgres,service_role=X/postgres,authenticated=X/postgres}",
+      "proname": "accept_relationship_invite",
+      "proconfig": [
+        "search_path=public, extensions"
+      ],
+      "prosecdef": true,
+      "definition": "CREATE OR REPLACE FUNCTION public.accept_relationship_invite(raw_token text)\n RETURNS uuid\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public', 'extensions'\nAS $function$\ndeclare inv public.relationship_invites%rowtype; rid uuid;\nbegin\n if auth.uid() is null then raise exception 'not authenticated'; end if;\n if exists(select 1 from public.relationship_members where user_id=auth.uid() and left_at is null) then raise exception 'already in an active relationship'; end if;\n select * into inv from public.relationship_invites\n where token_hash=encode(extensions.digest(raw_token,'sha256'),'hex')\n for update;\n if inv.id is null then raise exception 'invalid invite'; end if;\n if inv.revoked_at is not null then raise exception 'invite revoked'; end if;\n if inv.accepted_at is not null then raise exception 'invite already used'; end if;\n if inv.expires_at <= now() then raise exception 'invite expired'; end if;\n if inv.created_by=auth.uid() then raise exception 'cannot accept your own invite'; end if;\n rid := inv.relationship_id;\n if (select count(*) from public.relationship_members where relationship_id=rid and left_at is null) >= 2 then raise exception 'relationship already has two members'; end if;\n insert into public.relationship_members(relationship_id,user_id,member_role) values(rid,auth.uid(),'member_b');\n update public.relationship_invites set accepted_at=now(), accepted_by=auth.uid() where id=inv.id;\n return rid;\nend; $function$\n",
+      "identity_args": "raw_token text"
+    },
+    {
+      "owner": "postgres",
+      "proacl": "{postgres=X/postgres,service_role=X/postgres,authenticated=X/postgres}",
+      "proname": "complete_assignment",
+      "proconfig": [
+        "search_path=public"
+      ],
+      "prosecdef": true,
+      "definition": "CREATE OR REPLACE FUNCTION public.complete_assignment(assignment_id uuid, chosen_plant text DEFAULT 'flower'::text)\n RETURNS uuid\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare a public.task_assignments%rowtype; gid uuid;\nbegin\n select * into a from public.task_assignments where id=assignment_id and user_id=auth.uid() for update;\n if a.id is null then raise exception 'assignment not found'; end if;\n if a.status <> 'completed' then update public.task_assignments set status='completed',completed_at=now() where id=a.id; end if;\n select id into gid from public.garden_events where source_assignment_id=a.id;\n if gid is null then insert into public.garden_events(relationship_id,created_by,source_assignment_id,plant_type,event_date) values(a.relationship_id,auth.uid(),a.id,coalesce(nullif(chosen_plant,''),'flower'),a.assigned_for_date) returning id into gid; end if;\n return gid;\nend; $function$\n",
+      "identity_args": "assignment_id uuid, chosen_plant text"
+    },
+    {
+      "owner": "postgres",
+      "proacl": "{postgres=X/postgres,service_role=X/postgres,authenticated=X/postgres}",
+      "proname": "create_relationship_invite",
+      "proconfig": [
+        "search_path=public, extensions"
+      ],
+      "prosecdef": true,
+      "definition": "CREATE OR REPLACE FUNCTION public.create_relationship_invite(valid_hours integer DEFAULT 168)\n RETURNS text\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public', 'extensions'\nAS $function$\ndeclare rid uuid; raw_token text;\nbegin\n if auth.uid() is null then raise exception 'not authenticated'; end if;\n select relationship_id into rid from public.relationship_members where user_id=auth.uid() and left_at is null;\n if rid is null then raise exception 'no active relationship'; end if;\n if (select count(*) from public.relationship_members where relationship_id=rid and left_at is null) >= 2 then raise exception 'relationship already has two members'; end if;\n update public.relationship_invites set revoked_at=now() where relationship_id=rid and accepted_at is null and revoked_at is null;\n raw_token := encode(extensions.gen_random_bytes(32),'hex');\n insert into public.relationship_invites(relationship_id,created_by,token_hash,expires_at)\n values(rid,auth.uid(),encode(extensions.digest(raw_token,'sha256'),'hex'),now()+make_interval(hours=>greatest(1,least(valid_hours,720))));\n return raw_token;\nend; $function$\n",
+      "identity_args": "valid_hours integer"
+    },
+    {
+      "owner": "postgres",
+      "proacl": "{postgres=X/postgres,service_role=X/postgres,authenticated=X/postgres}",
+      "proname": "create_solo_relationship",
+      "proconfig": [
+        "search_path=public"
+      ],
+      "prosecdef": true,
+      "definition": "CREATE OR REPLACE FUNCTION public.create_solo_relationship()\n RETURNS uuid\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare rid uuid;\nbegin\n if auth.uid() is null then raise exception 'not authenticated'; end if;\n if exists(select 1 from public.relationship_members where user_id=auth.uid() and left_at is null) then raise exception 'user already has an active relationship'; end if;\n insert into public.relationships(created_by) values(auth.uid()) returning id into rid;\n insert into public.relationship_members(relationship_id,user_id,member_role) values(rid,auth.uid(),'member_a');\n return rid;\nend; $function$\n",
+      "identity_args": ""
+    },
+    {
+      "owner": "postgres",
+      "proacl": "{postgres=X/postgres,service_role=X/postgres}",
+      "proname": "handle_new_user",
+      "proconfig": [
+        "search_path=public"
+      ],
+      "prosecdef": true,
+      "definition": "CREATE OR REPLACE FUNCTION public.handle_new_user()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nbegin\n insert into public.profiles(id,display_name) values(new.id,coalesce(new.raw_user_meta_data->>'display_name','')) on conflict(id) do nothing;\n return new;\nend; $function$\n",
+      "identity_args": ""
+    },
+    {
+      "owner": "postgres",
+      "proacl": "{postgres=X/postgres,service_role=X/postgres}",
+      "proname": "is_relationship_member",
+      "proconfig": [
+        "search_path=public"
+      ],
+      "prosecdef": true,
+      "definition": "CREATE OR REPLACE FUNCTION public.is_relationship_member(rel uuid)\n RETURNS boolean\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\n select exists(select 1 from public.relationship_members rm where rm.relationship_id=rel and rm.user_id=auth.uid() and rm.left_at is null);\n$function$\n",
+      "identity_args": "rel uuid"
+    },
+    {
+      "owner": "postgres",
+      "proacl": "{postgres=X/postgres,service_role=X/postgres,authenticated=X/postgres}",
+      "proname": "refresh_shared_root_insights",
+      "proconfig": [
+        "search_path=public"
+      ],
+      "prosecdef": true,
+      "definition": "CREATE OR REPLACE FUNCTION public.refresh_shared_root_insights(rel uuid, wk integer)\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nbegin\n if not public.is_relationship_member(rel) then raise exception 'not authorized'; end if;\n insert into public.shared_insights(relationship_id,insight_type,week_no,value)\n select rel,'shared_root_need',wk,r1.need from public.root_preferences r1 join public.root_preferences r2 on r2.relationship_id=r1.relationship_id and r2.week_no=r1.week_no and r2.need=r1.need and r2.user_id<>r1.user_id where r1.relationship_id=rel and r1.week_no=wk group by r1.need having count(distinct r1.user_id)>=2\n on conflict do nothing;\nend; $function$\n",
+      "identity_args": "rel uuid, wk integer"
+    },
+    {
+      "owner": "postgres",
+      "proacl": "{=X/postgres,postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "proname": "rls_auto_enable",
+      "proconfig": [
+        "search_path=pg_catalog"
+      ],
+      "prosecdef": true,
+      "definition": "CREATE OR REPLACE FUNCTION public.rls_auto_enable()\n RETURNS event_trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\nDECLARE\n  cmd record;\nBEGIN\n  FOR cmd IN\n    SELECT *\n    FROM pg_event_trigger_ddl_commands()\n    WHERE command_tag IN ('CREATE TABLE', 'CREATE TABLE AS', 'SELECT INTO')\n      AND object_type IN ('table','partitioned table')\n  LOOP\n     IF cmd.schema_name IS NOT NULL AND cmd.schema_name IN ('public') AND cmd.schema_name NOT IN ('pg_catalog','information_schema') AND cmd.schema_name NOT LIKE 'pg_toast%' AND cmd.schema_name NOT LIKE 'pg_temp%' THEN\n      BEGIN\n        EXECUTE format('alter table if exists %s enable row level security', cmd.object_identity);\n        RAISE LOG 'rls_auto_enable: enabled RLS on %', cmd.object_identity;\n      EXCEPTION\n        WHEN OTHERS THEN\n          RAISE LOG 'rls_auto_enable: failed to enable RLS on %', cmd.object_identity;\n      END;\n     ELSE\n        RAISE LOG 'rls_auto_enable: skip % (either system schema or not in enforced list: %.)', cmd.object_identity, cmd.schema_name;\n     END IF;\n  END LOOP;\nEND;\n$function$\n",
+      "identity_args": ""
+    }
+  ],
+  "extensions": [
+    {
+      "extname": "pg_stat_statements",
+      "extversion": "1.11",
+      "schema_name": "extensions"
+    },
+    {
+      "extname": "pgcrypto",
+      "extversion": "1.3",
+      "schema_name": "extensions"
+    },
+    {
+      "extname": "plpgsql",
+      "extversion": "1.0",
+      "schema_name": "pg_catalog"
+    },
+    {
+      "extname": "supabase_vault",
+      "extversion": "0.3.1",
+      "schema_name": "vault"
+    },
+    {
+      "extname": "uuid-ossp",
+      "extversion": "1.1",
+      "schema_name": "extensions"
+    }
+  ],
+  "constraints": [
+    {
+      "conname": "garden_events_created_by_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (created_by) REFERENCES auth.users(id)",
+      "table_name": "garden_events"
+    },
+    {
+      "conname": "garden_events_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "garden_events"
+    },
+    {
+      "conname": "garden_events_relationship_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (relationship_id) REFERENCES relationships(id) ON DELETE CASCADE",
+      "table_name": "garden_events"
+    },
+    {
+      "conname": "garden_events_source_assignment_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (source_assignment_id) REFERENCES task_assignments(id) ON DELETE SET NULL",
+      "table_name": "garden_events"
+    },
+    {
+      "conname": "profiles_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE",
+      "table_name": "profiles"
+    },
+    {
+      "conname": "profiles_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "profiles"
+    },
+    {
+      "conname": "relationship_invites_accepted_by_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (accepted_by) REFERENCES auth.users(id)",
+      "table_name": "relationship_invites"
+    },
+    {
+      "conname": "relationship_invites_created_by_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE CASCADE",
+      "table_name": "relationship_invites"
+    },
+    {
+      "conname": "relationship_invites_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "relationship_invites"
+    },
+    {
+      "conname": "relationship_invites_relationship_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (relationship_id) REFERENCES relationships(id) ON DELETE CASCADE",
+      "table_name": "relationship_invites"
+    },
+    {
+      "conname": "relationship_invites_token_hash_key",
+      "contype": "u",
+      "definition": "UNIQUE (token_hash)",
+      "table_name": "relationship_invites"
+    },
+    {
+      "conname": "relationship_members_member_role_check",
+      "contype": "c",
+      "definition": "CHECK (member_role = ANY (ARRAY['member_a'::text, 'member_b'::text]))",
+      "table_name": "relationship_members"
+    },
+    {
+      "conname": "relationship_members_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (relationship_id, user_id)",
+      "table_name": "relationship_members"
+    },
+    {
+      "conname": "relationship_members_relationship_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (relationship_id) REFERENCES relationships(id) ON DELETE CASCADE",
+      "table_name": "relationship_members"
+    },
+    {
+      "conname": "relationship_members_user_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+      "table_name": "relationship_members"
+    },
+    {
+      "conname": "relationships_created_by_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (created_by) REFERENCES auth.users(id)",
+      "table_name": "relationships"
+    },
+    {
+      "conname": "relationships_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "relationships"
+    },
+    {
+      "conname": "relationships_status_check",
+      "contype": "c",
+      "definition": "CHECK (status = ANY (ARRAY['active'::text, 'disconnected'::text, 'archived'::text]))",
+      "table_name": "relationships"
+    },
+    {
+      "conname": "root_preferences_need_check",
+      "contype": "c",
+      "definition": "CHECK (need = ANY (ARRAY['affection'::text, 'fun'::text, 'conversation'::text, 'spontaneity'::text, 'attention'::text, 'support'::text]))",
+      "table_name": "root_preferences"
+    },
+    {
+      "conname": "root_preferences_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "root_preferences"
+    },
+    {
+      "conname": "root_preferences_relationship_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (relationship_id) REFERENCES relationships(id) ON DELETE CASCADE",
+      "table_name": "root_preferences"
+    },
+    {
+      "conname": "root_preferences_relationship_id_user_id_week_no_need_key",
+      "contype": "u",
+      "definition": "UNIQUE (relationship_id, user_id, week_no, need)",
+      "table_name": "root_preferences"
+    },
+    {
+      "conname": "root_preferences_user_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+      "table_name": "root_preferences"
+    },
+    {
+      "conname": "root_preferences_week_no_check",
+      "contype": "c",
+      "definition": "CHECK (week_no >= 1 AND week_no <= 4)",
+      "table_name": "root_preferences"
+    },
+    {
+      "conname": "shared_insights_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "shared_insights"
+    },
+    {
+      "conname": "shared_insights_relationship_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (relationship_id) REFERENCES relationships(id) ON DELETE CASCADE",
+      "table_name": "shared_insights"
+    },
+    {
+      "conname": "shared_insights_relationship_id_insight_type_week_no_value_key",
+      "contype": "u",
+      "definition": "UNIQUE (relationship_id, insight_type, week_no, value)",
+      "table_name": "shared_insights"
+    },
+    {
+      "conname": "shared_insights_week_no_check",
+      "contype": "c",
+      "definition": "CHECK (week_no >= 1 AND week_no <= 4)",
+      "table_name": "shared_insights"
+    },
+    {
+      "conname": "task_assignments_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "task_assignments"
+    },
+    {
+      "conname": "task_assignments_relationship_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (relationship_id) REFERENCES relationships(id) ON DELETE CASCADE",
+      "table_name": "task_assignments"
+    },
+    {
+      "conname": "task_assignments_relationship_id_user_id_assigned_for_date__key",
+      "contype": "u",
+      "definition": "UNIQUE (relationship_id, user_id, assigned_for_date, task_key)",
+      "table_name": "task_assignments"
+    },
+    {
+      "conname": "task_assignments_status_check",
+      "contype": "c",
+      "definition": "CHECK (status = ANY (ARRAY['assigned'::text, 'completed'::text, 'skipped'::text]))",
+      "table_name": "task_assignments"
+    },
+    {
+      "conname": "task_assignments_user_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+      "table_name": "task_assignments"
+    }
+  ],
+  "default_acl": [
+    {
+      "owner": "postgres",
+      "nspname": "public",
+      "defaclacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+      "defaclobjtype": "r"
+    },
+    {
+      "owner": "postgres",
+      "nspname": "public",
+      "defaclacl": "{postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "defaclobjtype": "f"
+    },
+    {
+      "owner": "postgres",
+      "nspname": "public",
+      "defaclacl": "{postgres=rwU/postgres,anon=rwU/postgres,authenticated=rwU/postgres,service_role=rwU/postgres}",
+      "defaclobjtype": "S"
+    },
+    {
+      "owner": "supabase_admin",
+      "nspname": "public",
+      "defaclacl": "{postgres=rwU/supabase_admin,anon=rwU/supabase_admin,authenticated=rwU/supabase_admin,service_role=rwU/supabase_admin}",
+      "defaclobjtype": "S"
+    },
+    {
+      "owner": "supabase_admin",
+      "nspname": "public",
+      "defaclacl": "{postgres=arwdDxtm/supabase_admin,anon=arwdDxtm/supabase_admin,authenticated=arwdDxtm/supabase_admin,service_role=arwdDxtm/supabase_admin}",
+      "defaclobjtype": "r"
+    },
+    {
+      "owner": "supabase_admin",
+      "nspname": "public",
+      "defaclacl": "{postgres=X/supabase_admin,anon=X/supabase_admin,authenticated=X/supabase_admin,service_role=X/supabase_admin}",
+      "defaclobjtype": "f"
+    },
+    {
+      "owner": "postgres",
+      "nspname": "storage",
+      "defaclacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+      "defaclobjtype": "r"
+    },
+    {
+      "owner": "postgres",
+      "nspname": "storage",
+      "defaclacl": "{postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "defaclobjtype": "f"
+    },
+    {
+      "owner": "postgres",
+      "nspname": "storage",
+      "defaclacl": "{postgres=rwU/postgres,anon=rwU/postgres,authenticated=rwU/postgres,service_role=rwU/postgres}",
+      "defaclobjtype": "S"
+    },
+    {
+      "owner": "supabase_auth_admin",
+      "nspname": "auth",
+      "defaclacl": "{postgres=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin}",
+      "defaclobjtype": "r"
+    },
+    {
+      "owner": "supabase_auth_admin",
+      "nspname": "auth",
+      "defaclacl": "{postgres=rwU/supabase_auth_admin,dashboard_user=rwU/supabase_auth_admin}",
+      "defaclobjtype": "S"
+    },
+    {
+      "owner": "supabase_auth_admin",
+      "nspname": "auth",
+      "defaclacl": "{postgres=X/supabase_auth_admin,dashboard_user=X/supabase_auth_admin}",
+      "defaclobjtype": "f"
+    },
+    {
+      "owner": "supabase_admin",
+      "nspname": "graphql_public",
+      "defaclacl": "{postgres=rwU/supabase_admin,anon=rwU/supabase_admin,authenticated=rwU/supabase_admin,service_role=rwU/supabase_admin}",
+      "defaclobjtype": "S"
+    },
+    {
+      "owner": "supabase_admin",
+      "nspname": "graphql_public",
+      "defaclacl": "{postgres=arwdDxtm/supabase_admin,anon=arwdDxtm/supabase_admin,authenticated=arwdDxtm/supabase_admin,service_role=arwdDxtm/supabase_admin}",
+      "defaclobjtype": "r"
+    },
+    {
+      "owner": "supabase_admin",
+      "nspname": "graphql_public",
+      "defaclacl": "{postgres=X/supabase_admin,anon=X/supabase_admin,authenticated=X/supabase_admin,service_role=X/supabase_admin}",
+      "defaclobjtype": "f"
+    },
+    {
+      "owner": "supabase_admin",
+      "nspname": "extensions",
+      "defaclacl": "{postgres=a*r*w*d*D*x*t*m*/supabase_admin}",
+      "defaclobjtype": "r"
+    },
+    {
+      "owner": "supabase_admin",
+      "nspname": "extensions",
+      "defaclacl": "{postgres=X*/supabase_admin}",
+      "defaclobjtype": "f"
+    },
+    {
+      "owner": "supabase_admin",
+      "nspname": "extensions",
+      "defaclacl": "{postgres=r*w*U*/supabase_admin}",
+      "defaclobjtype": "S"
+    },
+    {
+      "owner": "supabase_admin",
+      "nspname": "graphql",
+      "defaclacl": "{postgres=arwdDxtm/supabase_admin,anon=arwdDxtm/supabase_admin,authenticated=arwdDxtm/supabase_admin,service_role=arwdDxtm/supabase_admin}",
+      "defaclobjtype": "r"
+    },
+    {
+      "owner": "supabase_admin",
+      "nspname": "graphql",
+      "defaclacl": "{postgres=X/supabase_admin,anon=X/supabase_admin,authenticated=X/supabase_admin,service_role=X/supabase_admin}",
+      "defaclobjtype": "f"
+    },
+    {
+      "owner": "supabase_admin",
+      "nspname": "graphql",
+      "defaclacl": "{postgres=rwU/supabase_admin,anon=rwU/supabase_admin,authenticated=rwU/supabase_admin,service_role=rwU/supabase_admin}",
+      "defaclobjtype": "S"
+    },
+    {
+      "owner": "supabase_admin",
+      "nspname": "realtime",
+      "defaclacl": "{postgres=rwU/supabase_admin,dashboard_user=rwU/supabase_admin}",
+      "defaclobjtype": "S"
+    },
+    {
+      "owner": "supabase_admin",
+      "nspname": "realtime",
+      "defaclacl": "{postgres=X/supabase_admin,dashboard_user=X/supabase_admin}",
+      "defaclobjtype": "f"
+    },
+    {
+      "owner": "supabase_admin",
+      "nspname": "realtime",
+      "defaclacl": "{postgres=arwdDxtm/supabase_admin,dashboard_user=arwdDxtm/supabase_admin}",
+      "defaclobjtype": "r"
+    }
+  ],
+  "publications": null,
+  "comments": [
+    {
+      "comment": null,
+      "relname": "profiles"
+    },
+    {
+      "comment": null,
+      "relname": "relationships"
+    },
+    {
+      "comment": null,
+      "relname": "relationship_members"
+    },
+    {
+      "comment": null,
+      "relname": "relationship_invites"
+    },
+    {
+      "comment": null,
+      "relname": "root_preferences"
+    },
+    {
+      "comment": null,
+      "relname": "task_assignments"
+    },
+    {
+      "comment": null,
+      "relname": "garden_events"
+    },
+    {
+      "comment": null,
+      "relname": "shared_insights"
+    }
+  ],
+  "column_acl": null,
+  "custom_schemas": null,
+  "event_triggers": [
+    {
+      "evtname": "ensure_rls",
+      "evttags": [
+        "CREATE TABLE",
+        "CREATE TABLE AS",
+        "SELECT INTO"
+      ],
+      "proname": "rls_auto_enable",
+      "evtevent": "ddl_command_end",
+      "evtenabled": "O",
+      "function_schema": "public"
+    },
+    {
+      "evtname": "issue_graphql_placeholder",
+      "evttags": [
+        "DROP EXTENSION"
+      ],
+      "proname": "set_graphql_placeholder",
+      "evtevent": "sql_drop",
+      "evtenabled": "O",
+      "function_schema": "extensions"
+    },
+    {
+      "evtname": "issue_pg_cron_access",
+      "evttags": [
+        "CREATE EXTENSION"
+      ],
+      "proname": "grant_pg_cron_access",
+      "evtevent": "ddl_command_end",
+      "evtenabled": "O",
+      "function_schema": "extensions"
+    },
+    {
+      "evtname": "issue_pg_graphql_access",
+      "evttags": [
+        "CREATE EXTENSION"
+      ],
+      "proname": "grant_pg_graphql_access",
+      "evtevent": "ddl_command_end",
+      "evtenabled": "O",
+      "function_schema": "extensions"
+    },
+    {
+      "evtname": "issue_pg_net_access",
+      "evttags": [
+        "CREATE EXTENSION"
+      ],
+      "proname": "grant_pg_net_access",
+      "evtevent": "ddl_command_end",
+      "evtenabled": "O",
+      "function_schema": "extensions"
+    },
+    {
+      "evtname": "pgrst_ddl_watch",
+      "evttags": null,
+      "proname": "pgrst_ddl_watch",
+      "evtevent": "ddl_command_end",
+      "evtenabled": "O",
+      "function_schema": "extensions"
+    },
+    {
+      "evtname": "pgrst_drop_watch",
+      "evttags": null,
+      "proname": "pgrst_drop_watch",
+      "evtevent": "sql_drop",
+      "evtenabled": "O",
+      "function_schema": "extensions"
+    }
+  ],
+  "database_timezone": "UTC",
+  "effective_helper_execute": [
+    {
+      "role": "anon",
+      "can_execute": false
+    },
+    {
+      "role": "authenticated",
+      "can_execute": false
+    },
+    {
+      "role": "service_role",
+      "can_execute": true
+    }
+  ],
+  "migration_history": [
+    {
+      "version": "20260916171924",
+      "name": "pairing_backend_v1"
+    },
+    {
+      "version": "20260916171939",
+      "name": "pairing_backend_security_hardening"
+    },
+    {
+      "version": "20260916183619",
+      "name": "fix_pairing_crypto_search_path"
+    }
+  ],
+  "edge_functions": [],
+  "security_advisors": {
+    "lints": [
+      {
+        "name": "anon_security_definer_function_executable",
+        "title": "Public Can Execute SECURITY DEFINER Function",
+        "level": "WARN",
+        "facing": "EXTERNAL",
+        "categories": [
+          "SECURITY"
+        ],
+        "description": "Detects `SECURITY DEFINER` functions that are callable without signing in. Revoke `EXECUTE`, switch the function to `SECURITY INVOKER`, or move it out of your exposed API schema if it is not meant to be public.",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable",
+        "count": 1,
+        "findings": [
+          {
+            "detail": "Function `public.rls_auto_enable()` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/rls_auto_enable`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "rls_auto_enable",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-09-16T19:10:31.698Z"
+          }
+        ]
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "title": "Signed-In Users Can Execute SECURITY DEFINER Function",
+        "level": "WARN",
+        "facing": "EXTERNAL",
+        "categories": [
+          "SECURITY"
+        ],
+        "description": "Detects `SECURITY DEFINER` functions that are callable by signed-in users. Revoke `EXECUTE`, switch the function to `SECURITY INVOKER`, or move it out of your exposed API schema if signed-in users should not call it.",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable",
+        "count": 6,
+        "findings": [
+          {
+            "detail": "Function `public.accept_relationship_invite(raw_token text)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/accept_relationship_invite`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "accept_relationship_invite",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "raw_token text",
+              "security_definer": true
+            },
+            "observed_at": "2026-09-16T19:10:31.698Z"
+          },
+          {
+            "detail": "Function `public.complete_assignment(assignment_id uuid, chosen_plant text)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/complete_assignment`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "complete_assignment",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "assignment_id uuid, chosen_plant text",
+              "security_definer": true
+            },
+            "observed_at": "2026-09-16T19:10:31.698Z"
+          },
+          {
+            "detail": "Function `public.create_relationship_invite(valid_hours integer)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/create_relationship_invite`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "create_relationship_invite",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "valid_hours integer",
+              "security_definer": true
+            },
+            "observed_at": "2026-09-16T19:10:31.698Z"
+          },
+          {
+            "detail": "Function `public.create_solo_relationship()` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/create_solo_relationship`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "create_solo_relationship",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-09-16T19:10:31.698Z"
+          },
+          {
+            "detail": "Function `public.refresh_shared_root_insights(rel uuid, wk integer)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/refresh_shared_root_insights`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "refresh_shared_root_insights",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "rel uuid, wk integer",
+              "security_definer": true
+            },
+            "observed_at": "2026-09-16T19:10:31.698Z"
+          },
+          {
+            "detail": "Function `public.rls_auto_enable()` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/rls_auto_enable`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "rls_auto_enable",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-09-16T19:10:31.698Z"
+          }
+        ]
+      },
+      {
+        "name": "auth_leaked_password_protection",
+        "title": "Leaked Password Protection Disabled",
+        "level": "WARN",
+        "facing": "EXTERNAL",
+        "categories": [
+          "SECURITY"
+        ],
+        "description": "Leaked password protection is currently disabled.",
+        "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection",
+        "count": 1,
+        "findings": [
+          {
+            "detail": "Supabase Auth prevents the use of compromised passwords by checking against HaveIBeenPwned.org. Enable this feature to enhance security.",
+            "metadata": {
+              "type": "auth",
+              "entity": "Auth"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

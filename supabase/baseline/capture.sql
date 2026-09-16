@@ -1,0 +1,16 @@
+-- Read-only catalog capture. No application rows or secrets are selected.
+-- Run through an authorized metadata connection; retain only reviewed schema output.
+select jsonb_build_object(
+'columns',(select jsonb_agg(to_jsonb(x)) from (select table_name,column_name,ordinal_position,data_type,udt_schema,udt_name,column_default,is_nullable,is_identity,is_generated,generation_expression from information_schema.columns where table_schema='public' order by table_name,ordinal_position)x),
+'constraints',(select jsonb_agg(to_jsonb(x)) from (select c.relname as table_name,co.conname,co.contype,pg_get_constraintdef(co.oid,true) as definition from pg_constraint co join pg_class c on c.oid=co.conrelid join pg_namespace n on n.oid=c.relnamespace where n.nspname='public' order by c.relname,co.conname)x),
+'indexes',(select jsonb_agg(to_jsonb(x)) from (select tablename,indexname,indexdef from pg_indexes where schemaname='public' order by tablename,indexname)x),
+'policies',(select jsonb_agg(to_jsonb(x)) from (select * from pg_policies where schemaname='public' order by tablename,policyname)x),
+'functions',(select jsonb_agg(to_jsonb(x)) from (select p.proname,pg_get_function_identity_arguments(p.oid) as identity_args,pg_get_functiondef(p.oid) as definition,p.prosecdef,p.proconfig,p.proacl::text,pg_get_userbyid(p.proowner) as owner from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.prokind in ('f','p') and not exists(select 1 from pg_depend d where d.objid=p.oid and d.classid='pg_proc'::regclass and d.deptype='e') order by p.proname)x),
+'triggers',(select jsonb_agg(to_jsonb(x)) from (select n.nspname,c.relname,t.tgname,pg_get_triggerdef(t.oid,true) as definition,t.tgenabled from pg_trigger t join pg_class c on c.oid=t.tgrelid join pg_namespace n on n.oid=c.relnamespace where not t.tgisinternal and (n.nspname='public' or t.tgfoid in (select p.oid from pg_proc p join pg_namespace pn on pn.oid=p.pronamespace where pn.nspname='public')) order by 1,2,3)x),
+'tables',(select jsonb_agg(to_jsonb(x)) from (select c.relname,c.relkind,c.relrowsecurity,c.relforcerowsecurity,c.relacl::text,pg_get_userbyid(c.relowner) as owner,c.reloptions from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public' and c.relkind in ('r','p','v','m','S') order by 1)x),
+'extensions',(select jsonb_agg(to_jsonb(x)) from (select e.extname,e.extversion,n.nspname as schema_name from pg_extension e join pg_namespace n on n.oid=e.extnamespace order by 1)x),
+'schemas',(select jsonb_agg(to_jsonb(x)) from (select nspname,nspacl::text,pg_get_userbyid(nspowner) as owner from pg_namespace where nspname in ('public','extensions'))x),
+'default_acl',(select jsonb_agg(to_jsonb(x)) from (select pg_get_userbyid(d.defaclrole) as owner,n.nspname,d.defaclobjtype,d.defaclacl::text from pg_default_acl d left join pg_namespace n on n.oid=d.defaclnamespace)x),
+'enums',(select jsonb_agg(to_jsonb(x)) from (select t.typname,e.enumlabel,e.enumsortorder from pg_type t join pg_namespace n on n.oid=t.typnamespace join pg_enum e on e.enumtypid=t.oid where n.nspname='public' order by 1,3)x),
+'publications',(select jsonb_agg(to_jsonb(x)) from (select pubname,schemaname,tablename from pg_publication_tables where schemaname='public')x)
+) as snapshot;

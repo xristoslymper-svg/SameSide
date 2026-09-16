@@ -1,0 +1,1 @@
+{"name":"sameside-backend-tests","private":true,"type":"module","packageManager":"pnpm@11.19.0","scripts":{"test":"node contract.test.mjs"},"devDependencies":{"@embedded-postgres/windows-x64":"17.6.0-beta.15","pg":"8.23.0","supabase":"2.117.0"}}
