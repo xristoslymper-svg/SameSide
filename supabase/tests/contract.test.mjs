@@ -33,7 +33,7 @@ let rid,invite,a0,b0,oldAssignment,oldEvent;
 try{
  await db.query(await readFile(path.join(dir,'platform-bootstrap.sql'),'utf8'));
  const migrations=(await readdir(path.join(dir,'../migrations'))).filter(x=>x.endsWith('.sql')).sort();
- for(const name of migrations.filter(x=>!x.includes('phase1a_')))await db.query(await readFile(path.join(dir,'../migrations',name),'utf8'));
+ for(const name of migrations.filter(x=>!x.includes('phase1a_') && !x.includes('private_roots_checkin') && !x.includes('shared_flower_private_reflections') && !x.includes('legacy_flower_choice')))await db.query(await readFile(path.join(dir,'../migrations',name),'utf8'));
  await db.query("insert into auth.users(id,raw_user_meta_data) select unnest($1::uuid[]),'{}'::jsonb",[Object.values(users)]);
  rid=await rpc(A,'create_solo_relationship');
  await db.query("update public.relationships set path_started_at=current_date-8 where id=$1",[rid]);
@@ -213,5 +213,141 @@ try{
   assert.equal(result.filter(x=>x.status==='fulfilled').length,1);
   assert.equal((await as(E,'select * from public.relationship_members where user_id=$1',[E])).length,1);
  });
+ for(const name of migrations.filter(x=>x.includes('private_roots_checkin'))) {
+  const c=await db.connect();try {await c.query('begin');await c.query(await readFile(path.join(dir,'../migrations',name),'utf8'));await c.query('commit');}
+  catch(e){await c.query('rollback');throw e;}finally{c.release();}
+ }
+ const ra=randomUUID(),rb=randomUUID(),rc=randomUUID();
+ await db.query("insert into auth.users(id,raw_user_meta_data) select unnest($1::uuid[]),'{}'::jsonb",[[ra,rb,rc]]);
+ const rr=await rpc(ra,'create_solo_relationship',['Pacific/Kiritimati']);
+ const roots=u=>rpc(u,'get_my_root_preferences');
+ const saveRoots=(u,choices)=>rpc(u,'save_my_root_preferences',[choices],['text[]']);
+ await test('Roots saves one/two choices; retry preserves rows; replacement is current-period only',async()=>{
+  assert.deepEqual(await roots(ra),{choices:[],can_edit:true});
+  assert.deepEqual(await saveRoots(ra,['fun']),{choices:['fun'],can_edit:true});
+  const before=await as(ra,'select id,created_at from public.root_preferences');
+  await saveRoots(ra,['fun']);assert.deepEqual(await as(ra,'select id,created_at from public.root_preferences'),before);
+  assert.deepEqual(await saveRoots(ra,['fun','conversation']),{choices:['conversation','fun'],can_edit:true});
+  await saveRoots(ra,['attention']);assert.deepEqual(await roots(ra),{choices:['attention'],can_edit:true});
+  assert.equal((await as(ra,'select * from public.root_preferences')).length,1);
+ });
+ await test('Roots rejects empty/duplicate/unknown/malformed choices and has no owner/relationship arguments',async()=>{
+  for(const choices of [[],null,['fun','fun'],['fun','support','affection'],['other'],['Fun'],[null],[['fun']]]) await fail(()=>saveRoots(ra,choices),'invalid_root_choices');
+  assert.equal((await db.query("select pg_get_function_arguments('public.save_my_root_preferences(text[])'::regprocedure) args")).rows[0].args,'choices text[]');
+  await fail(()=>saveRoots(rc,['fun']),'no_active_relationship');
+  await fail(()=>as(null,"select public.save_my_root_preferences(array['fun'])",[],'anon'),'permission denied');
+ });
+ await test('Roots isolates both partners, denies direct writes and keeps shared derivation disabled',async()=>{
+  await rpc(rb,'accept_relationship_invite',[await rpc(ra,'create_relationship_invite')]);
+  await saveRoots(rb,['affection']);
+  assert.equal((await as(ra,'select * from public.root_preferences where user_id=$1',[rb])).length,0);
+  assert.equal((await as(rb,'select * from public.root_preferences where user_id=$1',[ra])).length,0);
+  for(const choice of ['affection','fun','conversation']) assert.deepEqual(await saveRoots(ra,[choice]),{choices:[choice],can_edit:true});
+  assert.deepEqual(await roots(rb),{choices:['affection'],can_edit:true});
+  await fail(()=>as(ra,"insert into public.root_preferences(relationship_id,user_id,week_no,need) values($1,$2,1,'fun')",[rr,ra]),'permission denied');
+  await fail(()=>as(ra,"update public.root_preferences set need='fun'"),'permission denied');
+  await fail(()=>as(ra,'delete from public.root_preferences'),'permission denied');
+  await fail(()=>as(ra,'select * from public.shared_insights'),'permission denied');
+  await fail(()=>rpc(ra,'refresh_shared_root_insights',[rr,1]),'permission denied');
+ });
+ await test('Roots concurrent replacements stay atomic and contain at most two choices',async()=>{
+  await Promise.all([saveRoots(ra,['fun','support']),saveRoots(ra,['conversation','affection']),saveRoots(ra,['fun','support'])]);
+  const result=await roots(ra);
+  assert.ok([JSON.stringify(['fun','support']),JSON.stringify(['affection','conversation'])].includes(JSON.stringify(result.choices)));
+  assert.equal((await as(ra,'select * from public.root_preferences')).length,2);
+ });
+ await test('Roots uses relationship-local week, preserves history and closes writes after Routine',async()=>{
+  await db.query("update public.relationships set path_started_at=(now() at time zone timezone)::date-7 where id=$1",[rr]);
+  assert.deepEqual(await roots(ra),{choices:[],can_edit:true});
+  await saveRoots(ra,['support']);
+  assert.equal((await as(ra,"select week_no from public.root_preferences where need='support' and week_no=2"))[0].week_no,2);
+  await db.query("update public.relationships set path_started_at=(now() at time zone timezone)::date-21 where id=$1",[rr]);
+  await saveRoots(ra,['fun']);
+  await db.query("update public.relationships set path_started_at=(now() at time zone timezone)::date-28 where id=$1",[rr]);
+  assert.deepEqual(await roots(ra),{choices:['fun'],can_edit:false});
+  await fail(()=>saveRoots(ra,['support']),'roots_period_not_available');
+  assert.ok((await as(ra,'select * from public.root_preferences')).length>=4);
+ });
+ for (const name of migrations.filter(x=>x.includes('shared_flower_private_reflections'))) await db.query(await readFile(path.join(dir,'../migrations',name),'utf8'));
+ await test('creator alone chooses once; both members inherit choice and growth history remains',async()=>{
+  const before=(await db.query('select count(*)::int n from public.garden_events')).rows[0].n;
+  await fail(()=>rpc(rb,'choose_shared_flower',['daisy']),'only_creator_can_choose');
+  await fail(()=>rpc(ra,'choose_shared_flower',['invalid']),'invalid_flower');
+  assert.equal(await rpc(ra,'choose_shared_flower',['cosmos']),'cosmos');
+  assert.equal(await rpc(ra,'choose_shared_flower',['cosmos']),'cosmos');
+  await fail(()=>rpc(ra,'choose_shared_flower',['zinnia']),'flower_already_chosen');
+  assert.equal((await as(rb,'select selected_flower from public.relationships where id=$1',[rr]))[0].selected_flower,'cosmos');
+  assert.equal((await as(rc,'select selected_flower from public.relationships where id=$1',[rr])).length,0);
+  await fail(()=>as(rb,"update public.relationships set selected_flower='daisy'"),'permission denied');
+  assert.equal((await db.query('select count(*)::int n from public.garden_events')).rows[0].n,before);
+ });
+ const reflection=u=>rpc(u,'get_my_daily_reflection');
+ const keep=(u,t)=>rpc(u,'save_my_daily_reflection',[t]);
+ await test('private reflection creates once, edits, uses server relationship date and rejects invalid length',async()=>{
+  const first=await reflection(ra); assert.equal(first.text,null);
+  assert.equal(first.date,(await db.query("select to_char((now() at time zone timezone)::date,'YYYY-MM-DD') d from public.relationships where id=$1",[rr])).rows[0].d);
+  assert.equal((await keep(ra,'An ordinary happy moment.')).text,'An ordinary happy moment.');
+  await Promise.all([keep(ra,'Updated thought.'),keep(ra,'Updated thought.')]);
+  assert.equal((await reflection(ra)).text,'Updated thought.');
+  assert.equal((await as(ra,'select * from public.daily_reflections')).length,1);
+  for(const bad of ['',null,'   ','x'.repeat(281)]) await fail(()=>keep(ra,bad),'invalid_reflection');
+  await keep(ra,'x'.repeat(280));
+ });
+ await test('reflection text/existence/timestamps private in both directions; direct writes and anon blocked',async()=>{
+  assert.equal((await reflection(rb)).text,null);
+  await keep(rb,'Only B sees this.');
+  assert.equal((await as(ra,'select * from public.daily_reflections where user_id=$1',[rb])).length,0);
+  assert.equal((await as(rb,'select * from public.daily_reflections where user_id=$1',[ra])).length,0);
+  assert.equal((await as(rc,'select * from public.daily_reflections')).length,0);
+  await fail(()=>keep(rc,'No membership'),'no_active_relationship');
+  await fail(()=>rpc(null,'get_my_daily_reflection'),'not_authenticated');
+  await fail(()=>as(null,'select * from public.daily_reflections',[],'anon'),'permission denied');
+  for(const sql of ["update public.daily_reflections set body='changed'",'delete from public.daily_reflections',"insert into public.daily_reflections(user_id,relationship_id,reflection_date,body) values('"+ra+"','"+rr+"',current_date,'bad')"]) await fail(()=>as(ra,sql),'permission denied');
+  const garden=await as(rb,'select * from public.get_shared_garden()');
+  for(const row of garden) assert.deepEqual(Object.keys(row).sort(),['flower_count','garden_date']);
+ });
+
+
+ // Create a pre-migration relationship whose B member must be able to resolve
+ // the missing flower, without changing path, membership or historical rows.
+ const la=randomUUID(),lb=randomUUID(),lc=randomUUID();
+ await db.query("insert into auth.users(id,raw_user_meta_data) select unnest($1::uuid[]),'{}'::jsonb",[[la,lb,lc]]);
+ const lr=await rpc(la,'create_solo_relationship');
+ await rpc(lb,'accept_relationship_invite',[await rpc(la,'create_relationship_invite')]);
+ await db.query("insert into public.garden_events(relationship_id,created_by,plant_type) select $1,$2,'flower' from generate_series(1,7)",[lr,la]);
+ const beforeLegacy=(await db.query('select path_started_at from public.relationships where id=$1',[lr])).rows[0];
+ for (const name of migrations.filter(x=>x.includes('legacy_flower_choice'))) {
+  const c=await db.connect();try { await c.query('begin'); await c.query(await readFile(path.join(dir,'../migrations',name),'utf8')); await c.query('commit'); }
+  catch(e){await c.query('rollback');throw e;}finally{c.release();}
+ }
+ await test('legacy B can choose once; seven moments and path survive; retry and outsider isolation',async()=>{
+  assert.equal((await as(lb,'select legacy_flower_choice from public.relationships where id=$1',[lr]))[0].legacy_flower_choice,true);
+  await fail(()=>rpc(lc,'choose_shared_flower',['cosmos']),'no_active_relationship');
+  assert.equal(await rpc(lb,'choose_shared_flower',['cosmos']),'cosmos');
+  assert.equal(await rpc(lb,'choose_shared_flower',['cosmos']),'cosmos');
+  await fail(()=>rpc(la,'choose_shared_flower',['zinnia']),'flower_already_chosen');
+  assert.equal((await as(la,'select selected_flower from public.relationships where id=$1',[lr]))[0].selected_flower,'cosmos');
+  assert.equal((await as(lb,'select * from public.get_shared_garden()')).reduce((sum,d)=>sum+Number(d.flower_count),0),7);
+  assert.deepEqual((await db.query('select path_started_at from public.relationships where id=$1',[lr])).rows[0],beforeLegacy);
+  assert.equal((await as(lb,'select legacy_flower_choice from public.relationships where id=$1',[lr]))[0].legacy_flower_choice,false);
+  await fail(()=>as(lb,'update public.relationships set legacy_flower_choice=true'),'permission denied');
+ });
+ await test('fresh relationship remains starter-only; concurrent legacy choices have one winner',async()=>{
+  const fresh=await rpc(lc,'create_solo_relationship');
+  const ld=randomUUID(); await db.query("insert into auth.users(id,raw_user_meta_data) values($1,'{}')",[ld]);
+  await rpc(ld,'accept_relationship_invite',[await rpc(lc,'create_relationship_invite')]);
+  assert.equal((await as(ld,'select legacy_flower_choice from public.relationships where id=$1',[fresh]))[0].legacy_flower_choice,false);
+  await fail(()=>rpc(ld,'choose_shared_flower',['daisy']),'only_creator_can_choose');
+  await rpc(lc,'choose_shared_flower',['daisy']);
+  // Set up a separate local legacy fixture; never reset live user data.
+  await db.query('update public.relationships set selected_flower=null,legacy_flower_choice=true where id=$1',[lr]);
+  const result=await Promise.allSettled([rpc(la,'choose_shared_flower',['cosmos']),rpc(lb,'choose_shared_flower',['zinnia'])]);
+  assert.equal(result.filter(r=>r.status==='fulfilled').length,1);
+  assert.match(result.find(r=>r.status==='rejected').reason.message,/flower_already_chosen/);
+  assert.equal((await as(lb,'select * from public.get_shared_garden()')).reduce((sum,d)=>sum+Number(d.flower_count),0),7);
+  await db.query('update public.relationship_members set left_at=now() where user_id=$1',[lb]);
+  await fail(()=>rpc(lb,'choose_shared_flower',['cosmos']),'no_active_relationship');
+ });
+
  console.log(`PASS ${passed} test groups; database=${database}; PostgreSQL=${(await db.query('show server_version')).rows[0].server_version}`);
 }finally{await db.end();}

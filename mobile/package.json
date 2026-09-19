@@ -1,0 +1,45 @@
+{
+  "name": "same-side-mobile",
+  "description": "Same Side mobile and web authentication foundation",
+  "license": "0BSD",
+  "version": "0.1.0",
+  "main": "expo-router/entry",
+  "dependencies": {
+    "@supabase/supabase-js": "2.116.0",
+    "expo": "~57.0.23",
+    "expo-constants": "~57.0.18",
+    "expo-linking": "~57.0.10",
+    "expo-router": "~57.0.21",
+    "expo-secure-store": "~57.0.4",
+    "expo-status-bar": "~57.0.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-reanimated": "4.5.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.2",
+    "react-native-url-polyfill": "4.0.0",
+    "react-native-web": "~0.21.2",
+    "react-native-worklets": "0.10.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "@react-native/metro-config": "0.86.3",
+    "@types/node": "^24.13.4",
+    "@types/react": "~19.2.2",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web --port 8081",
+    "typecheck": "tsc --noEmit",
+    "export:web": "expo export --platform web",
+    "test:web": "playwright test",
+    "preview:web": "node scripts/serve-web.mjs",
+    "dev:scenario": "node scripts/dev-scenarios.mjs"
+  },
+  "private": true,
+  "packageManager": "pnpm@11.19.0"
+}

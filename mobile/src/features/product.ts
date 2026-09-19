@@ -1,0 +1,64 @@
+import { isDemo, demoToday } from '../lib/demo';
+import { supabase } from '../lib/supabase';
+import { journeyDay, relationshipDate } from './growth';
+import { getRelationshipState } from './relationships';
+
+export type Move = { id: string; task_title: string; task_body: string; task_minutes: number; status: string; program_day: number; slot: number; assigned_for_date: string };
+export type GardenDay = { garden_date: string; flower_count: number };
+function client() {
+  if (!supabase) throw new Error('We could not connect. Please try again.');
+  return supabase;
+}
+export async function getMove(slot = 0): Promise<Move> {
+  const { data, error } = await client().rpc('get_or_create_today_assignment', { requested_slot: slot });
+  if (error) {
+    if (error.message.includes('path_not_available')) throw new Error('No new move today. Your garden is still here to enjoy.');
+    if (error.message.includes('daily_limit_reached')) throw new Error('That’s plenty for today. Your garden is here to enjoy.');
+    if (error.message.includes('previous_slot_not_completed')) throw new Error('Let’s come back to your current move. Try again to bring it up.');
+    throw new Error('We could not load your move. Please try again.');
+  }
+  const move = Array.isArray(data) ? data[0] : data;
+  if (!move?.id || !move.task_title || !move.task_body) throw new Error('We could not load your move. Please try again.');
+  return move;
+}
+export async function getTodayMove(userId: string): Promise<Move> {
+  const primary = await getMove();
+  if (primary.status !== 'completed') return primary;
+  // The RPC supplies the relationship-local date. Read only this user's already-issued
+  // moves, so reopening never requests an optional move without their choice.
+  const { data, error } = await client().from('task_assignments')
+    .select('id,task_title,task_body,task_minutes,status,program_day,slot,assigned_for_date')
+    .eq('user_id', userId).eq('assigned_for_date', primary.assigned_for_date).eq('contract_version', 1)
+    .order('slot', { ascending: false }).limit(1).maybeSingle();
+  if (error) throw new Error('We could not bring up your move. Please try again.');
+  return data ?? primary;
+}
+export async function completeMove(id: string) {
+  const { error } = await client().rpc('complete_assignment', { assignment_id: id });
+  if (error) throw new Error(error.message.includes('assignment_not_eligible')
+    ? 'This move is no longer available. Try again to see today’s move.'
+    : 'We couldn’t save that just yet. Please try again.');
+}
+export async function getGarden(): Promise<GardenDay[]> {
+  const { data, error } = await client().rpc('get_shared_garden');
+  if (error) throw new Error('We could not load your garden. Please try again.');
+  // Keep the UI model restricted to the anonymous public contract.
+  return (data ?? []).map((day: GardenDay) => ({ garden_date: day.garden_date, flower_count: Number(day.flower_count) }));
+}
+export async function getProgram(userId: string) {
+  const membership = await getRelationshipState(userId);
+  if (!membership) throw new Error('We could not open your space. Please try again.');
+  let { data, error } = await client().from('relationships').select('active_path,selected_flower,legacy_flower_choice,path_started_at,timezone').eq('id', membership.relationshipId).single();
+  if (error?.code === '42703' || error?.code === 'PGRST204') {
+    const old = await client().from('relationships').select('active_path,selected_flower,path_started_at,timezone').eq('id', membership.relationshipId).single();
+    data = old.data ? { ...old.data, legacy_flower_choice: false } : null; error = old.error;
+  }
+  if (error || data?.active_path !== 'routine') throw new Error('We could not open your space. Please try again.');
+  // Display-only week context; assignment eligibility remains entirely server-owned.
+  if (!data.path_started_at) throw new Error('We could not load your journey dates. Please try again.');
+  const today = isDemo ? demoToday() : relationshipDate(data.timezone ?? 'UTC');
+  const day = journeyDay(data.path_started_at, today);
+  return { ...membership, name: 'The Routine', selectedFlower: data.selected_flower as string | null,
+    canChooseFlower: membership.role === 'member_a' || data.legacy_flower_choice === true,
+    startDate: data.path_started_at as string, today, day, week: Math.min(4, Math.ceil(day / 7)) };
+}

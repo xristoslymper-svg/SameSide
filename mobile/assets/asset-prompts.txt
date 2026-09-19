@@ -1,0 +1,10 @@
+Replaceable MVP artwork. Generated with the built-in image generation tool.
+The test garden image is illustrative, not evidence of any actual planting.
+The atlas cells are referenced by src/features/flowers.ts and BotanicalFlower.tsx.
+Early growth stages share placeholder artwork; species-specific stage art can replace this later.
+
+botanical-atlas.png prompt:
+Create one botanical sprite sheet asset for a premium couples wellness app. Precisely 3 columns and 3 rows of equal square cells, no borders, no text, no labels. Uniform solid warm cream background #F7F2EA. Delicate detailed elegant botanical watercolour, 70% realistic botany 30% illustration. Each whole plant centered in its own cell with generous margins and no overlap. Top row: pink Cosmos bipinnatus flower with feathery leaves; blue Myosotis forget-me-not cluster; pink Zinnia elegans. Middle row: white Bellis perennis daisy; orange Calendula officinalis; blue Centaurea cyanus cornflower. Bottom row: tiny seed in small mound of soil; young green sprout with leaves; a developed cosmos stem with leaves and closed bud. All plants vertical full stem visible, airy elegant botanical book art, not cartoon, not photo. This is a single reusable nine-cell sprite sheet. Save output image.
+
+test-garden.png prompt:
+Photorealistic editorial placeholder photograph for a small physical flower garden, warm late summer afternoon. Modest tended flower beds with cosmos, zinnias, daisies, calendula and cornflowers along a narrow earthy path, natural greens and restrained pink and orange, intimate believable backyard scale, no buildings, no people, no signage, landscape composition. This is a generic illustrative test garden image, not documentation of a real location. No text.
