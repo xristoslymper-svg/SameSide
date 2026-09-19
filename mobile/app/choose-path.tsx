@@ -1,92 +1,41 @@
+import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SetupExit } from '../src/components/SetupExit';
 import { FlowScreen } from '../src/components/onboarding';
 import { useOnboarding } from '../src/providers/OnboardingProvider';
 
 const paths = [
-  ['routine', '🌿', 'The Routine', 'Bring back attention, warmth and spontaneity when everyday life starts running on autopilot.', 'Included', true],
-  ['same-fight', '💬', 'The Same Fight', 'Shift the pattern behind arguments that keep repeating.', '€14.99', false],
-  ['distance', '↔', 'The Distance', 'Find your way back to feeling close and connected.', '€14.99', false],
-  ['spark', '✨', 'The Spark', 'Bring more affection, playfulness and intimacy into everyday life.', '€14.99', false],
-  ['communication-gap', '👂', 'The Communication Gap', 'Make more room to listen, understand and feel heard.', '€14.99', false],
-  ['imbalance', '⚖', 'The Imbalance', 'Reset the everyday effort that can start to feel one-sided.', '€14.99', false],
-  ['trust-gap', '🤝', 'The Trust Gap', 'Build consistency, openness and reassurance through small actions.', '€14.99', false],
-  ['next-chapter', '🧭', 'The Next Chapter', 'Reconnect around what you want to build and experience together.', '€14.99', false],
+ ['routine','🌿','The Routine','Bring back attention, warmth and spontaneity when everyday life starts running on autopilot.',true],
+ ['fight','💬','The Same Fight','Shift the pattern behind arguments that keep repeating.',false],
+ ['distance','↔','The Distance','Find your way back to feeling close and connected.',false],
+ ['spark','✨','The Spark','Bring more affection, playfulness and intimacy into everyday life.',false],
+ ['communication','👂','The Communication Gap','Make more room to listen, understand and feel heard.',false],
+ ['imbalance','⚖','The Imbalance','Reset the everyday effort that can start to feel one-sided.',false],
+ ['trust','🤝','The Trust Gap','Build consistency, openness and reassurance through small actions.',false],
+ ['future','🧭','The Next Chapter','Reconnect around what you want to build and experience together.',false],
 ] as const;
+type PathId = typeof paths[number][0];
+const questions:{q:string;a:[string,PathId][]}[]=[
+ {q:'What feels most familiar lately?',a:[['We mostly run on autopilot','routine'],['The same arguments keep coming back','fight'],['We feel less close than we used to','distance'],['The affection or spark feels quieter','spark']]},
+ {q:'What would you most like more of?',a:[['Warmth and little moments','routine'],['Calmer disagreements','fight'],['Feeling emotionally close','distance'],['Affection and playfulness','spark']]},
+ {q:'When you talk about something important, what gets in the way?',a:[['We default to practical talk','routine'],['It turns into the same conflict','fight'],['We avoid going deeper','distance'],['One or both of us don’t feel heard','communication']]},
+ {q:'Which everyday feeling comes up most?',a:[['Life feels repetitive','routine'],['I carry more of the load','imbalance'],['We are together but disconnected','distance'],['I miss feeling desired or affectionate','spark']]},
+ {q:'What would make the biggest difference this month?',a:[['Doing small things differently','routine'],['Breaking one repeating conflict cycle','fight'],['Making time to reconnect','distance'],['Sharing effort more fairly','imbalance']]},
+ {q:'If one thing shifted, what would you notice first?',a:[['More small moments of attention','routine'],['Less tension around recurring topics','fight'],['More closeness during ordinary days','distance'],['More balance in what we each carry','imbalance']]},
+ {q:'What sounds most worth working toward?',a:[['A relationship that feels less automatic','routine'],['A relationship with more affection','spark'],['A relationship with stronger trust','trust'],['A clearer sense of where we’re going','future']]},
+];
 
-export default function ChoosePathScreen() {
-  const { save, busy } = useOnboarding();
-
-  return (
-    <FlowScreen>
-      <Text style={s.eyebrow}>CHOOSE YOUR PATH</Text>
-      <Text style={s.title}>What would you like{'\n'}to shift?</Text>
-      <Text style={s.intro}>Choose the place you'd like to start. You can explore another path later.</Text>
-
-      <View style={s.list}>
-        {paths.map(([id, icon, title, description, price, available]) => {
-          const inside = <>
-            <View style={s.top}>
-              <View style={s.nameRow}><Text style={s.icon}>{icon}</Text><Text style={s.pathTitle}>{title}</Text></View>
-              <View style={[s.price, available && s.included]}>
-                <Text style={[s.priceText, available && s.includedText]}>{available ? 'INCLUDED' : `🔒  ${price}`}</Text>
-              </View>
-            </View>
-            <Text style={s.description}>{description}</Text>
-            <View style={s.metaRow}>
-              <Text style={s.meta}>4-week path</Text>
-              <Text style={[s.action, !available && s.lockedAction]}>{available ? 'Start here  →' : 'Coming soon'}</Text>
-            </View>
-          </>;
-
-          return available ? (
-            <Pressable key={id} disabled={busy}
-              onPress={() => void save({ path: 'routine', step: 'personalize' })}
-              style={({ pressed }) => [s.card, s.availableCard, pressed && s.pressed]}>
-              {inside}
-            </Pressable>
-          ) : <View key={id} style={[s.card, s.lockedCard]}>{inside}</View>;
-        })}
-      </View>
-
-      <View style={s.quiz}>
-        <Text style={s.quizTitle}>Not sure where to start?</Text>
-        <Text style={s.quizBody}>Take a quick 10-question check-in and we'll suggest a path to begin with.</Text>
-        <View style={s.quizButton}><Text style={s.quizButtonText}>Take the questionnaire →</Text></View>
-        <Text style={s.soon}>Coming soon</Text>
-      </View>
-
-      <SetupExit />
-    </FlowScreen>
-  );
+export default function ChoosePathScreen(){
+ const {save,busy}=useOnboarding(); const [quiz,setQuiz]=useState(false); const [i,setI]=useState(0); const [answers,setAnswers]=useState<PathId[]>([]); const [result,setResult]=useState<PathId|null>(null);
+ function answer(id:PathId){const next=[...answers,id]; if(i<questions.length-1){setAnswers(next);setI(i+1);return;} const score=next.reduce((a,k)=>(a[k]=(a[k]||0)+1,a),{} as Record<string,number>); setResult((Object.keys(score) as PathId[]).sort((a,b)=>score[b]-score[a])[0]||'routine');}
+ function back(){if(result){setResult(null);return;} if(i>0){setAnswers(answers.slice(0,-1));setI(i-1);}else setQuiz(false);}
+ if(quiz){const q=questions[i];const p=result?paths.find(x=>x[0]===result):null;return <FlowScreen>
+   <Pressable onPress={back} style={s.back}><Text style={s.backText}>← Back</Text></Pressable>
+   {!p?<><Text style={s.eyebrow}>A QUICK CHECK-IN</Text><Text style={s.count}>Question {i+1} of {questions.length}</Text><View style={s.bar}><View style={[s.fill,{width:`${((i+1)/questions.length)*100}%`}]} /></View><Text style={s.title}>{q.q}</Text><View style={s.list}>{q.a.map(([label,id])=><Pressable key={label} onPress={()=>answer(id)} style={s.option}><Text style={s.optionText}>{label}</Text></Pressable>)}</View></>
+   :<><Text style={s.eyebrow}>A PLACE TO START</Text><Text style={s.resultIcon}>{p[1]}</Text><Text style={s.title}>{p[2]}</Text><Text style={s.intro}>{p[3]}</Text><Text style={s.meta}>{p[4]?'4-week path · Included':'4-week path · Coming soon'}</Text>{p[4]?<Pressable disabled={busy} onPress={()=>void save({path:'routine',step:'personalize'})} style={s.primary}><Text style={s.primaryText}>Start The Routine</Text></Pressable>:<Pressable onPress={()=>{setQuiz(false);setResult(null);setI(0);setAnswers([]);}} style={s.primary}><Text style={s.primaryText}>Explore the paths</Text></Pressable>}</>}
+ </FlowScreen>}
+ return <FlowScreen><Text style={s.eyebrow}>CHOOSE YOUR PATH</Text><Text style={s.title}>What would you like{'\n'}to shift?</Text><Text style={s.intro}>Choose the place you'd like to start. You can explore another path later.</Text>
+  <View style={s.list}>{paths.map(([id,icon,title,description,available])=>{const inside=<><View style={s.top}><View style={s.nameRow}><Text style={s.icon}>{icon}</Text><Text style={s.pathTitle}>{title}</Text></View><View style={[s.badge,available&&s.included]}><Text style={[s.badgeText,available&&s.includedText]}>{available?'INCLUDED':'COMING SOON'}</Text></View></View><Text style={s.description}>{description}</Text><View style={s.metaRow}><Text style={s.meta}>4-week path</Text>{available&&<Text style={s.action}>Start here →</Text>}</View></>;return available?<Pressable key={id} disabled={busy} onPress={()=>void save({path:'routine',step:'personalize'})} style={({pressed})=>[s.card,s.availableCard,pressed&&{opacity:.82}]}>{inside}</Pressable>:<View key={id} style={[s.card,s.lockedCard]}>{inside}</View>})}</View>
+  <Pressable onPress={()=>{setQuiz(true);setI(0);setAnswers([]);setResult(null);}} style={s.quiz}><Text style={s.quizTitle}>Not sure where to start?</Text><Text style={s.quizBody}>Answer a few quick questions and we’ll suggest a path that fits what feels most important right now.</Text><Text style={s.action}>Find my starting point →</Text></Pressable><SetupExit/></FlowScreen>;
 }
-
-const s = StyleSheet.create({
-  eyebrow:{color:'#667C6A',fontSize:13,fontWeight:'700',letterSpacing:3,marginBottom:14},
-  title:{color:'#344B3D',fontFamily:'Georgia',fontSize:42,lineHeight:47,marginBottom:14},
-  intro:{color:'#817A72',fontSize:17,lineHeight:25,maxWidth:520,marginBottom:28},
-  list:{gap:14},
-  card:{borderRadius:24,borderWidth:1,paddingHorizontal:20,paddingVertical:19},
-  availableCard:{backgroundColor:'#F1F5EE',borderColor:'#A8B8A7'},
-  lockedCard:{backgroundColor:'#FFFCF7',borderColor:'#E4DDD2'},
-  pressed:{opacity:.82,transform:[{scale:.995}]},
-  top:{alignItems:'flex-start',flexDirection:'row',justifyContent:'space-between',gap:12},
-  nameRow:{alignItems:'center',flexDirection:'row',flex:1,gap:10},
-  icon:{fontSize:20},
-  pathTitle:{color:'#344B3D',flexShrink:1,fontFamily:'Georgia',fontSize:23,lineHeight:29},
-  price:{backgroundColor:'#F3EEE7',borderRadius:999,paddingHorizontal:11,paddingVertical:7},
-  included:{backgroundColor:'#DDE9DA'},
-  priceText:{color:'#746E67',fontSize:11,fontWeight:'700',letterSpacing:.5},
-  includedText:{color:'#536D58',letterSpacing:1},
-  description:{color:'#777169',fontSize:15,lineHeight:22,marginTop:13,maxWidth:560},
-  metaRow:{alignItems:'center',flexDirection:'row',justifyContent:'space-between',marginTop:17},
-  meta:{color:'#9A938A',fontSize:12,fontWeight:'600',letterSpacing:.5,textTransform:'uppercase'},
-  action:{color:'#58705D',fontSize:14,fontWeight:'700'},
-  lockedAction:{color:'#A39C94',fontWeight:'600'},
-  quiz:{alignItems:'center',backgroundColor:'#F5EFE8',borderRadius:24,marginTop:28,paddingHorizontal:22,paddingVertical:26},
-  quizTitle:{color:'#344B3D',fontFamily:'Georgia',fontSize:23,textAlign:'center'},
-  quizBody:{color:'#7E776F',fontSize:15,lineHeight:22,marginTop:9,maxWidth:430,textAlign:'center'},
-  quizButton:{borderColor:'#B9B0A5',borderRadius:999,borderWidth:1,marginTop:18,paddingHorizontal:20,paddingVertical:12},
-  quizButtonText:{color:'#596C5D',fontSize:14,fontWeight:'700'},
-  soon:{color:'#A09991',fontSize:11,letterSpacing:1,marginTop:8,textTransform:'uppercase'},
-});
+const s=StyleSheet.create({eyebrow:{color:'#667C6A',fontSize:12,fontWeight:'700',letterSpacing:2.5,marginBottom:12},title:{color:'#344B3D',fontFamily:'Georgia',fontSize:38,lineHeight:44,marginBottom:14},intro:{color:'#817A72',fontSize:16,lineHeight:24,marginBottom:26},list:{gap:12},card:{borderRadius:24,borderWidth:1,padding:19},availableCard:{backgroundColor:'#F1F5EE',borderColor:'#A8B8A7'},lockedCard:{backgroundColor:'#FFFCF7',borderColor:'#E4DDD2'},top:{flexDirection:'row',justifyContent:'space-between',alignItems:'flex-start',gap:10},nameRow:{flexDirection:'row',alignItems:'center',flex:1,gap:9},icon:{fontSize:20},pathTitle:{color:'#344B3D',flexShrink:1,fontFamily:'Georgia',fontSize:22},badge:{backgroundColor:'#F3EEE7',borderRadius:999,paddingHorizontal:10,paddingVertical:7},included:{backgroundColor:'#DDE9DA'},badgeText:{color:'#918A81',fontSize:9,fontWeight:'700',letterSpacing:.7},includedText:{color:'#536D58'},description:{color:'#777169',fontSize:15,lineHeight:22,marginTop:12},metaRow:{flexDirection:'row',justifyContent:'space-between',alignItems:'center',marginTop:15},meta:{color:'#9A938A',fontSize:12,fontWeight:'600',textTransform:'uppercase'},action:{color:'#58705D',fontSize:14,fontWeight:'700',marginTop:14},quiz:{backgroundColor:'#F5EFE8',borderRadius:24,marginTop:26,padding:22},quizTitle:{color:'#344B3D',fontFamily:'Georgia',fontSize:23},quizBody:{color:'#7E776F',fontSize:15,lineHeight:22,marginTop:8},back:{minHeight:44,justifyContent:'center',alignSelf:'flex-start'},backText:{color:'#667C6A',fontWeight:'700'},count:{color:'#8A8278',fontSize:13,marginBottom:8},bar:{height:5,backgroundColor:'#E8DFD3',borderRadius:5,marginBottom:28,overflow:'hidden'},fill:{height:'100%',backgroundColor:'#788B76'},option:{backgroundColor:'#FFFDF8',borderWidth:1,borderColor:'#E8DFD3',borderRadius:18,padding:16},optionText:{color:'#39483C',fontSize:15,lineHeight:21},resultIcon:{fontSize:34,marginBottom:12},primary:{backgroundColor:'#39483C',borderRadius:18,padding:16,alignItems:'center',marginTop:22},primaryText:{color:'white',fontWeight:'800'}});
