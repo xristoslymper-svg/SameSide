@@ -1,8 +1,11 @@
 import { Platform } from 'react-native';
-// Loopback-only, explicitly enabled web testing. No real client/network fallback.
-export const demoAvailable = Platform.OS === 'web' && typeof window !== 'undefined'
- && ['localhost','127.0.0.1','[::1]'].includes(window.location.hostname)
- && process.env.EXPO_PUBLIC_ENABLE_DEMO === 'true';
+// Explicitly enabled, isolated web demo. It uses sessionStorage + a fake transport only;
+// no demo request reaches the real Supabase project.
+const hostAllowsDemo = Platform.OS === 'web' && typeof window !== 'undefined'
+ && (['localhost','127.0.0.1','[::1]'].includes(window.location.hostname)
+   || window.location.hostname === 'same-side.vercel.app'
+   || window.location.hostname.endsWith('.vercel.app'));
+export const demoAvailable = hostAllowsDemo && process.env.EXPO_PUBLIC_ENABLE_DEMO === 'true';
 const prefix = 'same-side.demo.';
 if (demoAvailable && new URLSearchParams(window.location.search).get('demo') === '1') window.sessionStorage.setItem(prefix+'active','1');
 export const isDemo = demoAvailable && window.sessionStorage.getItem(prefix+'active') === '1';
@@ -16,11 +19,6 @@ const initial = ():State => ({relationship:false,members:1,name:'Alex',flower:nu
 function read():State { try { const value=window.sessionStorage.getItem(prefix+'data'); return value?JSON.parse(value):initial(); } catch {return initial();} }
 export const demoToday = () => read().today;
 function write(state:State) { window.sessionStorage.setItem(prefix+'data',JSON.stringify(state)); }
-export function demoSession() {
- const exp=Math.floor(Date.now()/1000)+3600;
- const encode=(v:unknown)=>btoa(JSON.stringify(v)).replaceAll('=','').replaceAll('+','-').replaceAll('/','_');
- return {access_token:`${encode({alg:'HS256',typ:'JWT'})}.${encode({sub:demoUserId,exp,role:'authenticated'})}.demo-only`,refresh_token:'demo-only',token_type:'bearer',expires_in:3600,expires_at:exp,user:{id:demoUserId,email:'tester@example.test',aud:'authenticated',role:'authenticated',app_metadata:{},user_metadata:{}}};
-}
 export function startDemo(scenario:DemoScenario='fresh') {
  if(!demoAvailable)return;
  // Only this tab's demo namespace is reset. Real localStorage is never touched.
@@ -49,6 +47,11 @@ export const demoStorage = {
  async setItem(key:string,value:string) {window.sessionStorage.setItem(prefix+'app.'+key,value);},
  async removeItem(key:string) {window.sessionStorage.removeItem(prefix+'app.'+key);},
 };
+export function demoSession() {
+ const exp=Math.floor(Date.now()/1000)+3600;
+ const encode=(v:unknown)=>btoa(JSON.stringify(v)).replaceAll('=','').replaceAll('+','-').replaceAll('/','_');
+ return {access_token:`${encode({alg:'HS256',typ:'JWT'})}.${encode({sub:demoUserId,exp,role:'authenticated'})}.demo-only`,refresh_token:'demo-only',token_type:'bearer',expires_in:3600,expires_at:exp,user:{id:demoUserId,email:'tester@example.test',aud:'authenticated',role:'authenticated',app_metadata:{},user_metadata:{}}};
+}
 export const demoFetch: typeof fetch = async (input,init) => {
  if(!isDemo)throw new Error('Demo transport is unavailable.');
  const req=new Request(input,init); const url=new URL(req.url);
