@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Pressable, Text, View, useWindowDimensions } from 'react-native';
-import { router, useFocusEffect } from 'expo-router';
-import { Button, Notice, Screen, styles } from '../../src/components/ui';
+import { useCallback,useEffect,useState } from 'react';
+import { Pressable,Text,View,useWindowDimensions } from 'react-native';
+import { router,useFocusEffect } from 'expo-router';
+import { Button,Notice,Screen,styles } from '../../src/components/ui';
 import { useProductData } from '../../src/components/product';
 import { AppHeader } from '../../src/components/AppHeader';
 import { FlowerStory } from '../../src/components/FlowerStory';
@@ -9,70 +9,21 @@ import { GrowthReplay } from '../../src/components/GrowthReplay';
 import { BotanicalFlower } from '../../src/components/BotanicalFlower';
 import { RealGarden } from '../../src/components/RealGarden';
 import { CommunityGarden } from '../../src/components/CommunityGarden';
-import { findFlower, type FlowerId } from '../../src/features/flowers';
-import { growth, type Journey } from '../../src/features/growth';
-import { getGarden, getProgram } from '../../src/features/product';
+import { findFlower,type FlowerId } from '../../src/features/flowers';
+import { growth,type Journey } from '../../src/features/growth';
+import { getGarden,getProgram } from '../../src/features/product';
 import { useAuth } from '../../src/providers/AuthProvider';
-
-export default function Garden() {
- const { session } = useAuth(); const [learn, setLearn] = useState(false);
- const [communityOpen, setCommunityOpen] = useState(false);
- const [story, setStory] = useState<FlowerId | null>(null);
- const [replay, setReplay] = useState<{ flower: FlowerId; journey: Journey } | null>(null);
- const closeReplay = useCallback(() => setReplay(null), []);
- useFocusEffect(useCallback(() => () => { setReplay(null); setStory(null); setLearn(false); setCommunityOpen(false); }, []));
- const { width } = useWindowDimensions();
- const state = useProductData(useCallback(async () => { const days = await getGarden(); const program = await getProgram(session!.user.id); return { days, program }; }, [session!.user.id]));
- const journey: Journey | null = state.data ? { startDate: state.data.program.startDate, today: state.data.program.today, days: state.data.days } : null;
- const stage = journey ? growth(journey) : growth({startDate:'2000-01-01',today:'2000-01-01',days:[]});
- // If focus/day revalidation discovers new history, return to the real state
- // rather than finishing a replay of an outdated snapshot.
- useEffect(() => {
-  if (!replay || !state.data) return;
-  const current = {startDate:state.data.program.startDate,today:state.data.program.today,days:state.data.days};
-  if (replay.flower !== state.data.program.selectedFlower || JSON.stringify(replay.journey) !== JSON.stringify(current)) setReplay(null);
- }, [replay,state.data]);
- const count = stage.actions;
- const flower = findFlower(state.data?.program.selectedFlower ?? null);
- return <Screen compact>
-  <View style={{ marginBottom: 18 }}><AppHeader/></View>
-  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-   <Text style={styles.eyebrow}>Your garden</Text><Text style={[styles.small, { textTransform: 'uppercase', letterSpacing: 0.8 }]}>The Routine{state.data ? ` · Week ${state.data.program.week}` : ''}</Text>
-  </View>
-  <View style={{ alignItems: 'center', marginTop: 20, gap: 5 }}>
-   {flower && stage.bloom && <Text style={styles.eyebrow}>It bloomed</Text>}
-   <Text style={[styles.cardTitle, { fontSize: 27 }]}>{flower ? `Your ${flower.name}${stage.bloom ? ' bloomed' : ''}` : 'What will you grow?'}</Text>
-   <Text style={styles.small}>{flower?.meaning ?? (state.loading ? 'A little space for what grows between you.' : 'Every flower carries a story.')}</Text>
-  </View>
-  <BotanicalFlower flower={flower?.id ?? 'cosmos'} state={stage} size={Math.min(width - 44, 340)} label={flower ? undefined : state.loading ? 'Botanical garden loading' : 'Botanical preview — choose your shared flower'}/>
-  <View style={{ alignItems: 'center', gap: 9 }}>
-   {state.loading && !state.data && <Text style={styles.small}>Bringing your garden into view…</Text>}
-   {state.error && <><Notice>{state.error}</Notice><Button label="Try again" secondary onPress={() => { void state.refresh(); }}/></>}
-   {state.data && <>
-    <Text style={[styles.body, { textAlign: 'center' }]}>{flower ? stage.title : 'Choose what you’ll grow together.'}</Text>
-    <Text style={[styles.small, { textAlign: 'center' }]}>{count} little {count === 1 ? 'moment has' : 'moments have'} helped it grow.</Text>
-    {flower && stage.bloom && <Text style={[styles.small, { textAlign: 'center' }]}>All those little moments became something.</Text>}
-    {flower && journey && count >= 1 && <Pressable accessibilityRole="button" style={{ minHeight: 44, justifyContent: 'center' }} onPress={() => setReplay({ flower: flower.id, journey: journey! })}><Text style={styles.label}>Replay our growth →</Text></Pressable>}
-    {flower && <Pressable accessibilityRole="button" style={{ minHeight: 44, justifyContent: 'center' }} onPress={() => setStory(flower.id)}><Text style={styles.small}>The story of your flower →</Text></Pressable>}
-    {!flower && <>
-     <Button label="Choose your flower" onPress={() => router.push('/choose-flower?returnTo=garden')}/>
-     <Text style={[styles.small, { textAlign: 'center' }]}>The moments already here will help it along.</Text>
-    </>}
-   </>}
-  </View>
-  <View style={{ alignItems: 'center', marginTop: 26, gap: 4 }}>
-   <Text style={[styles.small, { textAlign: 'center' }]}>{stage.bloom && flower ? 'A bloom here. A beginning in the real garden.' : 'When this blooms, something real begins.'}</Text>
-   <Pressable accessibilityRole="button" style={{ minHeight: 44, justifyContent: 'center' }} onPress={() => setLearn(true)}><Text style={styles.label}>Learn more →</Text></Pressable>
-  </View>
-   <View style={{ marginTop: 34, paddingTop: 28, borderTopWidth: 1, borderTopColor: '#ddd6c9', gap: 9 }}>
-    <Text style={styles.eyebrow}>The Same Side Garden</Text>
-    <Text style={[styles.cardTitle, { fontSize: 25 }]}>A garden of real stories.</Text>
-    <Text style={styles.body}>Different journeys. A shared garden. Wander through the flowers and discover the stories behind them.</Text>
-    <Button label="Walk through the garden →" secondary onPress={() => setCommunityOpen(true)}/>
-   </View>
-  {replay && <GrowthReplay flower={replay.flower} journey={replay.journey} close={closeReplay}/>}
-  <FlowerStory flower={story} close={() => setStory(null)}/>
-  <RealGarden visible={learn} close={() => setLearn(false)}/>
-   <CommunityGarden visible={communityOpen} close={() => setCommunityOpen(false)}/>
+export default function Garden(){
+ const {session}=useAuth();const [learn,setLearn]=useState(false);const [communityOpen,setCommunityOpen]=useState(false);const [story,setStory]=useState<FlowerId|null>(null);const [replay,setReplay]=useState<{flower:FlowerId;journey:Journey}|null>(null);const closeReplay=useCallback(()=>setReplay(null),[]);useFocusEffect(useCallback(()=>()=>{setReplay(null);setStory(null);setLearn(false);setCommunityOpen(false);},[]));const {width}=useWindowDimensions();
+ const state=useProductData(useCallback(async()=>{const days=await getGarden();const program=await getProgram(session!.user.id);return{days,program};},[session!.user.id]));const journey:Journey|null=state.data?{startDate:state.data.program.startDate,today:state.data.program.today,days:state.data.days}:null;const stage=journey?growth(journey):growth({startDate:'2000-01-01',today:'2000-01-01',days:[]});
+ useEffect(()=>{if(!replay||!state.data)return;const current={startDate:state.data.program.startDate,today:state.data.program.today,days:state.data.days};if(replay.flower!==state.data.program.selectedFlower||JSON.stringify(replay.journey)!==JSON.stringify(current))setReplay(null);},[replay,state.data]);
+ const count=stage.actions;const flower=findFlower(state.data?.program.selectedFlower??null);
+ return <Screen compact><View style={{marginBottom:18}}><AppHeader/></View><View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',gap:12,flexWrap:'wrap'}}><Text style={styles.eyebrow}>Your garden</Text><Text style={[styles.small,{textTransform:'uppercase',letterSpacing:.8}]}>The Routine{state.data?` · Week ${state.data.program.week}`:''}</Text></View>
+  <View style={{alignItems:'center',marginTop:20,gap:5}}>{flower&&stage.bloom&&<Text style={styles.eyebrow}>It bloomed</Text>}<Text style={[styles.cardTitle,{fontSize:27}]}>{flower?`Your ${flower.name}${stage.bloom?' bloomed':''}`:'What will you grow?'}</Text><Text style={styles.small}>{flower?.meaning??(state.loading?'A little space for what grows between you.':'Every flower carries a story.')}</Text></View>
+  <BotanicalFlower flower={flower?.id??'cosmos'} state={stage} size={Math.min(width-44,340)} label={flower?undefined:state.loading?'Botanical garden loading':'Botanical preview — choose your shared flower'}/>
+  <View style={{alignItems:'center',gap:8}}>{state.loading&&!state.data&&<Text style={styles.small}>Bringing your garden into view…</Text>}{state.error&&<><Notice>{state.error}</Notice><Button label="Try again" secondary onPress={()=>{void state.refresh();}}/></>}{state.data&&<>{<Text style={[styles.body,{textAlign:'center'}]}>{flower?stage.title:'Choose what you’ll grow together.'}</Text>}<Text style={[styles.small,{textAlign:'center'}]}>{count} little {count===1?'moment has':'moments have'} helped it grow.</Text>{!flower?<Button label="Choose your flower" onPress={()=>router.push('/choose-flower?returnTo=garden')}/>:<View style={{alignItems:'center',marginTop:8}}>{journey&&count>=1&&<Pressable accessibilityRole="button" style={{minHeight:44,justifyContent:'center'}} onPress={()=>setReplay({flower:flower.id,journey})}><Text style={styles.label}>Replay our growth →</Text></Pressable>}<Pressable accessibilityRole="button" style={{minHeight:44,justifyContent:'center'}} onPress={()=>setStory(flower.id)}><Text style={styles.small}>About your flower</Text></Pressable></View>}</>}</View>
+  <Pressable accessibilityRole="button" onPress={()=>setLearn(true)} style={{marginTop:28,paddingVertical:18,paddingHorizontal:18,borderRadius:22,backgroundColor:'#F4EFE7'}}><Text style={styles.eyebrow}>FROM HERE TO THE REAL GARDEN</Text><Text style={[styles.cardTitle,{fontSize:20,marginTop:5}]}>{stage.bloom&&flower?'Your bloom is ready for its next chapter.':'When this blooms, something real begins.'}</Text><Text style={[styles.small,{marginTop:6}]}>See how your digital flower becomes part of the Same Side garden →</Text></Pressable>
+  <View style={{marginTop:34,paddingTop:28,borderTopWidth:1,borderTopColor:'#ddd6c9',gap:9}}><Text style={styles.eyebrow}>COMMUNITY</Text><Text style={[styles.cardTitle,{fontSize:25}]}>Stories growing alongside yours.</Text><Text style={styles.body}>Wander through flowers from other journeys and discover the stories behind them.</Text><Button label="Walk through the garden" secondary onPress={()=>setCommunityOpen(true)}/></View>
+  {replay&&<GrowthReplay flower={replay.flower} journey={replay.journey} close={closeReplay}/>}<FlowerStory flower={story} close={()=>setStory(null)}/><RealGarden visible={learn} close={()=>setLearn(false)}/><CommunityGarden visible={communityOpen} close={()=>setCommunityOpen(false)}/>
  </Screen>;
 }
