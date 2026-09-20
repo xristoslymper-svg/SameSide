@@ -1,18 +1,20 @@
-// One presentation model for The Routine's existing 28-day journey. No writes,
-// partner attribution, streaks, random visuals, or growth loss from inactivity.
+// Presentation helpers for The Routine's botanical journey.
+// Shared production clients receive only a qualitative stage from the backend;
+// exact relationship completion totals stay private to the server.
 export type GardenDay = { garden_date: string; flower_count: number };
 export type Journey = { startDate: string; today: string; days: GardenDay[] };
 export const routineDays = 28;
 const stages = [
- { day: 1, care: 0, stage: 'Seed', cell: 6, scale: 0.72, title: 'A little beginning.' },
- { day: 2, care: 1, stage: 'Roots', cell: 6, scale: 0.85, title: 'Quiet roots are taking hold.' },
- { day: 4, care: 1, stage: 'Tiny shoot', cell: 7, scale: 0.35, title: 'A tiny shoot. A strong start.' },
- { day: 8, care: 3, stage: 'First leaves', cell: 7, scale: 0.52, title: 'The first leaves are finding their light.' },
- { day: 15, care: 7, stage: 'Established plant', cell: 7, scale: 0.76, title: 'Little by little, it’s becoming established.' },
- { day: 22, care: 12, stage: 'Bud', cell: 8, scale: 0.84, title: 'A bud is taking shape.' },
- { day: 25, care: 16, stage: 'Opening', cell: null, scale: 0.88, title: 'Your flower is beginning to open.' },
- { day: 28, care: 18, stage: 'Full bloom', cell: null, scale: 0.97, title: 'Your flower is in bloom.' },
+ { key:'seed', day: 1, care: 0, stage: 'Seed', cell: 6, scale: 0.72, title: 'A little beginning.' },
+ { key:'roots', day: 2, care: 1, stage: 'Roots', cell: 6, scale: 0.85, title: 'Quiet roots are taking hold.' },
+ { key:'shoot', day: 4, care: 1, stage: 'Tiny shoot', cell: 7, scale: 0.35, title: 'A tiny shoot. A strong start.' },
+ { key:'leaves', day: 8, care: 3, stage: 'First leaves', cell: 7, scale: 0.52, title: 'The first leaves are finding their light.' },
+ { key:'established', day: 15, care: 7, stage: 'Established plant', cell: 7, scale: 0.76, title: 'Little by little, it’s becoming established.' },
+ { key:'bud', day: 22, care: 12, stage: 'Bud', cell: 8, scale: 0.84, title: 'A bud is taking shape.' },
+ { key:'opening', day: 25, care: 16, stage: 'Opening', cell: null, scale: 0.88, title: 'Your flower is beginning to open.' },
+ { key:'bloom', day: 28, care: 18, stage: 'Full bloom', cell: null, scale: 0.97, title: 'Your flower is in bloom.' },
 ] as const;
+export type SharedStageKey = typeof stages[number]['key'];
 const DAY = 86400000;
 function timestamp(date: string) {
  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error('Missing journey date');
@@ -27,6 +29,10 @@ export function relationshipDate(timezone: string, now = new Date()) {
  const value = (type: string) => parts.find(p=>p.type===type)!.value;
  return `${value('year')}-${value('month')}-${value('day')}`;
 }
+export function sharedGrowth(key: SharedStageKey, day = 1) {
+ const stage = stages.find(item=>item.key===key) ?? stages[0];
+ return { ...stage, day, date:'', actions:0, week:Math.min(4,Math.max(1,Math.ceil(Math.min(day,28)/7))), bloom:key==='bloom', scale:stage.scale };
+}
 export function growth(journey: Journey, atDate = journey.today) {
  const date = atDate > journey.today ? journey.today : atDate;
  const day = journeyDay(journey.startDate, date);
@@ -38,21 +44,14 @@ export function growth(journey: Journey, atDate = journey.today) {
  let actions = 0, care = 0;
  for (const count of byDate.values()) {
   actions += count;
-  // One active date supplies one day's care. Additional shared actions add a
-  // small, capped lift; six actions in a day cannot replace six days of nurture.
   care += 1 + Math.min(count - 1, 2) * 0.125;
  }
  let index = 0;
  for (let i = 1; i < stages.length; i++) if (day >= stages[i].day && care >= stages[i].care) index = i;
- // The Routine is a four-week experience, not a streak challenge. Four separate
- // days of real care are enough for the end-of-path bloom; missed days never make
- // completion impossible, while a single burst of actions cannot fake consistency.
- if (day >= routineDays && byDate.size >= 4) index = stages.length - 1;
  const stage = stages[index];
  const next = stages[index + 1];
  const withinStage = next ? Math.min(1, Math.max(0, (Math.min(day, routineDays) - stage.day) / (next.day - stage.day))) : 1;
  return { ...stage, day, date, actions, week: Math.min(4, Math.ceil(day / 7)), bloom: index === stages.length - 1,
-  // Cumulative care and elapsed days never decrease; no dry/dead/missed-day state.
   scale: stage.scale + 0.03 * withinStage + 0.02 * Math.min(1, care / Math.max(1, stage.care + 3)) };
 }
 export type GrowthState = ReturnType<typeof growth>;
@@ -61,8 +60,6 @@ export function growthHistory(journey: Journey): GrowthFrame[] {
  const end = journeyDay(journey.startDate, journey.today);
  const baseline = growth({ ...journey, days: [] }, journey.startDate);
  const frames: GrowthFrame[] = [{label:'The beginning',state:baseline}];
- // Daily snapshots for a short first week; later use time milestones, activity
- // dates and the last three days. No invented intra-day event ordering.
  const candidates = new Set<number>([1,end]);
  if (end <= 7) for(let day=1;day<=end;day++) candidates.add(day);
  else {
