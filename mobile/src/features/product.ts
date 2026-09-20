@@ -4,7 +4,7 @@ import { journeyDay, relationshipDate } from './growth';
 import { getRelationshipState } from './relationships';
 
 export type Move = { id: string; task_title: string; task_body: string; task_minutes: number; status: string; program_day: number; slot: number; assigned_for_date: string };
-export type GardenDay = { garden_date: string; flower_count: number };
+export type SharedGardenState = { stage_key: 'seed'|'roots'|'shoot'|'leaves'|'established'|'bud'|'opening'|'bloom'; bloom: boolean; programme_complete: boolean };
 function client() {
   if (!supabase) throw new Error('We could not connect. Please try again.');
   return supabase;
@@ -24,8 +24,6 @@ export async function getMove(slot = 0): Promise<Move> {
 export async function getTodayMove(userId: string): Promise<Move> {
   const primary = await getMove();
   if (primary.status !== 'completed') return primary;
-  // The RPC supplies the relationship-local date. Read only this user's already-issued
-  // moves, so reopening never requests an optional move without their choice.
   const { data, error } = await client().from('task_assignments')
     .select('id,task_title,task_body,task_minutes,status,program_day,slot,assigned_for_date')
     .eq('user_id', userId).eq('assigned_for_date', primary.assigned_for_date).eq('contract_version', 1)
@@ -39,11 +37,12 @@ export async function completeMove(id: string) {
     ? 'This move is no longer available. Try again to see today’s move.'
     : 'We couldn’t save that just yet. Please try again.');
 }
-export async function getGarden(): Promise<GardenDay[]> {
-  const { data, error } = await client().rpc('get_shared_garden');
+export async function getGardenState(): Promise<SharedGardenState> {
+  const { data, error } = await client().rpc('get_shared_garden_state');
   if (error) throw new Error('We could not load your garden. Please try again.');
-  // Keep the UI model restricted to the anonymous public contract.
-  return (data ?? []).map((day: GardenDay) => ({ garden_date: day.garden_date, flower_count: Number(day.flower_count) }));
+  const row = Array.isArray(data) ? data[0] : data;
+  if (!row?.stage_key) throw new Error('We could not load your garden. Please try again.');
+  return { stage_key: row.stage_key, bloom: !!row.bloom, programme_complete: !!row.programme_complete } as SharedGardenState;
 }
 export async function getProgram(userId: string) {
   const membership = await getRelationshipState(userId);
@@ -54,11 +53,10 @@ export async function getProgram(userId: string) {
     data = old.data ? { ...old.data, legacy_flower_choice: false } : null; error = old.error;
   }
   if (error || data?.active_path !== 'routine') throw new Error('We could not open your space. Please try again.');
-  // Display-only week context; assignment eligibility remains entirely server-owned.
   if (!data.path_started_at) throw new Error('We could not load your journey dates. Please try again.');
   const today = isDemo ? demoToday() : relationshipDate(data.timezone ?? 'UTC');
   const day = journeyDay(data.path_started_at, today);
   return { ...membership, name: 'The Routine', selectedFlower: data.selected_flower as string | null,
     canChooseFlower: membership.role === 'member_a' || data.legacy_flower_choice === true,
-    startDate: data.path_started_at as string, today, day, week: Math.min(4, Math.ceil(day / 7)) };
+    startDate: data.path_started_at as string, today, day, week: Math.min(4, Math.ceil(Math.min(day,28) / 7)) };
 }
