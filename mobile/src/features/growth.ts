@@ -44,10 +44,10 @@ export function growth(journey: Journey, atDate = journey.today) {
  }
  let index = 0;
  for (let i = 1; i < stages.length; i++) if (day >= stages[i].day && care >= stages[i].care) index = i;
- // The Routine is a four-week experience, not a streak challenge. Once the four
- // weeks finish, any relationship that created at least one shared garden moment
- // receives the bloom instead of becoming permanently stuck behind missed days.
- if (day >= routineDays && actions > 0) index = stages.length - 1;
+ // The Routine is a four-week experience, not a streak challenge. Four separate
+ // days of real care are enough for the end-of-path bloom; missed days never make
+ // completion impossible, while a single burst of actions cannot fake consistency.
+ if (day >= routineDays && byDate.size >= 4) index = stages.length - 1;
  const stage = stages[index];
  const next = stages[index + 1];
  const withinStage = next ? Math.min(1, Math.max(0, (Math.min(day, routineDays) - stage.day) / (next.day - stage.day))) : 1;
