@@ -13,10 +13,10 @@ export const demoUserId = '00000000-0000-4000-8000-00000000d001';
 const relationshipId = '00000000-0000-4000-8000-00000000d002';
 export const demoToken = 'd'.repeat(64);
 export type DemoScenario = 'fresh' | 'solo' | 'paired' | 'legacy' | 'week3' | 'bloom';
-type State = { relationship: boolean; members: number; name: string; flower: string | null; legacy: boolean; day: number; today: string; start: string; daily: Record<string,number>; moves: Record<string, any>; roots: string[]; thought: string | null };
+type State = { relationship: boolean; members: number; name: string; partnerName:string; departed:boolean; flower: string | null; legacy: boolean; day: number; today: string; start: string; daily: Record<string,number>; moves: Record<string, any>; roots: string[]; thought: string | null; physical:'growing'|'ready_to_plant'|'planted'|'photo_ready' };
 const date = (offset=0) => new Date(Date.now()+offset*86400000).toISOString().slice(0,10);
-const initial = ():State => ({relationship:false,members:1,name:'Alex',flower:null,legacy:false,day:1,today:date(),start:date(),daily:{},moves:{},roots:[],thought:null});
-function read():State { try { const value=window.sessionStorage.getItem(prefix+'data'); return value?JSON.parse(value):initial(); } catch {return initial();} }
+const initial = ():State => ({relationship:false,members:1,name:'Alex',partnerName:'Sam',departed:false,flower:null,legacy:false,day:1,today:date(),start:date(),daily:{},moves:{},roots:[],thought:null,physical:'growing'});
+function read():State { try { const value=window.sessionStorage.getItem(prefix+'data'); return value?{...initial(),...JSON.parse(value)}:initial(); } catch {return initial();} }
 export const demoToday = () => read().today;
 function write(state:State) { window.sessionStorage.setItem(prefix+'data',JSON.stringify(state)); }
 function gardenStage(state:State) {
@@ -35,9 +35,10 @@ export function startDemo(scenario:DemoScenario='fresh') {
   state.day=scenario==='week3'?21:scenario==='bloom'?28:7;
   state.start=date(1-state.day);state.flower=scenario==='legacy'?null:'cosmos';state.legacy=scenario==='legacy';
   for(let i=0;i<state.day;i++)state.daily[date(i+1-state.day)]=1;
+  if(scenario==='bloom')state.physical='ready_to_plant';
   state.moves['0']={id:'demo-move-0',slot:0,assigned_for_date:state.today,program_day:Math.min(state.day,28),task_title:'Notice one small thing',task_body:'Tell your partner one specific thing you appreciated today.',task_minutes:2,status:'completed'};
   window.sessionStorage.setItem(prefix+'app.same-side.demo.auth',JSON.stringify(demoSession()));
-  window.sessionStorage.setItem(prefix+'app.same-side.onboarding.v1.'+demoUserId,JSON.stringify({version:1,step:'done',intent:state.members===2?'together':'solo',path:'routine',focus:null}));
+  window.sessionStorage.setItem(prefix+'app.same-side.onboarding.v1.'+demoUserId,JSON.stringify({version:1,step:'done',intent:state.members===2?'together':'solo',path:'routine',focus:[]}));
  }
  write(state);window.location.assign(scenario==='fresh'?'/?demo=1':'/garden?demo=1');
 }
@@ -68,16 +69,20 @@ export const demoFetch: typeof fetch = async (input,init) => {
   if(url.pathname.endsWith('/token'))return reply(demoSession());
   return reply({message:'Use the demo continue button. No email is sent.'},400);
  }
- if(url.pathname.endsWith('/relationship_members'))return req.method==='HEAD'?reply(null,200,{'content-range':`0-${state.members-1}/${state.members}`}):rows(state.relationship?[{relationship_id:relationshipId,member_role:'member_a',user_id:demoUserId}]:[]);
+ if(url.pathname.endsWith('/relationship_members'))return req.method==='HEAD'?reply(null,200,{'content-range':`0-${Math.max(0,state.members-1)}/${state.members}`}):rows(state.relationship?[{relationship_id:relationshipId,member_role:'member_a',user_id:demoUserId}]:[]);
  if(url.pathname.endsWith('/relationships'))return rows(state.relationship?[{id:relationshipId,active_path:'routine',selected_flower:state.flower,legacy_flower_choice:state.legacy,path_started_at:state.start,timezone:'UTC'}]:[]);
  if(url.pathname.endsWith('/profiles')) {state.name=body.display_name??state.name;write(state);return reply(null,204);}
  if(url.pathname.endsWith('/task_assignments'))return rows(Object.values(state.moves).sort((a,b)=>b.slot-a.slot).slice(0,1));
  const rpc=url.pathname.split('/rpc/')[1]; let result:unknown;
  switch(rpc) {
-  case 'create_solo_relationship':state.relationship=true;result=relationshipId;break;
-  case 'create_relationship_invite':result=demoToken;break;
+  case 'create_solo_relationship':state.relationship=true;state.members=1;result=relationshipId;break;
+  case 'create_relationship_invite':if(state.departed)return reply({message:'relationship_closed'},400);result=demoToken;break;
+  case 'revoke_relationship_invites':result=null;break;
   case 'preview_relationship_invite':result=[{invite_state:'ready',display_name:state.name}];break;
   case 'accept_relationship_invite':state.members=2;state.relationship=true;result=relationshipId;break;
+  case 'get_relationship_overview':result=state.relationship?[{relationship_id:relationshipId,my_role:'member_a',active_member_count:state.members,partner_name:state.members===2||state.departed?state.partnerName:null,partner_active:state.members===2,has_departure:state.departed,my_joined_at:new Date().toISOString(),my_joined_day:1,partner_joined_at:state.members===2?new Date().toISOString():null}]:[];break;
+  case 'leave_relationship':state.relationship=false;state.members=0;result=relationshipId;break;
+  case 'get_physical_garden_state':result=[{status:state.physical,batch:state.physical==='growing'?null:'September 2026',planted_at:state.physical==='planted'||state.physical==='photo_ready'?new Date().toISOString():null,photo_url:null}];break;
   case 'choose_shared_flower':
    if(state.flower&&state.flower!==body.flower)return reply({message:'flower_already_chosen'},400);
    state.flower=body.flower;state.legacy=false;result=state.flower;break;
