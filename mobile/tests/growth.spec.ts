@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { growth, growthHistory, dateOnDay, relationshipDate, type Journey } from '../src/features/growth';
+import { growth, growthHistory, dateOnDay, relationshipDate, sharedGrowth, type Journey } from '../src/features/growth';
 
 const startDate='2026-01-01';
 function journey(day:number, counts:number[]):Journey {
@@ -33,6 +33,15 @@ test('extra partner/bonus actions enrich early growth but cannot jump developmen
  const single=growth(journey(7,Array(7).fill(1))),couple=growth(journey(7,Array(7).fill(6)));
  expect(single.stage).toBe('Tiny shoot'); expect(couple.stage).toBe(single.stage);
  expect(couple.scale).toBeGreaterThanOrEqual(single.scale);
+});
+test('four active days do not automatically earn a full bloom at programme end',()=>{
+ const input:Journey={startDate,today:dateOnDay(startDate,28),days:[0,7,14,21].map(i=>({garden_date:dateOnDay(startDate,i+1),flower_count:1}))};
+ expect(growth(input).bloom).toBe(false);
+});
+test('qualitative server stages map to fixed botanical presentation states',()=>{
+ expect(sharedGrowth('seed',1).stage).toBe('Seed');
+ expect(sharedGrowth('bud',24).stage).toBe('Bud');
+ expect(sharedGrowth('bloom',35).bloom).toBe(true);
 });
 test('historical frames use real daily totals, not interpolated event counts',()=>{
  const frames=growthHistory(journey(7,[2,0,1,0,3,1,2]));
