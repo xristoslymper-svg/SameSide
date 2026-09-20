@@ -19,9 +19,14 @@ const initial = ():State => ({relationship:false,members:1,name:'Alex',flower:nu
 function read():State { try { const value=window.sessionStorage.getItem(prefix+'data'); return value?JSON.parse(value):initial(); } catch {return initial();} }
 export const demoToday = () => read().today;
 function write(state:State) { window.sessionStorage.setItem(prefix+'data',JSON.stringify(state)); }
+function gardenStage(state:State) {
+ const activeDays=Object.values(state.daily).filter(value=>value>0).length;
+ const elapsed=state.day;
+ const stage_key=elapsed>=28&&activeDays>=20?'bloom':elapsed>=25&&activeDays>=16?'opening':elapsed>=22&&activeDays>=12?'bud':elapsed>=15&&activeDays>=8?'established':elapsed>=8&&activeDays>=4?'leaves':elapsed>=4&&activeDays>=2?'shoot':activeDays>=1?'roots':'seed';
+ return {stage_key,bloom:stage_key==='bloom',programme_complete:elapsed>=28};
+}
 export function startDemo(scenario:DemoScenario='fresh') {
  if(!demoAvailable)return;
- // Only this tab's demo namespace is reset. Real localStorage is never touched.
  for(const key of Object.keys(window.sessionStorage)) if(key.startsWith(prefix)) window.sessionStorage.removeItem(key);
  window.sessionStorage.setItem(prefix+'active','1');
  const state=initial();
@@ -30,8 +35,7 @@ export function startDemo(scenario:DemoScenario='fresh') {
   state.day=scenario==='week3'?21:scenario==='bloom'?28:7;
   state.start=date(1-state.day);state.flower=scenario==='legacy'?null:'cosmos';state.legacy=scenario==='legacy';
   for(let i=0;i<state.day;i++)state.daily[date(i+1-state.day)]=1;
-  if(state.day===7) {state.daily[state.start]=2;state.daily[date(-4)]=2;}
-  state.moves['0']={id:'demo-move-0',slot:0,assigned_for_date:state.today,program_day:state.day,task_title:'Notice one small thing',task_body:'Tell your partner one specific thing you appreciated today.',task_minutes:2,status:'completed'};
+  state.moves['0']={id:'demo-move-0',slot:0,assigned_for_date:state.today,program_day:Math.min(state.day,28),task_title:'Notice one small thing',task_body:'Tell your partner one specific thing you appreciated today.',task_minutes:2,status:'completed'};
   window.sessionStorage.setItem(prefix+'app.same-side.demo.auth',JSON.stringify(demoSession()));
   window.sessionStorage.setItem(prefix+'app.same-side.onboarding.v1.'+demoUserId,JSON.stringify({version:1,step:'done',intent:state.members===2?'together':'solo',path:'routine',focus:null}));
  }
@@ -83,7 +87,7 @@ export const demoFetch: typeof fetch = async (input,init) => {
    if(slot&&state.moves[slot-1]?.status!=='completed')return reply({message:'previous_slot_not_completed'},400);
    const titles=['Notice one small thing','Make one thing lighter','Share a warm memory'];
    const descriptions=['Tell your partner one specific thing you appreciated today.','Take care of a little everyday job your partner usually does.','Tell your partner about a small moment together that still makes you smile.'];
-   state.moves[slot]??={id:'demo-move-'+slot,slot,assigned_for_date:state.today,program_day:state.day,task_title:titles[slot],task_body:descriptions[slot],task_minutes:2,status:'assigned'};
+   state.moves[slot]??={id:'demo-move-'+slot,slot,assigned_for_date:state.today,program_day:Math.min(state.day,28),task_title:titles[slot],task_body:descriptions[slot],task_minutes:2,status:'assigned'};
    result=state.moves[slot];break;
   }
   case 'complete_assignment': {
@@ -92,7 +96,7 @@ export const demoFetch: typeof fetch = async (input,init) => {
    if(move.status!=='completed'){move.status='completed';state.daily[state.today]=(state.daily[state.today]??0)+1;}
    result=null;break;
   }
-  case 'get_shared_garden':result=Object.entries(state.daily).map(([garden_date,flower_count])=>({garden_date,flower_count}));break;
+  case 'get_shared_garden_state':result=[gardenStage(state)];break;
   case 'get_my_root_preferences':result={choices:state.roots,can_edit:true};break;
   case 'save_my_root_preferences':state.roots=body.choices;result={choices:state.roots,can_edit:true};break;
   case 'get_my_daily_reflection':result={date:state.today,text:state.thought};break;
