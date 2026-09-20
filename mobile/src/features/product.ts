@@ -1,10 +1,11 @@
 import { isDemo, demoToday } from '../lib/demo';
 import { supabase } from '../lib/supabase';
 import { journeyDay, relationshipDate } from './growth';
-import { getRelationshipState } from './relationships';
+import { getRelationshipOverview } from './relationships';
 
 export type Move = { id: string; task_title: string; task_body: string; task_minutes: number; status: string; program_day: number; slot: number; assigned_for_date: string };
 export type SharedGardenState = { stage_key: 'seed'|'roots'|'shoot'|'leaves'|'established'|'bud'|'opening'|'bloom'; bloom: boolean; programme_complete: boolean };
+export type PhysicalGardenState = { status: 'growing'|'ready_to_plant'|'planted'|'photo_ready'; batch: string | null; plantedAt: string | null; photoUrl: string | null };
 function client() {
   if (!supabase) throw new Error('We could not connect. Please try again.');
   return supabase;
@@ -44,8 +45,17 @@ export async function getGardenState(): Promise<SharedGardenState> {
   if (!row?.stage_key) throw new Error('We could not load your garden. Please try again.');
   return { stage_key: row.stage_key, bloom: !!row.bloom, programme_complete: !!row.programme_complete } as SharedGardenState;
 }
+export async function getPhysicalGardenState(): Promise<PhysicalGardenState> {
+  const { data, error } = await client().rpc('get_physical_garden_state');
+  if (!error) {
+    const row = Array.isArray(data) ? data[0] : data;
+    if (row?.status) return { status: row.status, batch: row.batch ?? null, plantedAt: row.planted_at ?? null, photoUrl: row.photo_url ?? null } as PhysicalGardenState;
+  }
+  // Safe fallback while lifecycle migration rolls out.
+  return { status: 'growing', batch: null, plantedAt: null, photoUrl: null };
+}
 export async function getProgram(userId: string) {
-  const membership = await getRelationshipState(userId);
+  const membership = await getRelationshipOverview(userId);
   if (!membership) throw new Error('We could not open your space. Please try again.');
   let { data, error } = await client().from('relationships').select('active_path,selected_flower,legacy_flower_choice,path_started_at,timezone').eq('id', membership.relationshipId).single();
   if (error?.code === '42703' || error?.code === 'PGRST204') {
@@ -58,5 +68,6 @@ export async function getProgram(userId: string) {
   const day = journeyDay(data.path_started_at, today);
   return { ...membership, name: 'The Routine', selectedFlower: data.selected_flower as string | null,
     canChooseFlower: membership.role === 'member_a' || data.legacy_flower_choice === true,
+    relationshipClosed: membership.hasDeparture,
     startDate: data.path_started_at as string, today, day, week: Math.min(4, Math.ceil(Math.min(day,28) / 7)) };
 }
