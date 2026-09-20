@@ -11,7 +11,7 @@ const stages = [
  { day: 15, care: 7, stage: 'Established plant', cell: 7, scale: 0.76, title: 'Little by little, it’s becoming established.' },
  { day: 22, care: 12, stage: 'Bud', cell: 8, scale: 0.84, title: 'A bud is taking shape.' },
  { day: 25, care: 16, stage: 'Opening', cell: null, scale: 0.88, title: 'Your flower is beginning to open.' },
- { day: 28, care: 18, stage: 'Full bloom', cell: null, scale: 0.97, title: 'You grew this together.' },
+ { day: 28, care: 18, stage: 'Full bloom', cell: null, scale: 0.97, title: 'Your flower is in bloom.' },
 ] as const;
 const DAY = 86400000;
 function timestamp(date: string) {
@@ -44,6 +44,10 @@ export function growth(journey: Journey, atDate = journey.today) {
  }
  let index = 0;
  for (let i = 1; i < stages.length; i++) if (day >= stages[i].day && care >= stages[i].care) index = i;
+ // The Routine is a four-week experience, not a streak challenge. Once the four
+ // weeks finish, any relationship that created at least one shared garden moment
+ // receives the bloom instead of becoming permanently stuck behind missed days.
+ if (day >= routineDays && actions > 0) index = stages.length - 1;
  const stage = stages[index];
  const next = stages[index + 1];
  const withinStage = next ? Math.min(1, Math.max(0, (Math.min(day, routineDays) - stage.day) / (next.day - stage.day))) : 1;
