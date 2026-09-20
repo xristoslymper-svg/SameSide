@@ -47,7 +47,7 @@ begin
    order by joined_at desc limit 1;
 
   relationship_id:=rid;
-  my_role:=me.member_role;
+  my_role:=me.member_role::text;
   select count(*)::integer into active_member_count
    from public.relationship_members where relationship_id=rid and left_at is null;
   if other.user_id is not null then
@@ -135,7 +135,7 @@ returns table(
   photo_url text
 )
 language plpgsql stable security definer set search_path='' as $$
-declare u uuid:=auth.uid(); rid uuid; r public.relationships%rowtype;
+declare u uuid:=auth.uid(); rid uuid; r public.relationships%rowtype; bloomed boolean:=false;
 begin
   if u is null then return; end if;
   select relationship_id into rid from public.relationship_members
@@ -143,7 +143,9 @@ begin
   if rid is null then return; end if;
   select * into r from public.relationships where id=rid;
   if r.id is null then return; end if;
-  status:=r.physical_garden_status;
+  select s.bloom into bloomed from private.read_shared_garden_state() s limit 1;
+  status:=case when r.physical_garden_status='growing' and coalesce(bloomed,false)
+    then 'ready_to_plant' else r.physical_garden_status end;
   batch:=r.physical_garden_batch;
   planted_at:=r.physical_garden_planted_at;
   photo_url:=r.physical_garden_photo_url;
