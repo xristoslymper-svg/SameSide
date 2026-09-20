@@ -1,18 +1,24 @@
 import { DemoEntry } from './DemoControls';
 import { isDemo } from '../lib/demo';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect,useState } from 'react';
 import { Modal, Pressable, Text, TextInput, View } from 'react-native';
 import { Button, Notice, styles } from './ui';
+import { getRelationshipOverview,leaveRelationship,type RelationshipOverview } from '../features/relationships';
 import { isDevelopmentPasswordSignInEnabled, useAuth } from '../providers/AuthProvider';
+import { useOnboarding } from '../providers/OnboardingProvider';
 import { theme } from '../theme';
 
 export function AccountMenu() {
   const { session, signOut, setTestPassword } = useAuth();
+  const { save } = useOnboarding();
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [relationship,setRelationship]=useState<RelationshipOverview|null>(null);
+  const [confirmLeave,setConfirmLeave]=useState(false);
+  useEffect(()=>{if(!open||!session)return;let active=true;void getRelationshipOverview(session.user.id).then(value=>{if(active)setRelationship(value);}).catch(()=>{});return()=>{active=false};},[open,session]);
   async function act(kind: 'password' | 'signout') {
     if (busy) return;
     if (kind === 'password' && password.length < 12) { setError('Use at least 12 characters.'); return; }
@@ -23,13 +29,16 @@ export function AccountMenu() {
     } catch { setError('We couldn’t make that change. Please try again.'); }
     finally { setBusy(false); }
   }
+  async function disconnect(){if(busy)return;setBusy(true);setError(null);try{await leaveRelationship();setConfirmLeave(false);setOpen(false);await save({intent:'solo',path:null,focus:[],step:'path'});}catch{setError('We couldn’t disconnect this relationship. Please try again.');}finally{setBusy(false);}}
+  const relationshipTitle=relationship?.partnerName?`You & ${relationship.partnerName}`:relationship?.hasDeparture?'This shared space is no longer connected':'Just you for now';
   return <><Pressable accessibilityRole="button" accessibilityLabel="Account" onPress={() => setOpen(true)} style={{ minHeight: 44, justifyContent: 'center', paddingHorizontal: 8 }}><Text style={styles.small}>Account</Text></Pressable>
-    {open && <Modal visible transparent animationType="fade" onRequestClose={() => { setOpen(false); setPassword(''); }}>
+    {open && <Modal visible transparent animationType="fade" onRequestClose={() => { setOpen(false); setPassword(''); setConfirmLeave(false); }}>
       <View style={{ flex: 1, backgroundColor: '#00000055', justifyContent: 'center', padding: 24 }}><View accessibilityViewIsModal style={[styles.card, { width: '100%', maxWidth: 440, alignSelf: 'center' }]}>
         <DemoEntry/><Text style={styles.cardTitle}>Your account</Text><Text style={styles.small}>{session?.user.email}</Text>
+        {relationship&&<View style={{marginTop:18,paddingTop:18,borderTopWidth:1,borderTopColor:theme.colors.line,gap:8}}><Text style={styles.eyebrow}>Your relationship</Text><Text style={[styles.cardTitle,{fontSize:20}]}>{relationshipTitle}</Text><Text style={styles.small}>{relationship.partnerActive?'Connected in one shared garden. Your private moves and reflections remain separate.':relationship.hasDeparture?'This garden is still here for you. It can’t be connected to a different partner; start fresh when you’re ready.':'Invite your partner whenever it feels right.'}</Text>{(relationship.partnerName||relationship.hasDeparture)&&!confirmLeave&&<Button label={relationship.hasDeparture?'Start a new relationship':'Leave this relationship'} secondary disabled={busy} onPress={()=>setConfirmLeave(true)}/>} {confirmLeave&&<View style={{gap:10,marginTop:4}}><Notice>{relationship.partnerActive?'This disconnects your accounts. Your partner keeps access to the shared garden, and you can begin a new relationship.':'Starting fresh disconnects you from this old shared space. The existing data is not deleted.'}</Notice><Button label="Confirm and disconnect" busy={busy} onPress={()=>{void disconnect();}}/><Button label="Keep this relationship" secondary disabled={busy} onPress={()=>setConfirmLeave(false)}/></View>}</View>}
         {isDevelopmentPasswordSignInEnabled && !isDemo && <><Text style={styles.eyebrow}>Local testing only</Text><Text style={styles.body}>Set a test password</Text><TextInput accessibilityLabel="New test password" style={styles.input} secureTextEntry autoCapitalize="none" autoCorrect={false} placeholder="At least 12 characters" placeholderTextColor={theme.colors.muted} value={password} onChangeText={setPassword}/><Button label="Save test password" secondary busy={busy} onPress={() => { void act('password'); }}/></>}
         {error && <Notice>{error}</Notice>}<Button label="Sign out" secondary busy={busy} onPress={() => { void act('signout'); }}/>
-        <Button label="Close" secondary onPress={() => { setOpen(false); setPassword(''); setError(null); }}/>
+        <Button label="Close" secondary onPress={() => { setOpen(false); setPassword(''); setError(null); setConfirmLeave(false); }}/>
       </View></View>
     </Modal>}</>;
 }
