@@ -12,6 +12,7 @@ function message(error: { message?: string } | null, fallback: string) {
   if (value.includes('relationship_full') || value.includes('invite_already_used')) return 'This invitation is no longer available.';
   if (value.includes('invite_expired')) return 'This invitation has expired. Ask your partner for a new one.';
   if (value.includes('invite_revoked') || value.includes('invalid_invite') || value.includes('invite_unavailable')) return 'This invitation is no longer available.';
+  if (value.includes('relationship_closed')) return 'This shared space can’t be connected to someone new. Start a new relationship from Account.';
   if (value.includes('own_invite')) return 'This invitation was created by this account.';
   if (value.includes('already_in_relationship')) return 'This account is already connected to a relationship.';
   return fallback;
@@ -36,6 +37,11 @@ export async function createInvite() {
   const { data, error } = await client().rpc('create_relationship_invite', { valid_hours: 168 });
   if (error || typeof data !== 'string') throw new Error(message(error, 'We could not create your invitation. Please try again.'));
   return data;
+}
+
+export async function revokeInvites() {
+  const { error } = await client().rpc('revoke_relationship_invites');
+  if (error) throw new Error('We could not cancel the invitation. Please try again.');
 }
 
 export function invitationUrl(token: string) {
@@ -67,3 +73,45 @@ export async function getRelationshipState(userId: string) {
   return { relationshipId: data.relationship_id as string, role: data.member_role as string, memberCount: count ?? 1 };
 }
 
+export type RelationshipOverview = {
+  relationshipId: string;
+  role: string;
+  memberCount: number;
+  partnerName: string | null;
+  partnerActive: boolean;
+  hasDeparture: boolean;
+  joinedAt: string | null;
+  joinedDay: number;
+  partnerJoinedAt: string | null;
+};
+
+export async function getRelationshipOverview(userId: string): Promise<RelationshipOverview | null> {
+  const { data, error } = await client().rpc('get_relationship_overview');
+  if (!error) {
+    const row = Array.isArray(data) ? data[0] : data;
+    if (!row?.relationship_id) return null;
+    return {
+      relationshipId: row.relationship_id,
+      role: row.my_role,
+      memberCount: Number(row.active_member_count ?? 1),
+      partnerName: row.partner_name ?? null,
+      partnerActive: !!row.partner_active,
+      hasDeparture: !!row.has_departure,
+      joinedAt: row.my_joined_at ?? null,
+      joinedDay: Math.max(1, Number(row.my_joined_day ?? 1)),
+      partnerJoinedAt: row.partner_joined_at ?? null,
+    };
+  }
+  // Safe rollout fallback while the lifecycle migration is being applied.
+  if (error.code === 'PGRST202' || error.message?.includes('get_relationship_overview')) {
+    const legacy = await getRelationshipState(userId);
+    return legacy ? { ...legacy, partnerName: null, partnerActive: legacy.memberCount === 2, hasDeparture: false, joinedAt: null, joinedDay: 1, partnerJoinedAt: null } : null;
+  }
+  throw new Error('We could not load your relationship. Please try again.');
+}
+
+export async function leaveRelationship() {
+  const { data, error } = await client().rpc('leave_relationship');
+  if (error || !data) throw new Error('We could not disconnect this relationship. Please try again.');
+  return data as string;
+}
