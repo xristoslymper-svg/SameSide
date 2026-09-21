@@ -1,0 +1,1 @@
+Static web assets for the Expo web build.
