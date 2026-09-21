@@ -11,9 +11,6 @@ export async function readReflection(): Promise<Reflection> {
 }
 
 export async function readRecentReflections(relationshipId: string, limit = 5): Promise<Reflection[]> {
- // The isolated demo implements the reflection RPCs, but it does not expose the
- // underlying daily_reflections REST table. Recent history is therefore empty
- // in demo rather than failing the whole Roots screen.
  if (isDemo) return [];
  if (!supabase) throw new Error('We couldn’t open your diary. Please try again.');
  const { data, error } = await supabase
@@ -22,6 +19,18 @@ export async function readRecentReflections(relationshipId: string, limit = 5): 
   .eq('relationship_id', relationshipId)
   .order('reflection_date', { ascending: false })
   .limit(limit);
+ if (error) throw new Error('We couldn’t open your diary. Please try again.');
+ return (data ?? []).map(row => ({ date: row.reflection_date as string, text: row.body as string }));
+}
+
+export async function readAllReflections(relationshipId: string): Promise<Reflection[]> {
+ if (isDemo) return [];
+ if (!supabase) throw new Error('We couldn’t open your diary. Please try again.');
+ const { data, error } = await supabase
+  .from('daily_reflections')
+  .select('reflection_date,body')
+  .eq('relationship_id', relationshipId)
+  .order('reflection_date', { ascending: false });
  if (error) throw new Error('We couldn’t open your diary. Please try again.');
  return (data ?? []).map(row => ({ date: row.reflection_date as string, text: row.body as string }));
 }
