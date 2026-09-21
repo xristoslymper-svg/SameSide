@@ -18,58 +18,62 @@ export default function ProductLayout() {
   if (destination !== '/welcome') return <Redirect href={destination}/>;
 
   const shellWidth = Math.min(width, 430);
-  const bottom = 0;
-  const safeBottom = Math.max(insets.bottom, 10);
+  const safeBottom = Math.max(insets.bottom, 9);
 
   return (
     <Tabs
       key={session.user.id}
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#6C5140',
-        tabBarInactiveTintColor: '#A08D7B',
+        tabBarHideOnKeyboard: true,
+        tabBarActiveTintColor: theme.colors.sage,
+        tabBarInactiveTintColor: '#9B9287',
         tabBarStyle: {
           position: 'absolute',
           width: shellWidth,
           left: (width - shellWidth) / 2,
-          bottom,
-          height: 68 + safeBottom,
-          paddingTop: 8,
+          bottom: 0,
+          height: 64 + safeBottom,
+          paddingTop: 7,
           paddingBottom: safeBottom,
-          backgroundColor: 'rgba(247,242,234,0.98)',
+          paddingHorizontal: 18,
+          backgroundColor: 'rgba(255,253,249,0.985)',
           borderTopWidth: 1,
           borderTopColor: theme.colors.line,
           borderLeftWidth: 0,
           borderRightWidth: 0,
           borderBottomWidth: 0,
-          shadowOpacity: 0,
-          elevation: 0,
+          shadowColor: '#283A2F',
+          shadowOpacity: 0.06,
+          shadowRadius: 16,
+          shadowOffset: { width: 0, height: -5 },
+          elevation: 8,
         },
         tabBarItemStyle: { paddingTop: 1 },
-        tabBarIconStyle: { marginTop: 1 },
-        tabBarLabelStyle: { fontSize: 12, fontWeight: '700', marginTop: 1, marginBottom: 0 },
-        sceneStyle: { backgroundColor: theme.colors.background, paddingBottom: 78 + safeBottom },
+        tabBarIconStyle: { marginBottom: 0 },
+        tabBarLabelStyle: { fontSize: 10.5, fontWeight: '700', marginTop: 2, marginBottom: 0 },
+        sceneStyle: { backgroundColor: theme.colors.background, paddingBottom: 73 + safeBottom },
       }}
     >
       <Tabs.Screen
         name="today"
         options={{
           title: 'Today',
-          tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 21, lineHeight: 22 }}>⌂</Text>,
+          tabBarIcon: ({ color, focused }) => <Text style={{ color, fontSize: focused ? 20 : 19, lineHeight: 21, fontWeight: focused ? '700' : '500' }}>⌂</Text>,
         }}
       />
       <Tabs.Screen
         name="garden"
         options={{
-          title: 'Flower',
-          tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 22, lineHeight: 22 }}>✿</Text>,
+          title: 'Garden',
+          tabBarIcon: ({ color, focused }) => <Text style={{ color, fontSize: focused ? 21 : 20, lineHeight: 21 }}>✤</Text>,
         }}
       />
       <Tabs.Screen
         name="roots"
         options={{
           title: 'Roots',
-          tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 21, lineHeight: 22 }}>◎</Text>,
+          tabBarIcon: ({ color, focused }) => <Text style={{ color, fontSize: focused ? 20 : 19, lineHeight: 21, fontWeight: focused ? '700' : '500' }}>◎</Text>,
         }}
       />
     </Tabs>
