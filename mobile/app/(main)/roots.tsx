@@ -21,7 +21,15 @@ const patterns=Object.keys(patternCopy) as RoutinePattern[];
 
 export default function Roots(){
  const {session}=useAuth();const {save,busy:inviting}=useOnboarding();
- const load=useCallback(async()=>{const program=await getProgram(session!.user.id);const [roots,reflection,recent]=await Promise.all([readRoots(),readReflection(),readRecentReflections(program.relationshipId)]);return{program,roots,reflection,recent};},[session!.user.id]);
+ const load=useCallback(async()=>{
+  const program=await getProgram(session!.user.id);
+  const [roots,reflection,recent]=await Promise.all([
+   readRoots(),
+   readReflection(),
+   readRecentReflections(program.relationshipId).catch(()=>[]),
+  ]);
+  return{program,roots,reflection,recent};
+ },[session!.user.id]);
  const state=useProductData(load);const [editing,setEditing]=useState(false);const [pattern,setPattern]=useState<RoutinePattern|null>(null);const [target,setTarget]=useState<BehavioralTarget|null>(null);const [busy,setBusy]=useState(false);const locked=useRef(false);const [error,setError]=useState<string|null>(null);
  useEffect(()=>{if(state.data){setPattern(state.data.roots.pattern);setTarget(state.data.roots.target);setEditing(false);setError(null);}},[state.data]);
  const saved=!!state.data?.roots.pattern&&!!state.data?.roots.target&&!editing;
