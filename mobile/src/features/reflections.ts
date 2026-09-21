@@ -1,18 +1,13 @@
 import { supabase } from '../lib/supabase';
-import { isDemo } from '../lib/demo';
-import { sessionStorage } from '../lib/storage';
+import { isDemo, demoDiaryRead, demoDiarySave } from '../lib/demo';
 
 export type Reflection = { date: string; text: string | null };
-const demoDiaryKey = 'same-side.demo.diary.v1';
 
 async function readDemoDiary(): Promise<Reflection[]> {
- const raw = await sessionStorage.getItem(demoDiaryKey);
- let entries: Reflection[] = [];
- try { entries = raw ? JSON.parse(raw) as Reflection[] : []; } catch { entries = []; }
- // Preserve an entry written before the archive existed.
+ const entries = demoDiaryRead() as Reflection[];
  const today = await readReflection();
- if (today.text && !entries.some(entry => entry.date === today.date)) entries.push(today);
- return entries.filter(entry => !!entry.text).sort((a,b) => b.date.localeCompare(a.date));
+ const merged = today.text && !entries.some(entry => entry.date === today.date) ? [today, ...entries] : entries;
+ return merged.filter(entry => !!entry.text).sort((a,b) => b.date.localeCompare(a.date));
 }
 
 export async function readReflection(): Promise<Reflection> {
@@ -44,9 +39,8 @@ export async function saveReflection(thought: string): Promise<Reflection> {
  if (error || !data) throw new Error('We couldn’t keep that thought yet. Your words are still here to try again.');
  const result = data as Reflection;
  if (isDemo) {
-  const current = await readDemoDiary();
-  const next = [result, ...current.filter(entry => entry.date !== result.date)];
-  await sessionStorage.setItem(demoDiaryKey, JSON.stringify(next));
+  const current = demoDiaryRead() as Reflection[];
+  demoDiarySave([result, ...current.filter(entry => entry.date !== result.date)]);
  }
  return result;
 }
