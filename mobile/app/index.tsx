@@ -1,6 +1,7 @@
 import { DemoEntry } from '../src/components/DemoControls';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { Brand, Button, styles } from '../src/components/ui';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Button } from '../src/components/ui';
 import { OpeningMedia } from '../src/components/OpeningMedia';
 import { FlowScreen } from '../src/components/onboarding';
 import { useOnboarding } from '../src/providers/OnboardingProvider';
@@ -8,37 +9,37 @@ import { theme } from '../src/theme';
 
 export default function OpeningScreen() {
   const { save, busy } = useOnboarding();
+  const insets = useSafeAreaInsets();
   return <FlowScreen immersive>
-    <View style={local.hero}>
+    <View style={local.screen}>
       <OpeningMedia/>
-      <View style={local.heroTop}>
-        <Brand centered/>
+      <View style={[local.heroTop,{top:Math.max(insets.top + 28,58)}]}>
+        <View style={local.logoMark} accessibilityLabel="Same Side">
+          <View style={local.logoRing}/><View style={[local.logoRing,{marginLeft:-9}]}/>
+        </View>
         <Text style={local.brandTitle}>Same Side</Text>
         <Text style={local.tagline}>A deeper connection{`\n`}lives in the everyday.</Text>
       </View>
-      <View style={local.heroBottom}>
-        <Button label="Get started" disabled={busy} onPress={() => { void save({ intent: 'together', step: 'how' }); }}/>
-        <Pressable accessibilityRole="button" disabled={busy} onPress={() => { void save({ step: 'auth' }); }} style={({pressed})=>[local.secondaryAction,pressed&&{opacity:.72}]}><Text style={local.secondaryText}>I already have an account</Text></Pressable>
+
+      <View style={[local.actions,{bottom:Math.max(insets.bottom + 18,28)}]}>
+        <Button label="Get Started" disabled={busy} onPress={() => { void save({ intent: null, step: 'how' }); }}/>
+        <Pressable accessibilityRole="button" disabled={busy} onPress={() => { void save({ step: 'auth' }); }} style={({pressed})=>[local.secondaryAction,pressed&&{opacity:.78}]}>
+          <Text style={local.secondaryText}>I already have an account</Text>
+        </Pressable>
+        <DemoEntry quiet/>
       </View>
-    </View>
-    <View style={local.afterHero}>
-      <Text style={styles.eyebrow}>START YOUR WAY</Text>
-      <Text style={[styles.cardTitle,{fontSize:22,lineHeight:28}]}>Begin together, or take the first small step yourself.</Text>
-      <Pressable accessibilityRole="button" disabled={busy} onPress={() => { void save({ intent: 'solo', step: 'how' }); }} style={({pressed})=>[local.soloAction,pressed&&{opacity:.7}]}><Text style={local.soloText}>Start on my own →</Text></Pressable>
-      <DemoEntry/>
     </View>
   </FlowScreen>;
 }
 
 const local=StyleSheet.create({
- hero:{position:'relative',borderRadius:32,overflow:'hidden',...theme.shadow.floating},
- heroTop:{position:'absolute',top:28,left:24,right:24,alignItems:'center',gap:8},
- brandTitle:{fontFamily:theme.fonts.heading,fontSize:30,lineHeight:35,color:theme.colors.ink,letterSpacing:-.5},
- tagline:{fontFamily:theme.fonts.heading,fontSize:17,lineHeight:23,color:theme.colors.inkSoft,textAlign:'center',marginTop:2},
- heroBottom:{position:'absolute',left:18,right:18,bottom:18,gap:10,padding:12,borderRadius:24,backgroundColor:'rgba(248,243,235,.86)'},
- secondaryAction:{minHeight:48,borderRadius:18,backgroundColor:'rgba(255,253,249,.82)',alignItems:'center',justifyContent:'center',borderWidth:1,borderColor:'rgba(232,224,213,.95)'},
- secondaryText:{color:theme.colors.ink,fontSize:14,fontWeight:'700'},
- afterHero:{paddingTop:28,paddingBottom:8,gap:10},
- soloAction:{minHeight:44,justifyContent:'center',alignSelf:'flex-start'},
- soloText:{fontSize:14,fontWeight:'700',color:theme.colors.sage},
+ screen:{flex:1,position:'relative',backgroundColor:'#E7DED2'},
+ heroTop:{position:'absolute',left:24,right:24,alignItems:'center'},
+ logoMark:{flexDirection:'row',alignItems:'center',justifyContent:'center',height:38,marginBottom:7},
+ logoRing:{width:31,height:31,borderRadius:16,borderWidth:1.35,borderColor:theme.colors.ink},
+ brandTitle:{fontFamily:theme.fonts.heading,fontSize:34,lineHeight:39,color:theme.colors.ink,letterSpacing:-.7,textAlign:'center'},
+ tagline:{fontFamily:theme.fonts.heading,fontSize:17,lineHeight:23,color:theme.colors.inkSoft,textAlign:'center',marginTop:8},
+ actions:{position:'absolute',left:24,right:24,gap:10},
+ secondaryAction:{minHeight:52,borderRadius:18,backgroundColor:'rgba(255,253,249,.88)',alignItems:'center',justifyContent:'center',borderWidth:1,borderColor:'rgba(232,224,213,.92)'},
+ secondaryText:{color:theme.colors.ink,fontSize:13.5,fontWeight:'700'},
 });
