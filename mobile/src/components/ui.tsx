@@ -3,7 +3,8 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { theme } from '../theme';
 
-export function Screen({ children, compact = false }: PropsWithChildren<{ compact?: boolean }> ) {
+export function Screen({ children, compact = false, immersive = false }: PropsWithChildren<{ compact?: boolean; immersive?: boolean }> ) {
+  if (immersive) return <SafeAreaView edges={[]} style={styles.safe}><View style={styles.immersivePage}>{children}</View></SafeAreaView>;
   return <SafeAreaView style={styles.safe}><ScrollView contentContainerStyle={[styles.scroll, compact && styles.scrollCompact]} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}><View style={[styles.page, compact && styles.pageCompact]}>{children}</View></ScrollView></SafeAreaView>;
 }
 export function Brand({ centered = false }: { centered?: boolean }) {
@@ -31,6 +32,7 @@ export function Botanical() {
 }
 export const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: theme.colors.background },
+  immersivePage: { flex: 1, width: '100%', maxWidth: 430, alignSelf: 'center', backgroundColor: theme.colors.background, overflow: 'hidden' },
   scroll: { flexGrow: 1, alignItems: 'center', paddingHorizontal: 24, paddingTop: 24, paddingBottom: 44 },
   scrollCompact: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 38 },
   page: { width: '100%', maxWidth: 430, gap: 24 },
