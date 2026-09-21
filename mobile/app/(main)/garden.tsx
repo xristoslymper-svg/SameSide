@@ -37,9 +37,10 @@ export default function Garden(){
    {flower&&<Pressable accessibilityRole="button" onPress={()=>setStory(flower.id)} style={local.textAction}><Text style={local.textActionText}>About your flower →</Text></Pressable>}
   </View>
   <Pressable accessibilityRole="button" onPress={()=>setCommunityOpen(true)} style={({pressed})=>[local.communityCard,pressed&&{opacity:.82}]}>
-   <View style={local.communityTop}><Text style={styles.eyebrow}>SAME SIDE GARDEN</Text><Text style={local.communityArrow}>↗</Text></View>
+   <Text style={styles.eyebrow}>SAME SIDE GARDEN</Text>
    <Text style={local.communityTitle}>{physicalTitle}</Text>
    <Text style={local.communityBody}>See the garden and the stories of other couples growing alongside you.</Text>
+   <Text style={local.communityAction}>Visit Garden →</Text>
   </Pressable>
   <FlowerStory flower={story} close={()=>setStory(null)}/><CommunityGarden visible={communityOpen} close={()=>setCommunityOpen(false)}/>
  </Screen>;
@@ -64,8 +65,7 @@ const local=StyleSheet.create({
  textAction:{minHeight:42,justifyContent:'center',alignSelf:'flex-start',marginTop:2},
  textActionText:{fontSize:13.5,fontWeight:'700',color:theme.colors.sage},
  communityCard:{marginTop:16,marginBottom:8,paddingVertical:20,paddingHorizontal:20,borderRadius:24,backgroundColor:theme.colors.cardWarm,borderWidth:1,borderColor:theme.colors.line,gap:7},
- communityTop:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12},
- communityArrow:{fontSize:17,color:theme.colors.sage},
  communityTitle:{fontFamily:theme.fonts.heading,fontSize:20,lineHeight:25,color:theme.colors.ink},
  communityBody:{fontSize:13,lineHeight:19.5,color:theme.colors.muted},
+ communityAction:{fontSize:13.5,fontWeight:'700',color:theme.colors.sage,marginTop:5,paddingVertical:5},
 });
