@@ -17,11 +17,12 @@ export function OpeningMedia() {
         aria-hidden="true"
         style={{
           position: 'absolute',
-          inset: 0,
+          left: 0,
+          top: '-12%',
           width: '100%',
-          height: '100%',
+          height: '112%',
           objectFit: 'cover',
-          objectPosition: '50% 58%',
+          objectPosition: '50% 50%',
           display: 'block',
         }}
       />
@@ -33,6 +34,6 @@ export function OpeningMedia() {
 
 const local = StyleSheet.create({
   frame: { ...StyleSheet.absoluteFillObject, overflow: 'hidden', backgroundColor: '#E7DED2' },
-  topVeil: { position: 'absolute', left: 0, right: 0, top: 0, height: '35%', backgroundColor: 'rgba(248,243,235,0.05)' },
-  bottomVeil: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '24%', backgroundColor: 'rgba(26,36,29,0.08)' },
+  topVeil: { position: 'absolute', left: 0, right: 0, top: 0, height: '30%', backgroundColor: 'rgba(248,243,235,0.04)' },
+  bottomVeil: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '21%', backgroundColor: 'rgba(26,36,29,0.12)' },
 });
