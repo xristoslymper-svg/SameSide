@@ -1,14 +1,16 @@
 import { StyleSheet, View } from 'react-native';
 
+const backgroundUrl = 'https://images.unsplash.com/photo-1761206532410-f0042edbeb9b?auto=format&fit=crop&w=2000&q=85';
+
 export function OpeningMedia() {
   return (
     <View
       pointerEvents="none"
-      accessibilityLabel="A couple sitting together in a field looking across the landscape"
+      accessibilityLabel="A couple sitting together in a field at sunset"
       style={local.frame}
     >
       <img
-        src="/opening-couple.webp"
+        src={backgroundUrl}
         alt=""
         aria-hidden="true"
         style={{
