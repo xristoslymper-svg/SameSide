@@ -1,12 +1,12 @@
 import { StyleSheet, View } from 'react-native';
 
-const backgroundUrl = 'https://images.unsplash.com/photo-1761206532410-f0042edbeb9b?auto=format&fit=crop&w=2000&q=85';
+const backgroundUrl = '/opening-hands.webp';
 
 export function OpeningMedia() {
   return (
     <View
       pointerEvents="none"
-      accessibilityLabel="A couple sitting together in a field at sunset"
+      accessibilityLabel="Two people holding hands at sunset"
       style={local.frame}
     >
       <img
