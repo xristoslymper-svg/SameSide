@@ -15,7 +15,15 @@ export function OpeningMedia() {
         src={backgroundUrl}
         alt=""
         aria-hidden="true"
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center center', display: 'block' }}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: '50% 58%',
+          display: 'block',
+        }}
       />
       <View style={local.topVeil} />
       <View style={local.bottomVeil} />
@@ -25,6 +33,6 @@ export function OpeningMedia() {
 
 const local = StyleSheet.create({
   frame: { ...StyleSheet.absoluteFillObject, overflow: 'hidden', backgroundColor: '#E7DED2' },
-  topVeil: { position: 'absolute', left: 0, right: 0, top: 0, height: '43%', backgroundColor: 'rgba(248,243,235,0.08)' },
-  bottomVeil: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '28%', backgroundColor: 'rgba(26,36,29,0.10)' },
+  topVeil: { position: 'absolute', left: 0, right: 0, top: 0, height: '35%', backgroundColor: 'rgba(248,243,235,0.05)' },
+  bottomVeil: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '24%', backgroundColor: 'rgba(26,36,29,0.08)' },
 });
