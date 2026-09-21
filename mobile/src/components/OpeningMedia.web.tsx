@@ -18,22 +18,32 @@ export function OpeningMedia() {
         style={{
           position: 'absolute',
           left: 0,
-          top: '-12%',
+          top: '-18%',
           width: '100%',
-          height: '112%',
+          height: '118%',
           objectFit: 'cover',
           objectPosition: '50% 50%',
           display: 'block',
         }}
       />
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: '34%',
+          background: 'linear-gradient(to bottom, rgba(231,222,210,0) 0%, rgba(231,222,210,0.16) 28%, rgba(46,57,49,0.26) 100%)',
+          pointerEvents: 'none',
+        }}
+      />
       <View style={local.topVeil} />
-      <View style={local.bottomVeil} />
     </View>
   );
 }
 
 const local = StyleSheet.create({
   frame: { ...StyleSheet.absoluteFillObject, overflow: 'hidden', backgroundColor: '#E7DED2' },
-  topVeil: { position: 'absolute', left: 0, right: 0, top: 0, height: '30%', backgroundColor: 'rgba(248,243,235,0.04)' },
-  bottomVeil: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '21%', backgroundColor: 'rgba(26,36,29,0.12)' },
+  topVeil: { position: 'absolute', left: 0, right: 0, top: 0, height: '28%', backgroundColor: 'rgba(248,243,235,0.04)' },
 });
