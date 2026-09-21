@@ -14,7 +14,7 @@ export function FlowScreen({ children, immersive = false }: PropsWithChildren<{ 
   const pathname = usePathname();
   if (token) return <Redirect href={session ? '/invite/resume' : '/sign-in'}/>;
   if (pathname !== destination) return <Redirect href={destination}/>;
-  return <Screen compact={immersive}>{!immersive && <Brand/>}{children}{error && <Notice>{error}</Notice>}</Screen>;
+  return <Screen immersive={immersive}>{!immersive && <Brand/>}{children}{error && <Notice>{error}</Notice>}</Screen>;
 }
 export function Choice({ title, description, selected, disabled, compact = false, onPress }: {
   title: string; description?: string; selected: boolean; disabled?: boolean; compact?: boolean; onPress: () => void;
