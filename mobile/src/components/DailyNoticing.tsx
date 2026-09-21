@@ -39,8 +39,8 @@ export function DailyReflection({ value, recent = [] }: { value: Reflection; rec
   <Text style={[styles.cardTitle, { fontSize: 22, lineHeight: 28 }]}>A space for whatever is on your mind.</Text>
   <Text style={[styles.small, { lineHeight: 19 }]}>Private to you. Write as much or as little as you like.</Text>
   {editing ? <>
-    <TextInput accessibilityLabel="Your private diary entry" multiline maxLength={280} editable={!busy} value={text} onChangeText={setText} placeholder="What are you thinking or feeling today?" style={[styles.input, { minHeight: 128, textAlignVertical: 'top' }]}/>
-    <Text style={styles.small}>{text.length}/280 · Only you can read this.</Text>
+    <TextInput accessibilityLabel="Your private diary entry" multiline editable={!busy} value={text} onChangeText={setText} placeholder="What are you thinking or feeling today?" style={[styles.input, { minHeight: 128, textAlignVertical: 'top' }]}/>
+    <Text style={styles.small}>Only you can read this.</Text>
     <Button label={saved.text ? 'Save changes' : 'Save today’s entry'} busy={busy} disabled={!text.trim()} onPress={() => { void keep(); }}/>
     {saved.text && <Button label="Cancel edit" secondary disabled={busy} onPress={() => { setText(saved.text!); setEditing(false); }}/>} 
    </>
