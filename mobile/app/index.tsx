@@ -18,7 +18,8 @@ export default function OpeningScreen() {
           <View style={local.logoRing}/><View style={[local.logoRing,{marginLeft:-9}]}/>
         </View>
         <Text style={local.brandTitle}>Same Side</Text>
-        <Text style={local.tagline}>Together against the problem,{`\n`}not each other.</Text>
+        <Text style={local.motto}>Together against the problem,{`\n`}not each other.</Text>
+        <Text style={local.tagline}>A deeper connection{`\n`}lives in the everyday.</Text>
       </View>
 
       <View style={[local.actions,{bottom:Math.max(insets.bottom + 18,28)}]}>
@@ -38,7 +39,8 @@ const local=StyleSheet.create({
  logoMark:{flexDirection:'row',alignItems:'center',justifyContent:'center',height:38,marginBottom:7},
  logoRing:{width:31,height:31,borderRadius:16,borderWidth:1.35,borderColor:theme.colors.ink},
  brandTitle:{fontFamily:theme.fonts.heading,fontSize:34,lineHeight:39,color:theme.colors.ink,letterSpacing:-.7,textAlign:'center'},
- tagline:{fontFamily:theme.fonts.heading,fontSize:17,lineHeight:23,color:theme.colors.inkSoft,textAlign:'center',marginTop:8},
+ motto:{fontFamily:theme.fonts.heading,fontSize:17,lineHeight:23,color:theme.colors.ink,textAlign:'center',marginTop:8},
+ tagline:{fontFamily:theme.fonts.heading,fontSize:14.5,lineHeight:20,color:theme.colors.inkSoft,textAlign:'center',marginTop:8},
  actions:{position:'absolute',left:24,right:24,gap:10},
  secondaryAction:{minHeight:52,borderRadius:18,backgroundColor:'rgba(255,253,249,.88)',alignItems:'center',justifyContent:'center',borderWidth:1,borderColor:'rgba(232,224,213,.92)'},
  secondaryText:{color:theme.colors.ink,fontSize:13.5,fontWeight:'700'},
