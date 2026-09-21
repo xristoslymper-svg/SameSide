@@ -5,9 +5,10 @@ import { AppHeader } from '../../src/components/AppHeader';
 import { LoadState,useProductData } from '../../src/components/product';
 import { getProgram } from '../../src/features/product';
 import { readRoots,saveRoots,patternCopy,targetLabels,type RoutinePattern,type BehavioralTarget } from '../../src/features/roots';
+import { readReflection,readRecentReflections } from '../../src/features/reflections';
 import { useAuth } from '../../src/providers/AuthProvider';
 import { useOnboarding } from '../../src/providers/OnboardingProvider';
-import { TodaysRead } from '../../src/components/DailyNoticing';
+import { DailyReflection } from '../../src/components/DailyNoticing';
 import { theme } from '../../src/theme';
 
 const steps=[
@@ -20,7 +21,7 @@ const patterns=Object.keys(patternCopy) as RoutinePattern[];
 
 export default function Roots(){
  const {session}=useAuth();const {save,busy:inviting}=useOnboarding();
- const load=useCallback(async()=>({program:await getProgram(session!.user.id),roots:await readRoots()}),[session!.user.id]);
+ const load=useCallback(async()=>{const program=await getProgram(session!.user.id);const [roots,reflection,recent]=await Promise.all([readRoots(),readReflection(),readRecentReflections(program.relationshipId)]);return{program,roots,reflection,recent};},[session!.user.id]);
  const state=useProductData(load);const [editing,setEditing]=useState(false);const [pattern,setPattern]=useState<RoutinePattern|null>(null);const [target,setTarget]=useState<BehavioralTarget|null>(null);const [busy,setBusy]=useState(false);const locked=useRef(false);const [error,setError]=useState<string|null>(null);
  useEffect(()=>{if(state.data){setPattern(state.data.roots.pattern);setTarget(state.data.roots.target);setEditing(false);setError(null);}},[state.data]);
  const saved=!!state.data?.roots.pattern&&!!state.data?.roots.target&&!editing;
@@ -59,7 +60,7 @@ export default function Roots(){
    </View>
    {error&&<Notice>{error}</Notice>}
 
-   <View style={local.readSection}><Text style={styles.eyebrow}>A LITTLE PERSPECTIVE</Text><Text style={local.readTitle}>One thought for the pattern you’re working on.</Text><TodaysRead date={state.data.program.today}/></View>
+   <DailyReflection value={state.data.reflection} recent={state.data.recent}/>
 
    {state.data.program.memberCount===1&&!state.data.program.relationshipClosed&&<View style={local.quietSection}><Text style={styles.eyebrow}>WHEN YOU’RE READY</Text><Text style={local.quietTitle}>Bring your partner in</Text><Text style={local.quietBody}>You can keep beginning on your own. Invite them whenever it feels right.</Text><Pressable accessibilityRole="button" disabled={inviting} onPress={()=>{void save({step:'invite'});}} style={local.textAction}><Text style={local.textActionText}>{inviting?'A moment…':'Invite my partner →'}</Text></Pressable></View>}
    {state.data.program.relationshipClosed&&<View style={local.quietSection}><Text style={styles.eyebrow}>YOUR SHARED SPACE</Text><Text style={local.quietTitle}>This garden is no longer connected.</Text><Text style={local.quietBody}>You can keep this space as it is. If you want to begin with someone new, use Relationship settings in Account to start fresh.</Text></View>}
@@ -99,8 +100,6 @@ const local=StyleSheet.create({
  textActionText:{fontSize:13.5,fontWeight:'700',color:theme.colors.sage},
  cancelAction:{minHeight:40,justifyContent:'center',alignItems:'center'},
  cancelText:{fontSize:13,color:theme.colors.muted,fontWeight:'600'},
- readSection:{paddingTop:24,borderTopWidth:1,borderTopColor:theme.colors.line,gap:10},
- readTitle:{fontFamily:theme.fonts.heading,fontSize:20,lineHeight:26,color:theme.colors.ink},
  quietSection:{paddingTop:22,borderTopWidth:1,borderTopColor:theme.colors.line,gap:7},
  quietTitle:{fontFamily:theme.fonts.heading,fontSize:20,lineHeight:26,color:theme.colors.ink},
  quietBody:{fontSize:13.5,lineHeight:20.5,color:theme.colors.muted},
