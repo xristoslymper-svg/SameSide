@@ -11,12 +11,14 @@ export const demoUserId = '00000000-0000-4000-8000-00000000d001';
 const relationshipId = '00000000-0000-4000-8000-00000000d002';
 export const demoToken = 'd'.repeat(64);
 export type DemoScenario = 'fresh' | 'solo' | 'paired' | 'legacy' | 'week3' | 'bloom';
-type State = { relationship: boolean; members: number; name: string; partnerName:string; departed:boolean; flower: string | null; legacy: boolean; day: number; today: string; start: string; daily: Record<string,number>; moves: Record<string, any>; roots: string[]; thought: string | null; physical:'growing'|'ready_to_plant'|'planted'|'photo_ready' };
+type State = { relationship: boolean; members: number; name: string; partnerName:string; departed:boolean; flower: string | null; legacy: boolean; day: number; today: string; start: string; daily: Record<string,number>; moves: Record<string, any>; roots: string[]; thought: string | null; diary?: Array<{date:string;text:string|null}>; physical:'growing'|'ready_to_plant'|'planted'|'photo_ready' };
 const date = (offset=0) => new Date(Date.now()+offset*86400000).toISOString().slice(0,10);
-const initial = ():State => ({relationship:false,members:1,name:'Alex',partnerName:'Sam',departed:false,flower:null,legacy:false,day:1,today:date(),start:date(),daily:{},moves:{},roots:[],thought:null,physical:'growing'});
+const initial = ():State => ({relationship:false,members:1,name:'Alex',partnerName:'Sam',departed:false,flower:null,legacy:false,day:1,today:date(),start:date(),daily:{},moves:{},roots:[],thought:null,diary:[],physical:'growing'});
 function read():State { try { const value=window.sessionStorage.getItem(prefix+'data'); return value?{...initial(),...JSON.parse(value)}:initial(); } catch {return initial();} }
 export const demoToday = () => read().today;
 function write(state:State) { window.sessionStorage.setItem(prefix+'data',JSON.stringify(state)); }
+export function demoDiaryRead(){ const state=read(); return state.diary??[]; }
+export function demoDiarySave(entries:Array<{date:string;text:string|null}>){ const state=read(); state.diary=entries; write(state); }
 function activeDays(state:State){return Object.values(state.daily).filter(value=>value>0).length;}
 function gardenStage(state:State) {
  const active=activeDays(state);
@@ -81,38 +83,16 @@ export const demoFetch: typeof fetch = async (input,init) => {
   case 'get_relationship_overview':result=state.relationship?[{relationship_id:relationshipId,my_role:'member_a',active_member_count:state.members,partner_name:state.members===2||state.departed?state.partnerName:null,partner_active:state.members===2,has_departure:state.departed,my_joined_at:new Date().toISOString(),my_joined_day:1,partner_joined_at:state.members===2?new Date().toISOString():null}]:[];break;
   case 'leave_relationship':state.relationship=false;state.members=0;result=relationshipId;break;
   case 'get_physical_garden_state':result=[{status:state.physical,batch:state.physical==='growing'?null:'September 2026',planted_at:state.physical==='planted'||state.physical==='photo_ready'?new Date().toISOString():null,photo_url:null}];break;
-  case 'choose_shared_flower':
-   if(state.flower&&state.flower!==body.flower)return reply({message:'flower_already_chosen'},400);
-   state.flower=body.flower;state.legacy=false;result=state.flower;break;
-  case 'get_or_create_today_assignment': {
-   const slot=body.requested_slot??0;
-   if(!Number.isInteger(slot)||slot<0||slot>2)return reply({message:'daily_limit_reached'},400);
-   if(slot&&state.moves[slot-1]?.status!=='completed')return reply({message:'previous_slot_not_completed'},400);
-   const active=activeDays(state); if(active>=28)return reply({message:'path_complete'},400);
-   const programDay=Math.min(active+1,28); const step=Math.min(4,Math.max(1,Math.ceil(programDay/7)));
-   const samples=[
-    {title:'Notice one specific effort',body:'Tell your partner one ordinary thing they did that you appreciated. Be specific.',why:'Routine makes familiar effort easy to stop seeing. Naming one concrete thing trains your attention back toward what your partner is already bringing into the relationship.'},
-    {title:'Make a tiny invitation',body:'Invite your partner into ten minutes together: tea, a short walk, music, or something equally simple.',why:'Routine stays powerful when nothing interrupts it. A small invitation creates a new shared moment without needing a special occasion.'},
-    {title:'Ask instead of assuming',body:'If your partner seems off today, ask how they are rather than deciding what their mood means.',why:'Assumptions can turn uncertainty into distance. A simple question replaces guessing with real information.'},
-    {title:'Repeat something that worked',body:'Think of one move from this journey that felt good between you and do a version of it again today.',why:'A good moment becomes useful when it can be repeated. Choosing something that worked helps turn a success into a pattern.'},
-   ];
-   const sample=samples[step-1];
-   state.moves[slot]??={id:'demo-move-'+slot,slot,assigned_for_date:state.today,program_day:programDay,task_title:sample.title,task_body:sample.body,task_why:sample.why,task_minutes:3,status:'assigned'};
-   result=state.moves[slot];break;
-  }
-  case 'complete_assignment': {
-   const move=Object.values(state.moves).find(m=>m.id===body.assignment_id);
-   if(!move)return reply({message:'assignment_not_eligible'},400);
-   if(move.status!=='completed'){move.status='completed';state.daily[state.today]=(state.daily[state.today]??0)+1;}
-   result=null;break;
-  }
+  case 'choose_shared_flower':if(state.flower&&state.flower!==body.flower)return reply({message:'flower_already_chosen'},400);state.flower=body.flower;state.legacy=false;result=state.flower;break;
+  case 'get_or_create_today_assignment': { const slot=body.requested_slot??0;if(!Number.isInteger(slot)||slot<0||slot>2)return reply({message:'daily_limit_reached'},400);if(slot&&state.moves[slot-1]?.status!=='completed')return reply({message:'previous_slot_not_completed'},400);const active=activeDays(state);if(active>=28)return reply({message:'path_complete'},400);const programDay=Math.min(active+1,28);const step=Math.min(4,Math.max(1,Math.ceil(programDay/7)));const samples=[{title:'Notice one specific effort',body:'Tell your partner one ordinary thing they did that you appreciated. Be specific.',why:'Routine makes familiar effort easy to stop seeing. Naming one concrete thing trains your attention back toward what your partner is already bringing into the relationship.'},{title:'Make a tiny invitation',body:'Invite your partner into ten minutes together: tea, a short walk, music, or something equally simple.',why:'Routine stays powerful when nothing interrupts it. A small invitation creates a new shared moment without needing a special occasion.'},{title:'Ask instead of assuming',body:'If your partner seems off today, ask how they are rather than deciding what their mood means.',why:'Assumptions can turn uncertainty into distance. A simple question replaces guessing with real information.'},{title:'Repeat something that worked',body:'Think of one move from this journey that felt good between you and do a version of it again today.',why:'A good moment becomes useful when it can be repeated. Choosing something that worked helps turn a success into a pattern.'}];const sample=samples[step-1];state.moves[slot]??={id:'demo-move-'+slot,slot,assigned_for_date:state.today,program_day:programDay,task_title:sample.title,task_body:sample.body,task_why:sample.why,task_minutes:3,status:'assigned'};result=state.moves[slot];break; }
+  case 'complete_assignment': {const move=Object.values(state.moves).find(m=>m.id===body.assignment_id);if(!move)return reply({message:'assignment_not_eligible'},400);if(move.status!=='completed'){move.status='completed';state.daily[state.today]=(state.daily[state.today]??0)+1;}result=null;break;}
   case 'get_shared_garden_state':result=[gardenStage(state)];break;
   case 'get_my_root_pulse':result={pattern:state.roots[0]??null,target:state.roots[1]??null,can_edit:true,week_no:Math.min(4,Math.max(1,Math.ceil(Math.max(1,state.day)/7)))};break;
   case 'save_my_root_pulse':state.roots=[body.pattern,body.target];result={pattern:body.pattern,target:body.target,can_edit:true,week_no:Math.min(4,Math.max(1,Math.ceil(Math.max(1,state.day)/7)))};break;
   case 'get_my_root_preferences':result={choices:state.roots,can_edit:true};break;
   case 'save_my_root_preferences':state.roots=body.choices;result={choices:state.roots,can_edit:true};break;
   case 'get_my_daily_reflection':result={date:state.today,text:state.thought};break;
-  case 'save_my_daily_reflection':state.thought=body.thought;result={date:state.today,text:state.thought};break;
+  case 'save_my_daily_reflection':state.thought=body.thought;state.diary=[{date:state.today,text:state.thought},...(state.diary??[]).filter(entry=>entry.date!==state.today)];result={date:state.today,text:state.thought};break;
   default:return reply({message:'This operation is not supported in the isolated demo.'},400);
  }
  write(state);return reply(result);
