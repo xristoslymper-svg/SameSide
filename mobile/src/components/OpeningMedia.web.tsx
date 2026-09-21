@@ -1,4 +1,6 @@
-import { StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
+
+const background = require('../../assets/opening-couple.jpg');
 
 export function OpeningMedia() {
   return (
@@ -7,7 +9,7 @@ export function OpeningMedia() {
       accessibilityLabel="A couple sitting together in a field looking across the landscape"
       style={local.frame}
     >
-      <View style={local.photo as any} />
+      <Image source={background} resizeMode="cover" style={local.photo} />
       <View style={local.topVeil} />
       <View style={local.bottomVeil} />
     </View>
@@ -22,11 +24,9 @@ const local = StyleSheet.create({
   },
   photo: {
     ...StyleSheet.absoluteFillObject,
-    backgroundImage: 'url("/opening-couple.jpg")',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center center',
-    backgroundRepeat: 'no-repeat',
-  } as any,
+    width: '100%',
+    height: '100%',
+  },
   topVeil: {
     position: 'absolute',
     left: 0,
