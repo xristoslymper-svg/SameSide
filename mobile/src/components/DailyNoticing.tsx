@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Modal, Text, TextInput, View } from 'react-native';
+import { Modal, Pressable, Text, TextInput, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Button, Notice, Screen, styles } from './ui';
 import { dailyIndex, thoughts, reads } from '../features/rootsContent';
 import { saveReflection, type Reflection } from '../features/reflections';
+import { theme } from '../theme';
 
 export function DailyThought({ date }: { date: string }) {
  const thought = thoughts[dailyIndex(date, thoughts.length)];
@@ -15,6 +17,7 @@ function shortDate(date: string) {
 }
 
 export function DailyReflection({ value, recent = [] }: { value: Reflection; recent?: Reflection[] }) {
+ const router = useRouter();
  const [saved, setSaved] = useState(value);
  const [entries, setEntries] = useState(recent);
  const [text, setText] = useState(value.text ?? '');
@@ -33,26 +36,24 @@ export function DailyReflection({ value, recent = [] }: { value: Reflection; rec
   } catch (e) { setError((e as Error).message); }
   finally { setBusy(false); }
  }
- const older = entries.filter(entry => entry.text && entry.date !== saved.date).slice(0, 3);
+ const older = entries.filter(entry => entry.text && entry.date !== saved.date).slice(0, 2);
  return <View style={[styles.card, { gap: 12, padding: 20 }]}>
   <Text style={styles.eyebrow}>PERSONAL DIARY</Text>
-  <Text style={[styles.cardTitle, { fontSize: 22, lineHeight: 28 }]}>A space for whatever is on your mind.</Text>
-  <Text style={[styles.small, { lineHeight: 19 }]}>Private to you. Write as much or as little as you like.</Text>
   {editing ? <>
-    <TextInput accessibilityLabel="Your private diary entry" multiline editable={!busy} value={text} onChangeText={setText} placeholder="What are you thinking or feeling today?" style={[styles.input, { minHeight: 128, textAlignVertical: 'top' }]}/>
-    <Text style={styles.small}>Only you can read this.</Text>
-    <Button label={saved.text ? 'Save changes' : 'Save today’s entry'} busy={busy} disabled={!text.trim()} onPress={() => { void keep(); }}/>
-    {saved.text && <Button label="Cancel edit" secondary disabled={busy} onPress={() => { setText(saved.text!); setEditing(false); }}/>} 
+    <TextInput accessibilityLabel="Your private diary entry" multiline editable={!busy} value={text} onChangeText={setText} placeholder="What’s on your mind today?" style={[styles.input, { minHeight: 128, textAlignVertical: 'top' }]}/>
+    <Text style={[styles.small,{color:theme.colors.muted}]}>🔒 Private to you</Text>
+    <Button label={saved.text ? 'Save changes' : 'Save entry'} busy={busy} disabled={!text.trim()} onPress={() => { void keep(); }}/>
+    {saved.text && <Pressable accessibilityRole="button" disabled={busy} onPress={() => { setText(saved.text!); setEditing(false); }} style={{alignSelf:'center',paddingVertical:5}}><Text style={[styles.small,{fontWeight:'700'}]}>Cancel</Text></Pressable>}
    </>
    : <>
-    <Text style={[styles.small, { fontWeight: '700' }]}>TODAY’S ENTRY</Text>
     <Text style={[styles.body, { color: '#3E4C43' }]}>{saved.text}</Text>
-    <Button label="Edit today’s entry" secondary onPress={() => setEditing(true)}/>
+    <Pressable accessibilityRole="button" onPress={() => setEditing(true)} style={{alignSelf:'flex-start',paddingVertical:4}}><Text style={{fontSize:13,fontWeight:'700',color:theme.colors.sage}}>Edit</Text></Pressable>
    </>}
-  {older.length > 0 && <View style={{ borderTopWidth: 1, borderTopColor: '#E6DED3', paddingTop: 12, gap: 11 }}>
-    <Text style={styles.eyebrow}>RECENT ENTRIES</Text>
-    {older.map(entry => <View key={entry.date} style={{ gap: 3 }}><Text style={[styles.small, { fontWeight: '700' }]}>{shortDate(entry.date)}</Text><Text numberOfLines={2} style={[styles.small, { color: '#59655E' }]}>{entry.text}</Text></View>)}
+  {older.length > 0 && <View style={{ borderTopWidth: 1, borderTopColor: theme.colors.line, paddingTop: 12, gap: 9 }}>
+    <Text style={styles.eyebrow}>RECENT</Text>
+    {older.map(entry => <View key={entry.date} style={{ gap: 2 }}><Text style={[styles.small, { fontWeight: '700' }]}>{shortDate(entry.date)}</Text><Text numberOfLines={1} style={[styles.small, { color: theme.colors.muted }]}>{entry.text}</Text></View>)}
    </View>}
+  {(saved.text || older.length > 0) && <Pressable accessibilityRole="button" onPress={() => router.push('/diary')} style={{alignSelf:'flex-start',paddingVertical:5}}><Text style={{fontSize:13,fontWeight:'700',color:theme.colors.sage}}>View diary →</Text></Pressable>}
   {error && <Notice>{error}</Notice>}
  </View>;
 }
