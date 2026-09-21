@@ -18,7 +18,7 @@ export default function OpeningScreen() {
           <View style={local.logoRing}/><View style={[local.logoRing,{marginLeft:-9}]}/>
         </View>
         <Text style={local.brandTitle}>Same Side</Text>
-        <Text style={local.tagline}>A deeper connection{`\n`}lives in the everyday.</Text>
+        <Text style={local.tagline}>Together against the problem,{`\n`}not each other.</Text>
       </View>
 
       <View style={[local.actions,{bottom:Math.max(insets.bottom + 18,28)}]}>
