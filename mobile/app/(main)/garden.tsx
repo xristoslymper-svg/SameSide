@@ -6,23 +6,21 @@ import { useProductData } from '../../src/components/product';
 import { AppHeader } from '../../src/components/AppHeader';
 import { FlowerStory } from '../../src/components/FlowerStory';
 import { BotanicalFlower } from '../../src/components/BotanicalFlower';
-import { CommunityGarden } from '../../src/components/CommunityGarden';
 import { findFlower,type FlowerId } from '../../src/features/flowers';
 import { sharedGrowth } from '../../src/features/growth';
-import { getGardenState,getPhysicalGardenState,getProgram } from '../../src/features/product';
+import { getGardenState,getProgram } from '../../src/features/product';
 import { useAuth } from '../../src/providers/AuthProvider';
 import { theme } from '../../src/theme';
 
 export default function Garden(){
- const {session}=useAuth();const [communityOpen,setCommunityOpen]=useState(false);const [story,setStory]=useState<FlowerId|null>(null);useFocusEffect(useCallback(()=>()=>{setStory(null);setCommunityOpen(false);},[]));const {width}=useWindowDimensions();
- const state=useProductData(useCallback(async()=>{const [garden,program,physical]=await Promise.all([getGardenState(),getProgram(session!.user.id),getPhysicalGardenState()]);return{garden,program,physical};},[session!.user.id]));
+ const {session}=useAuth();const [story,setStory]=useState<FlowerId|null>(null);useFocusEffect(useCallback(()=>()=>{setStory(null);},[]));const {width}=useWindowDimensions();
+ const state=useProductData(useCallback(async()=>{const [garden,program]=await Promise.all([getGardenState(),getProgram(session!.user.id)]);return{garden,program};},[session!.user.id]));
  const flower=findFlower(state.data?.program.selectedFlower??null);const stage=sharedGrowth(state.data?.garden.stage_key??'seed',state.data?.program.day??1);const paired=state.data?.program.memberCount===2;const partner=state.data?.program.partnerName;
- const physicalStatus=state.data?.physical.status;const physicalTitle=physicalStatus==='photo_ready'?'Your garden update is ready.':physicalStatus==='planted'?'Your flower is now part of the Same Side Garden.':physicalStatus==='ready_to_plant'?'Your bloom is ready for the Same Side Garden.':'When this blooms, we’ll plant the flower you chose in the Same Side Garden.';
  return <Screen compact>
   <AppHeader/>
   <View style={local.intro}><Text style={local.title}>Our Garden</Text><Text style={local.subtitle}>Small moments. A stronger us.</Text></View>
   <View style={local.gardenCanvas}>
-   <View style={local.canvasHeader}><View><Text style={styles.eyebrow}>THE ROUTINE</Text><Text style={local.flowerName}>{flower?flower.name:'Your flower'}</Text></View>{state.data&&<View style={local.stagePill}><Text style={local.stagePillText}>{stage.bloom?'IN BLOOM':`WEEK ${state.data.program.week}`}</Text></View>}</View>
+   <View style={local.canvasHeader}><View><Text style={styles.eyebrow}>THE ROUTINE</Text><Text style={local.flowerName}>{flower?flower.name:'Your flower'}</Text></View>{state.data&&<View style={local.stagePill}><Text style={local.stagePillText}>{stage.bloom?'IN BLOOM':`WEEK ${state.data.program.week} OF 4`}</Text></View>}</View>
    <View style={local.flowerWrap}><BotanicalFlower flower={flower?.id??'cosmos'} state={stage} size={Math.min(width-68,330)} label={flower?undefined:state.loading?'Botanical flower loading':'Botanical preview — choose your shared flower'}/></View>
    <Text style={local.stageTitle}>{flower?stage.title:'Choose what you’ll grow together.'}</Text>
    {flower&&<Text style={local.meaning}>{flower.meaning}</Text>}
@@ -36,13 +34,7 @@ export default function Garden(){
    {state.data&&!flower&&<Button label="Choose your flower" onPress={()=>router.push('/choose-flower?returnTo=garden')}/>} 
    {flower&&<Pressable accessibilityRole="button" onPress={()=>setStory(flower.id)} style={local.textAction}><Text style={local.textActionText}>About your flower →</Text></Pressable>}
   </View>
-  <Pressable accessibilityRole="button" onPress={()=>setCommunityOpen(true)} style={({pressed})=>[local.communityCard,pressed&&{opacity:.82}]}>
-   <Text style={styles.eyebrow}>SAME SIDE GARDEN</Text>
-   <Text style={local.communityTitle}>{physicalTitle}</Text>
-   <Text style={local.communityBody}>See the garden and the stories of other couples growing alongside you.</Text>
-   <Text style={local.communityAction}>Visit Garden →</Text>
-  </Pressable>
-  <FlowerStory flower={story} close={()=>setStory(null)}/><CommunityGarden visible={communityOpen} close={()=>setCommunityOpen(false)}/>
+  <FlowerStory flower={story} close={()=>setStory(null)}/>
  </Screen>;
 }
 
@@ -64,8 +56,4 @@ const local=StyleSheet.create({
  statusBody:{fontSize:13.5,lineHeight:20.5,color:theme.colors.muted},
  textAction:{minHeight:42,justifyContent:'center',alignSelf:'flex-start',marginTop:2},
  textActionText:{fontSize:13.5,fontWeight:'700',color:theme.colors.sage},
- communityCard:{marginTop:16,marginBottom:8,paddingVertical:20,paddingHorizontal:20,borderRadius:24,backgroundColor:theme.colors.cardWarm,borderWidth:1,borderColor:theme.colors.line,gap:7},
- communityTitle:{fontFamily:theme.fonts.heading,fontSize:20,lineHeight:25,color:theme.colors.ink},
- communityBody:{fontSize:13,lineHeight:19.5,color:theme.colors.muted},
- communityAction:{fontSize:13.5,fontWeight:'700',color:theme.colors.sage,marginTop:5,paddingVertical:5},
 });
