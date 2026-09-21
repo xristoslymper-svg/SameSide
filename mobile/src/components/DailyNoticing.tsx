@@ -24,36 +24,49 @@ export function DailyReflection({ value, recent = [] }: { value: Reflection; rec
  const [editing, setEditing] = useState(!value.text);
  const [busy, setBusy] = useState(false);
  const [error, setError] = useState<string | null>(null);
- useEffect(() => { setSaved(value); setText(value.text ?? ''); setEditing(!value.text); }, [value]);
+ useEffect(() => {
+  // Do not let a parent refresh with stale data erase an entry that was just saved locally.
+  if (value.date !== saved.date || value.text !== null || !saved.text) {
+   setSaved(value); setText(value.text ?? ''); setEditing(!value.text);
+  }
+ }, [value.date, value.text]);
  useEffect(() => { setEntries(recent); }, [recent]);
  async function keep() {
   if (busy || !text.trim()) return;
   setBusy(true); setError(null);
   try {
-   const result = await saveReflection(text);
-   setSaved(result); setText(result.text ?? ''); setEditing(false);
-   setEntries(current => [result, ...current.filter(entry => entry.date !== result.date)].slice(0, 5));
+   const result = await saveReflection(text.trim());
+   const kept = { ...result, text: result.text ?? text.trim() };
+   setSaved(kept); setText(kept.text ?? ''); setEditing(false);
+   setEntries(current => [kept, ...current.filter(entry => entry.date !== kept.date)].slice(0, 5));
   } catch (e) { setError((e as Error).message); }
   finally { setBusy(false); }
  }
  const older = entries.filter(entry => entry.text && entry.date !== saved.date).slice(0, 2);
- return <View style={[styles.card, { gap: 12, padding: 20 }]}>
-  <Text style={styles.eyebrow}>PERSONAL DIARY</Text>
+ return <View style={[styles.card, { gap: 14, padding: 20 }]}>
+  <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12}}>
+   <Text style={styles.eyebrow}>PERSONAL DIARY</Text>
+   <Text style={[styles.small,{color:theme.colors.muted}]}>🔒 Private</Text>
+  </View>
   {editing ? <>
-    <TextInput accessibilityLabel="Your private diary entry" multiline editable={!busy} value={text} onChangeText={setText} placeholder="What’s on your mind today?" style={[styles.input, { minHeight: 128, textAlignVertical: 'top' }]}/>
-    <Text style={[styles.small,{color:theme.colors.muted}]}>🔒 Private to you</Text>
-    <Button label={saved.text ? 'Save changes' : 'Save entry'} busy={busy} disabled={!text.trim()} onPress={() => { void keep(); }}/>
-    {saved.text && <Pressable accessibilityRole="button" disabled={busy} onPress={() => { setText(saved.text!); setEditing(false); }} style={{alignSelf:'center',paddingVertical:5}}><Text style={[styles.small,{fontWeight:'700'}]}>Cancel</Text></Pressable>}
+    <TextInput accessibilityLabel="Your private diary entry" multiline editable={!busy} value={text} onChangeText={setText} placeholder="What’s on your mind today?" style={[styles.input, { minHeight: 118, textAlignVertical: 'top' }]}/>
+    <View style={{flexDirection:'row',gap:10,alignItems:'center'}}>
+     <View style={{flex:1}}><Button label={saved.text ? 'Save changes' : 'Save entry'} busy={busy} disabled={!text.trim()} onPress={() => { void keep(); }}/></View>
+     {saved.text && <Pressable accessibilityRole="button" disabled={busy} onPress={() => { setText(saved.text!); setEditing(false); }} style={{padding:10}}><Text style={{fontSize:13,fontWeight:'700',color:theme.colors.muted}}>Cancel</Text></Pressable>}
+    </View>
    </>
-   : <>
-    <Text style={[styles.body, { color: '#3E4C43' }]}>{saved.text}</Text>
-    <Pressable accessibilityRole="button" onPress={() => setEditing(true)} style={{alignSelf:'flex-start',paddingVertical:4}}><Text style={{fontSize:13,fontWeight:'700',color:theme.colors.sage}}>Edit</Text></Pressable>
-   </>}
-  {older.length > 0 && <View style={{ borderTopWidth: 1, borderTopColor: theme.colors.line, paddingTop: 12, gap: 9 }}>
-    <Text style={styles.eyebrow}>RECENT</Text>
+   : <View style={{gap:11}}>
+    <Text style={[styles.small,{fontWeight:'700',color:theme.colors.muted}]}>{shortDate(saved.date)}</Text>
+    <Text style={[styles.body, { color: theme.colors.inkSoft, lineHeight: 23 }]}>{saved.text}</Text>
+    <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
+     <Pressable accessibilityRole="button" onPress={() => setEditing(true)} style={{paddingVertical:5,paddingRight:12}}><Text style={{fontSize:13,fontWeight:'700',color:theme.colors.sage}}>Edit</Text></Pressable>
+     <Pressable accessibilityRole="button" onPress={() => router.push('/diary')} style={{paddingVertical:5,paddingLeft:12}}><Text style={{fontSize:13,fontWeight:'700',color:theme.colors.sage}}>View diary →</Text></Pressable>
+    </View>
+   </View>}
+  {older.length > 0 && !editing && <View style={{ borderTopWidth: 1, borderTopColor: theme.colors.line, paddingTop: 12, gap: 9 }}>
     {older.map(entry => <View key={entry.date} style={{ gap: 2 }}><Text style={[styles.small, { fontWeight: '700' }]}>{shortDate(entry.date)}</Text><Text numberOfLines={1} style={[styles.small, { color: theme.colors.muted }]}>{entry.text}</Text></View>)}
    </View>}
-  {(saved.text || older.length > 0) && <Pressable accessibilityRole="button" onPress={() => router.push('/diary')} style={{alignSelf:'flex-start',paddingVertical:5}}><Text style={{fontSize:13,fontWeight:'700',color:theme.colors.sage}}>View diary →</Text></Pressable>}
+  {!saved.text && !editing && <Pressable accessibilityRole="button" onPress={() => setEditing(true)}><Text style={{fontSize:13,fontWeight:'700',color:theme.colors.sage}}>Write an entry</Text></Pressable>}
   {error && <Notice>{error}</Notice>}
  </View>;
 }
