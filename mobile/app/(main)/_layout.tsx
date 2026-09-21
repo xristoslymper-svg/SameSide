@@ -17,7 +17,7 @@ export default function ProductLayout() {
   if (token) return <Redirect href="/invite/resume"/>;
   if (destination !== '/welcome') return <Redirect href={destination}/>;
 
-  const shellWidth = Math.min(width, 430);
+  const shellWidth = Math.min(width - 28, 402);
   const safeBottom = Math.max(insets.bottom, 9);
 
   return (
@@ -32,27 +32,26 @@ export default function ProductLayout() {
           position: 'absolute',
           width: shellWidth,
           left: (width - shellWidth) / 2,
-          bottom: 0,
-          height: 64 + safeBottom,
+          bottom: Math.max(safeBottom, 12),
+          height: 62,
           paddingTop: 7,
-          paddingBottom: safeBottom,
-          paddingHorizontal: 18,
+          paddingBottom: 7,
+          paddingHorizontal: 16,
           backgroundColor: 'rgba(255,253,249,0.985)',
-          borderTopWidth: 1,
-          borderTopColor: theme.colors.line,
-          borderLeftWidth: 0,
-          borderRightWidth: 0,
-          borderBottomWidth: 0,
+          borderWidth: 1,
+          borderColor: theme.colors.line,
+          borderRadius: 31,
           shadowColor: '#283A2F',
-          shadowOpacity: 0.06,
-          shadowRadius: 16,
-          shadowOffset: { width: 0, height: -5 },
+          shadowOpacity: 0.08,
+          shadowRadius: 18,
+          shadowOffset: { width: 0, height: 5 },
           elevation: 8,
+          overflow: 'hidden',
         },
-        tabBarItemStyle: { paddingTop: 1 },
+        tabBarItemStyle: { paddingTop: 1, borderRadius: 24 },
         tabBarIconStyle: { marginBottom: 0 },
         tabBarLabelStyle: { fontSize: 10.5, fontWeight: '700', marginTop: 2, marginBottom: 0 },
-        sceneStyle: { backgroundColor: theme.colors.background, paddingBottom: 73 + safeBottom },
+        sceneStyle: { backgroundColor: theme.colors.background, paddingBottom: 86 + safeBottom },
       }}
     >
       <Tabs.Screen name="today" options={{title:'Today',tabBarIcon:({color,focused})=><Text style={{color,fontSize:focused?20:19,lineHeight:21,fontWeight:focused?'700':'500'}}>⌂</Text>}}/>
