@@ -55,27 +55,10 @@ export default function ProductLayout() {
         sceneStyle: { backgroundColor: theme.colors.background, paddingBottom: 73 + safeBottom },
       }}
     >
-      <Tabs.Screen
-        name="today"
-        options={{
-          title: 'Today',
-          tabBarIcon: ({ color, focused }) => <Text style={{ color, fontSize: focused ? 20 : 19, lineHeight: 21, fontWeight: focused ? '700' : '500' }}>⌂</Text>,
-        }}
-      />
-      <Tabs.Screen
-        name="garden"
-        options={{
-          title: 'Garden',
-          tabBarIcon: ({ color, focused }) => <Text style={{ color, fontSize: focused ? 21 : 20, lineHeight: 21 }}>✤</Text>,
-        }}
-      />
-      <Tabs.Screen
-        name="roots"
-        options={{
-          title: 'Roots',
-          tabBarIcon: ({ color, focused }) => <Text style={{ color, fontSize: focused ? 20 : 19, lineHeight: 21, fontWeight: focused ? '700' : '500' }}>◎</Text>,
-        }}
-      />
+      <Tabs.Screen name="today" options={{title:'Today',tabBarIcon:({color,focused})=><Text style={{color,fontSize:focused?20:19,lineHeight:21,fontWeight:focused?'700':'500'}}>⌂</Text>}}/>
+      <Tabs.Screen name="garden" options={{title:'Garden',tabBarIcon:({color,focused})=><Text style={{color,fontSize:focused?21:20,lineHeight:21}}>✤</Text>}}/>
+      <Tabs.Screen name="roots" options={{title:'Roots',tabBarIcon:({color,focused})=><Text style={{color,fontSize:focused?20:19,lineHeight:21,fontWeight:focused?'700':'500'}}>◎</Text>}}/>
+      <Tabs.Screen name="diary" options={{href:null}}/>
     </Tabs>
   );
 }
