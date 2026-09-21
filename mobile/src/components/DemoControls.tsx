@@ -6,7 +6,7 @@ import { Button, Notice, Screen, styles } from './ui';
 
 export function DemoEntry({ quiet = false }: { quiet?: boolean } = {}) {
  if(!demoAvailable||isDemo)return null;
- if(quiet)return <Pressable accessibilityRole="button" onPress={()=>startDemo()} style={({pressed})=>({minHeight:40,alignItems:'center',justifyContent:'center',opacity:pressed?.72:1})}><Text style={[styles.small,{fontWeight:'700'}]}>Explore demo — no sign-in</Text></Pressable>;
+ if(quiet)return <Pressable accessibilityRole="button" onPress={()=>startDemo()} style={({pressed})=>({minHeight:40,alignItems:'center',justifyContent:'center',opacity:pressed?0.72:1})}><Text style={[styles.small,{fontWeight:'700'}]}>Explore demo — no sign-in</Text></Pressable>;
  return <Button label="Explore demo — no sign-in" secondary onPress={()=>startDemo()}/>;
 }
 export function DemoControls() {
