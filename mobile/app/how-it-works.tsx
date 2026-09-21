@@ -14,7 +14,7 @@ export default function HowItWorksScreen() {
     <Text style={[styles.title,s.title]}>Small gestures{"\n"}Real connection</Text>
     <Text style={s.promise}>Habits that will last forever</Text>
     <View style={s.steps}>{steps.map(([title, body], i) => <View key={title} style={[styles.card,s.card]}><Text style={s.number}>{i + 1}</Text><View style={s.copy}><Text style={[styles.cardTitle,s.cardTitle]}>{title}</Text><Text style={[styles.body,s.body]}>{body}</Text></View></View>)}</View>
-    <Button label="Continue" disabled={busy} onPress={() => { void save({ step: 'auth' }); }}/>
+    <Button label="Continue" disabled={busy} onPress={() => { void save({ step: 'mode' }); }}/>
     <Button label="Back" secondary disabled={busy} onPress={() => { void save({ step: 'opening' }); }}/>
   </FlowScreen>;
 }
