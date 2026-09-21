@@ -4,9 +4,9 @@ import { FlowScreen } from '../src/components/onboarding';
 import { useOnboarding } from '../src/providers/OnboardingProvider';
 
 const steps = [
-  ['One action per day', 'Small habits that shift your relationship, day by day'],
-  ['Private actions', "When you’re together, each person gets something of their own. Neither sees the other’s move."],
-  ['Let it bloom', 'Choose a flower and grow it together. When it blooms here, we’ll plant one for real in the Same Side Garden.'],
+  ['Start with what feels off', 'Choose the pattern that’s been getting in the way lately. Routine, distance, the same argument, or something else. You’re not against each other. You’re on the same side against the pattern.'],
+  ['Build your way out of it', 'You each get a small private move every day, aimed at the other person. Over time, those moments help you build new habits and break out of the cycle you keep falling into.'],
+  ['Grow something together', 'Your digital flower grows as the journey unfolds. When it blooms, your path is complete and a real flower is planted in the Same Side Garden alongside flowers from other couples who took the same journey.'],
 ];
 export default function HowItWorksScreen() {
   const { save, busy } = useOnboarding();
