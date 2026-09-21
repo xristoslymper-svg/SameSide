@@ -1,9 +1,9 @@
 import { Image, StyleSheet, View } from 'react-native';
 
-const background = { uri: '/opening-couple.jpg' };
+const background = { uri: 'https://images.unsplash.com/photo-1761206532410-f0042edbeb9b?auto=format&fit=crop&w=2000&q=85' };
 
 export function OpeningMedia() {
-  return <View pointerEvents="none" style={local.frame} accessibilityLabel="A couple sitting together in a field looking across the landscape">
+  return <View pointerEvents="none" style={local.frame} accessibilityLabel="A couple sitting together in a field at sunset">
     <Image source={background} resizeMode="cover" style={local.photo}/>
     <View style={local.topVeil}/>
     <View style={local.bottomVeil}/>
