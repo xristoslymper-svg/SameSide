@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import { isDemo } from '../lib/demo';
 
 export type Reflection = { date: string; text: string | null };
 
@@ -10,6 +11,10 @@ export async function readReflection(): Promise<Reflection> {
 }
 
 export async function readRecentReflections(relationshipId: string, limit = 5): Promise<Reflection[]> {
+ // The isolated demo implements the reflection RPCs, but it does not expose the
+ // underlying daily_reflections REST table. Recent history is therefore empty
+ // in demo rather than failing the whole Roots screen.
+ if (isDemo) return [];
  if (!supabase) throw new Error('We couldn’t open your diary. Please try again.');
  const { data, error } = await supabase
   .from('daily_reflections')
