@@ -1,6 +1,12 @@
 import { Image, StyleSheet, View } from 'react-native';
+import h0 from '../assets/openingHands0';
+import h1 from '../assets/openingHands1';
+import h2 from '../assets/openingHands2';
+import h3 from '../assets/openingHands3';
+import h4 from '../assets/openingHands4';
+import h5 from '../assets/openingHands5';
 
-const background = require('../../assets/opening-hands.webp');
+const background = { uri: `data:image/webp;base64,${h0}${h1}${h2}${h3}${h4}${h5}` };
 
 export function OpeningMedia() {
   return <View pointerEvents="none" style={local.frame} accessibilityLabel="Two people holding hands at sunset">
