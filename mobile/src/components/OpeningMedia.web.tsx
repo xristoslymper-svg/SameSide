@@ -8,7 +8,7 @@ export function OpeningMedia() {
       style={local.frame}
     >
       <img
-        src="/opening-couple.jpg"
+        src="/opening-couple.webp"
         alt=""
         aria-hidden="true"
         style={{
@@ -18,6 +18,7 @@ export function OpeningMedia() {
           height: '100%',
           objectFit: 'cover',
           objectPosition: 'center center',
+          display: 'block',
         }}
       />
       <View style={local.topVeil} />
