@@ -1,6 +1,6 @@
 import { Image, StyleSheet, View } from 'react-native';
 
-const background = { uri: 'https://raw.githubusercontent.com/xristoslymper-svg/SameSide/8133342dc8493ba81e5328bc7f2ada01af6feee7/mobile/assets/opening-couple.jpg' };
+const background = { uri: '/opening-couple.jpg' };
 
 export function OpeningMedia() {
   return <View pointerEvents="none" style={local.frame} accessibilityLabel="A couple sitting together in a field looking across the landscape">
