@@ -11,7 +11,7 @@ import { useOnboarding } from '../../src/providers/OnboardingProvider';
 import { DailyReflection } from '../../src/components/DailyNoticing';
 import { theme } from '../../src/theme';
 
-const steps=[
+const weeks=[
  {title:'Notice each other again',copy:'Bring attention back to the small things that routine can make easy to miss.'},
  {title:'Change the default',copy:'Put a little more warmth, choice and novelty into ordinary days.'},
  {title:'Change the pattern in the moment',copy:'Practise a different response when an old automatic reaction appears.'},
@@ -31,13 +31,13 @@ export default function Roots(){
  const saved=!!state.data?.roots.pattern&&!!state.data?.roots.target&&!editing;
  async function submit(){if(locked.current||!pattern||!target)return;locked.current=true;setBusy(true);setError(null);try{await saveRoots(pattern,target);setEditing(false);await state.refresh();}catch(cause){setError(cause instanceof Error?cause.message:'Please try again.');}finally{locked.current=false;setBusy(false);}}
  function choosePattern(next:RoutinePattern){setPattern(next);setTarget(null);}
- const step=Math.min(4,Math.max(1,state.data?.program.week??1));const stepInfo=steps[step-1];const checkStep=pattern?2:1;
+ const week=Math.min(4,Math.max(1,state.data?.program.week??1));const weekInfo=weeks[week-1];const checkStep=pattern?2:1;
  return <Screen compact>
   <AppHeader/>
   <View style={local.intro}><Text style={local.title}>Roots</Text><Text style={local.subtitle}>A private space to reflect.</Text></View>
   <LoadState {...state}/>
   {!state.loading&&state.data&&<View style={local.content}>
-   <View style={local.pathNote}><Text style={styles.eyebrow}>YOUR CURRENT STEP</Text><View style={local.pathRow}><View style={{flex:1}}><Text style={local.pathTitle}>{stepInfo.title}</Text><Text style={local.pathCopy}>{stepInfo.copy}</Text></View></View></View>
+   <View style={local.pathNote}><Text style={styles.eyebrow}>WEEK {week} OF 4</Text><View style={local.pathRow}><View style={{flex:1}}><Text style={local.pathTitle}>{weekInfo.title}</Text><Text style={local.pathCopy}>{weekInfo.copy}</Text></View></View></View>
 
    <View style={local.checkCard}>
     <View style={local.checkTop}><View style={{flex:1}}><Text style={styles.eyebrow}>WHAT FEELS TRUE LATELY?</Text></View>{!saved&&<Text style={local.progress}>{checkStep} / 2</Text>}</View>
