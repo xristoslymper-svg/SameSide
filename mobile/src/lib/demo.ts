@@ -107,6 +107,8 @@ export const demoFetch: typeof fetch = async (input,init) => {
    result=null;break;
   }
   case 'get_shared_garden_state':result=[gardenStage(state)];break;
+  case 'get_my_root_pulse':result={pattern:state.roots[0]??null,target:state.roots[1]??null,can_edit:true,week_no:Math.min(4,Math.max(1,Math.ceil(Math.max(1,state.day)/7)))};break;
+  case 'save_my_root_pulse':state.roots=[body.pattern,body.target];result={pattern:body.pattern,target:body.target,can_edit:true,week_no:Math.min(4,Math.max(1,Math.ceil(Math.max(1,state.day)/7)))};break;
   case 'get_my_root_preferences':result={choices:state.roots,can_edit:true};break;
   case 'save_my_root_preferences':state.roots=body.choices;result={choices:state.roots,can_edit:true};break;
   case 'get_my_daily_reflection':result={date:state.today,text:state.thought};break;
