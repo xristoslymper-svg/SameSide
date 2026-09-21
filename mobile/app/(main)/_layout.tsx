@@ -26,8 +26,8 @@ export default function ProductLayout() {
       key={session.user.id}
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: theme.colors.ink,
-        tabBarInactiveTintColor: '#999287',
+        tabBarActiveTintColor: '#6C5140',
+        tabBarInactiveTintColor: '#A08D7B',
         tabBarStyle: {
           position: 'absolute',
           width: shellWidth,
