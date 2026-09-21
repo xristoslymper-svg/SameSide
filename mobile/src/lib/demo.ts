@@ -1,6 +1,4 @@
 import { Platform } from 'react-native';
-// Explicitly enabled, isolated web demo. It uses sessionStorage + a fake transport only;
-// no demo request reaches the real Supabase project.
 const hostAllowsDemo = Platform.OS === 'web' && typeof window !== 'undefined'
  && (['localhost','127.0.0.1','[::1]'].includes(window.location.hostname)
    || window.location.hostname === 'same-side.vercel.app'
@@ -19,11 +17,11 @@ const initial = ():State => ({relationship:false,members:1,name:'Alex',partnerNa
 function read():State { try { const value=window.sessionStorage.getItem(prefix+'data'); return value?{...initial(),...JSON.parse(value)}:initial(); } catch {return initial();} }
 export const demoToday = () => read().today;
 function write(state:State) { window.sessionStorage.setItem(prefix+'data',JSON.stringify(state)); }
+function activeDays(state:State){return Object.values(state.daily).filter(value=>value>0).length;}
 function gardenStage(state:State) {
- const activeDays=Object.values(state.daily).filter(value=>value>0).length;
- const elapsed=state.day;
- const stage_key=elapsed>=28&&activeDays>=20?'bloom':elapsed>=25&&activeDays>=16?'opening':elapsed>=22&&activeDays>=12?'bud':elapsed>=15&&activeDays>=8?'established':elapsed>=8&&activeDays>=4?'leaves':elapsed>=4&&activeDays>=2?'shoot':activeDays>=1?'roots':'seed';
- return {stage_key,bloom:stage_key==='bloom',programme_complete:elapsed>=28};
+ const active=activeDays(state);
+ const stage_key=active>=28?'bloom':active>=24?'opening':active>=18?'bud':active>=12?'established':active>=7?'leaves':active>=3?'shoot':active>=1?'roots':'seed';
+ return {stage_key,bloom:stage_key==='bloom',programme_complete:active>=28};
 }
 export function startDemo(scenario:DemoScenario='fresh') {
  if(!demoAvailable)return;
@@ -36,7 +34,7 @@ export function startDemo(scenario:DemoScenario='fresh') {
   state.start=date(1-state.day);state.flower=scenario==='legacy'?null:'cosmos';state.legacy=scenario==='legacy';
   for(let i=0;i<state.day;i++)state.daily[date(i+1-state.day)]=1;
   if(scenario==='bloom')state.physical='ready_to_plant';
-  state.moves['0']={id:'demo-move-0',slot:0,assigned_for_date:state.today,program_day:Math.min(state.day,28),task_title:'Notice one small thing',task_body:'Tell your partner one specific thing you appreciated today.',task_minutes:2,status:'completed'};
+  state.moves['0']={id:'demo-move-0',slot:0,assigned_for_date:state.today,program_day:Math.min(activeDays(state),28),task_title:'Notice one specific effort',task_body:'Tell your partner one ordinary thing they did that you appreciated. Be specific.',task_why:'Routine makes familiar effort easy to stop seeing. Naming one concrete thing trains your attention back toward what your partner is already bringing into the relationship.',task_minutes:2,status:'completed'};
   window.sessionStorage.setItem(prefix+'app.same-side.demo.auth',JSON.stringify(demoSession()));
   window.sessionStorage.setItem(prefix+'app.same-side.onboarding.v1.'+demoUserId,JSON.stringify({version:1,step:'done',intent:state.members===2?'together':'solo',path:'routine',focus:[]}));
  }
@@ -90,9 +88,16 @@ export const demoFetch: typeof fetch = async (input,init) => {
    const slot=body.requested_slot??0;
    if(!Number.isInteger(slot)||slot<0||slot>2)return reply({message:'daily_limit_reached'},400);
    if(slot&&state.moves[slot-1]?.status!=='completed')return reply({message:'previous_slot_not_completed'},400);
-   const titles=['Notice one small thing','Make one thing lighter','Share a warm memory'];
-   const descriptions=['Tell your partner one specific thing you appreciated today.','Take care of a little everyday job your partner usually does.','Tell your partner about a small moment together that still makes you smile.'];
-   state.moves[slot]??={id:'demo-move-'+slot,slot,assigned_for_date:state.today,program_day:Math.min(state.day,28),task_title:titles[slot],task_body:descriptions[slot],task_minutes:2,status:'assigned'};
+   const active=activeDays(state); if(active>=28)return reply({message:'path_complete'},400);
+   const programDay=Math.min(active+1,28); const step=Math.min(4,Math.max(1,Math.ceil(programDay/7)));
+   const samples=[
+    {title:'Notice one specific effort',body:'Tell your partner one ordinary thing they did that you appreciated. Be specific.',why:'Routine makes familiar effort easy to stop seeing. Naming one concrete thing trains your attention back toward what your partner is already bringing into the relationship.'},
+    {title:'Make a tiny invitation',body:'Invite your partner into ten minutes together: tea, a short walk, music, or something equally simple.',why:'Routine stays powerful when nothing interrupts it. A small invitation creates a new shared moment without needing a special occasion.'},
+    {title:'Ask instead of assuming',body:'If your partner seems off today, ask how they are rather than deciding what their mood means.',why:'Assumptions can turn uncertainty into distance. A simple question replaces guessing with real information.'},
+    {title:'Repeat something that worked',body:'Think of one move from this journey that felt good between you and do a version of it again today.',why:'A good moment becomes useful when it can be repeated. Choosing something that worked helps turn a success into a pattern.'},
+   ];
+   const sample=samples[step-1];
+   state.moves[slot]??={id:'demo-move-'+slot,slot,assigned_for_date:state.today,program_day:programDay,task_title:sample.title,task_body:sample.body,task_why:sample.why,task_minutes:3,status:'assigned'};
    result=state.moves[slot];break;
   }
   case 'complete_assignment': {
