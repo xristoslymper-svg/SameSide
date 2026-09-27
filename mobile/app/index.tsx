@@ -1,15 +1,19 @@
 import { DemoEntry } from '../src/components/DemoControls';
+import { Redirect } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '../src/components/ui';
 import { OpeningMedia } from '../src/components/OpeningMedia';
 import { FlowScreen } from '../src/components/onboarding';
 import { useOnboarding } from '../src/providers/OnboardingProvider';
+import { useAuth } from '../src/providers/AuthProvider';
 import { theme } from '../src/theme';
 
 export default function OpeningScreen() {
-  const { save, busy } = useOnboarding();
+  const { session } = useAuth();
+  const { save, busy, destination } = useOnboarding();
   const insets = useSafeAreaInsets();
+  if (session) return <Redirect href={destination}/>;
   return <FlowScreen immersive>
     <View style={local.screen}>
       <OpeningMedia/>
