@@ -20,7 +20,7 @@ function message(error: { message?: string } | null, fallback: string) {
 
 export async function ensureRelationship() {
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-  const { data, error } = await client().rpc('create_solo_relationship', { timezone_name: timezone });
+  const { data, error } = await client().rpc('create_relationship', { timezone_name: timezone });
   if (error || !data) throw new Error(message(error, 'We could not prepare your relationship. Please try again.'));
   return data as string;
 }
