@@ -41,7 +41,7 @@ export default function OpeningScreen() {
 }
 
 const local=StyleSheet.create({
- screen:{flex:1,position:'relative',backgroundColor:'#E7DED2'},
+ screen:{flex:1,position:'relative',backgroundColor:theme.colors.sand},
  content:{...StyleSheet.absoluteFillObject},
  photoContentZone:{flex:1,position:'relative',minHeight:0},
  ctaZone:{flexShrink:0,paddingTop:14,paddingHorizontal:24,backgroundColor:'transparent'},
@@ -52,6 +52,6 @@ const local=StyleSheet.create({
  motto:{fontFamily:theme.fonts.heading,fontSize:16.5,lineHeight:22,color:theme.colors.ink,textAlign:'center',marginTop:8},
  tagline:{fontFamily:theme.fonts.heading,fontSize:14.5,lineHeight:19,color:theme.colors.inkSoft,textAlign:'center',marginTop:5},
  actions:{gap:8},
- secondaryAction:{minHeight:48,borderRadius:18,backgroundColor:'rgba(255,253,249,.94)',alignItems:'center',justifyContent:'center',borderWidth:1,borderColor:'rgba(232,224,213,.92)'},
+ secondaryAction:{minHeight:48,borderRadius:18,backgroundColor:'rgba(255,252,247,.92)',alignItems:'center',justifyContent:'center',borderWidth:1,borderColor:'rgba(210,197,181,.88)'},
  secondaryText:{color:theme.colors.ink,fontSize:13.5,fontWeight:'700'},
 });
