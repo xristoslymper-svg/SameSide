@@ -70,9 +70,13 @@ export async function getProgram(userId: string) {
   if (error || data?.active_path !== 'routine') throw new Error('We could not open your space. Please try again.');
   if (!data.path_started_at) throw new Error('We could not load your journey dates. Please try again.');
   const today = isDemo ? demoToday() : relationshipDate(data.timezone ?? 'UTC');
-  const day = journeyDay(data.path_started_at, today);
+  const calendarDay = journeyDay(data.path_started_at, today);
+  const { data: progressData, error: progressError } = await client().rpc('get_routine_progress');
+  const progress = Array.isArray(progressData) ? progressData[0] : progressData;
+  const day = !progressError && progress?.program_day ? Number(progress.program_day) : calendarDay;
+  const week = !progressError && progress?.week_no ? Number(progress.week_no) : Math.min(4, Math.ceil(Math.min(day,28) / 7));
   return { ...membership, name: 'The Routine', selectedFlower: data.selected_flower as string | null,
     canChooseFlower: membership.role === 'member_a' || data.legacy_flower_choice === true,
     relationshipClosed: membership.hasDeparture,
-    startDate: data.path_started_at as string, today, day, week: Math.min(4, Math.ceil(Math.min(day,28) / 7)) };
+    startDate: data.path_started_at as string, today, day, week };
 }
