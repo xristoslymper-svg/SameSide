@@ -34,9 +34,9 @@ export function startDemo(scenario:DemoScenario='fresh') {
   state.relationship=true; state.members=scenario==='waiting'?1:2; state.role='member_a'; state.myReady=true; state.partnerReady=state.members===2; state.activated=state.members===2;
   state.day=scenario==='waiting'?1:scenario==='week3'?21:scenario==='bloom'?28:7;
   state.start=date(1-state.day);state.flower=scenario==='legacy'?null:'cosmos';state.legacy=scenario==='legacy';
-  for(let i=0;i<state.day;i++)state.daily[date(i+1-state.day)]=1;
+  if(state.activated)for(let i=0;i<state.day;i++)state.daily[date(i+1-state.day)]=1;
   if(scenario==='bloom')state.physical='ready_to_plant';
-  state.moves['0']={id:'demo-move-0',slot:0,assigned_for_date:state.today,program_day:Math.min(activeDays(state),28),task_title:'Notice one specific effort',task_body:'Tell your partner one ordinary thing they did that you appreciated. Be specific.',task_why:'Routine makes familiar effort easy to stop seeing. Naming one concrete thing trains your attention back toward what your partner is already bringing into the relationship.',task_minutes:2,status:'completed'};
+  if(state.activated)state.moves['0']={id:'demo-move-0',slot:0,assigned_for_date:state.today,program_day:Math.min(activeDays(state),28),task_title:'Notice one specific effort',task_body:'Tell your partner one ordinary thing they did that you appreciated. Be specific.',task_why:'Routine makes familiar effort easy to stop seeing. Naming one concrete thing trains your attention back toward what your partner is already bringing into the relationship.',task_minutes:2,status:'completed'};
   window.sessionStorage.setItem(prefix+'app.same-side.demo.auth',JSON.stringify(demoSession()));
   window.sessionStorage.setItem(prefix+'app.same-side.onboarding.v1.'+demoUserId,JSON.stringify({version:2,step:'done',path:'routine',focus:['time']}));
  }
