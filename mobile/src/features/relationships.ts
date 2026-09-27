@@ -73,6 +73,30 @@ export async function getRelationshipState(userId: string) {
   return { relationshipId: data.relationship_id as string, role: data.member_role as string, memberCount: count ?? 1 };
 }
 
+
+export type RoutineActivationState = {
+  relationshipId: string;
+  activated: boolean;
+  activatedAt: string | null;
+  myReady: boolean;
+  partnerReady: boolean;
+  memberCount: number;
+};
+
+export async function getRoutineActivationState(): Promise<RoutineActivationState> {
+  const { data, error } = await client().rpc('get_routine_activation_state');
+  if (error || !data) throw new Error('We could not load your Routine setup. Please try again.');
+  const row = Array.isArray(data) ? data[0] : data;
+  return {
+    relationshipId: row.relationship_id as string,
+    activated: !!row.activated,
+    activatedAt: row.activated_at ?? null,
+    myReady: !!row.my_ready,
+    partnerReady: !!row.partner_ready,
+    memberCount: Number(row.member_count ?? 1),
+  };
+}
+
 export type RelationshipOverview = {
   relationshipId: string;
   role: string;
