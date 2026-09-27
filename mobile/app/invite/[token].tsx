@@ -37,11 +37,11 @@ export default function InvitationScreen() {
   if (!preview && !error) return <Loading/>;
   const name = preview?.name || 'Your partner';
   return <Screen><Brand/><Botanical/>{preview?.state === 'ready' ? <>
-    <Text style={styles.eyebrow}>An invitation for you</Text><Text style={styles.title}>{name} invited you</Text>
-    <View style={styles.card}><Text style={styles.cardTitle}>Different moves. Same side.</Text>
-      <Text style={styles.body}>You'll each get your own private actions. Neither of you sees what the other gets. What you create together grows in the same garden.</Text></View>
+    <Text style={styles.eyebrow}>An invitation for you</Text><Text style={styles.title}>{name} invited you to The Routine</Text>
+    <View style={styles.card}><Text style={styles.cardTitle}>Four weeks, done together.</Text>
+      <Text style={styles.body}>Join your partner, answer a few questions about what you want more of, and The Routine will shape daily Moves for both of you.</Text></View>
     {session && <Text style={styles.small}>Joining as {session.user.email}</Text>}
-    {error && <Notice>{error}</Notice>}<Button label={`Join ${name}`} busy={busy} onPress={() => { void join(); }}/>
+    {error && <Notice>{error}</Notice>}<Button label="Join The Routine" busy={busy} onPress={() => { void join(); }}/>
     {session && <Button label="Use a different account" secondary disabled={busy} onPress={() => { void switchAccount(); }}/ >}
   </> : <><Text style={styles.title}>This invitation can’t be used</Text><Notice>{error || unavailable[preview?.state ?? 'invalid']}</Notice></>}</Screen>;
 }
