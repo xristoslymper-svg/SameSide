@@ -12,13 +12,32 @@ export function useProductData<T>(load: () => Promise<T>) {
   const [loading, setLoading] = useState(true);
   const generation = useRef(0);
   const active = useRef(false);
+  const hasData = useRef(false);
   const refresh = useCallback(async () => {
     const current = ++generation.current;
-    setLoading(true); setError(null);
-    try { const value = await load(); if (active.current && current === generation.current) setData(value); }
-    catch (cause) { if (active.current && current === generation.current) { setData(null); setError(cause instanceof Error ? cause.message : 'Please try again.'); } }
-    finally { if (active.current && current === generation.current) setLoading(false); }
+    const initialLoad = !hasData.current;
+    if (initialLoad) setLoading(true);
+    setError(null);
+    try {
+      const value = await load();
+      if (active.current && current === generation.current) {
+        hasData.current = true;
+        setData(value);
+      }
+    } catch (cause) {
+      if (active.current && current === generation.current && initialLoad) {
+        setData(null);
+        setError(cause instanceof Error ? cause.message : 'Please try again.');
+      }
+    } finally {
+      if (active.current && current === generation.current && initialLoad) setLoading(false);
+    }
   }, [load]);
+  const mutate = useCallback((value: T) => {
+    hasData.current = true;
+    setData(value);
+    setLoading(false);
+  }, []);
   useFocusEffect(useCallback(() => {
     active.current = true; void refresh();
     const subscription = AppState.addEventListener('change', state => { if (state === 'active') void refresh(); });
@@ -26,7 +45,7 @@ export function useProductData<T>(load: () => Promise<T>) {
     if (Platform.OS === 'web') document.addEventListener('visibilitychange', visible);
     return () => { active.current = false; generation.current++; subscription.remove(); if (Platform.OS === 'web') document.removeEventListener('visibilitychange', visible); };
   }, [refresh]));
-  return { data, error, loading, refresh };
+  return { data, error, loading, refresh, mutate };
 }
 export function ProductScreen({ title, question, children }: PropsWithChildren<{ title: string; question: string }>) {
   return <Screen><Brand/><Text style={styles.eyebrow}>{title}</Text><Text style={styles.title}>{question}</Text>{children}</Screen>;
