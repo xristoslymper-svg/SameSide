@@ -19,14 +19,16 @@ export default function ChooseFlower() {
  return <FlowerSelection/>;
 }
 function FlowerSelection() {
- const { session } = useAuth(); const { progress, save } = useOnboarding();
+ const { session } = useAuth(); const { save, destination } = useOnboarding();
  const { returnTo } = useLocalSearchParams<{ returnTo?: string }>();
- const legacy = returnTo === 'garden' || progress.step !== 'flower';
+ const legacy = returnTo === 'garden';
  const state = useProductData(useCallback(async () => { if (!legacy) await ensureRelationship(); return getProgram(session!.user.id); }, [session!.user.id, legacy]));
  const [detail, setDetail] = useState<FlowerId | null>(null);
  const [busy, setBusy] = useState(false); const [error, setError] = useState<string | null>(null);
  const selected = findFlower(state.data?.selectedFlower ?? null);
  const flower = findFlower(detail);
+ if (!legacy && destination !== '/choose-flower') return <Redirect href={destination}/>;
+ if (!legacy && state.data && selected) return <Redirect href={state.data.role === 'member_a' && !state.data.routineActivated ? '/invite-partner' : '/today'}/>;
  async function select(id: FlowerId) {
   if (busy) return; setBusy(true); setError(null);
   try {
