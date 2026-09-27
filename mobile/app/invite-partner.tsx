@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import { isDemo, simulateDemoPartnerJoin } from '../src/lib/demo';
 import { useEffect, useState } from 'react';
 import { Platform, Share, Text, TextInput, View } from 'react-native';
