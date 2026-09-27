@@ -28,7 +28,7 @@ export default function OpeningScreen() {
 
         <View style={[local.ctaZone,{paddingBottom:Math.max(insets.bottom + 10,16)}]}>
           <View style={local.actions}>
-            <Button label="Get Started" disabled={busy} onPress={() => { void save({ intent: null, step: 'how' }); }}/>
+            <Button label="Get Started" disabled={busy} onPress={() => { void save({ step: 'how' }); }}/>
             <Pressable accessibilityRole="button" disabled={busy} onPress={() => { void save({ step: 'auth' }); }} style={({pressed})=>[local.secondaryAction,pressed&&{opacity:.78}]}>
               <Text style={local.secondaryText}>I already have an account</Text>
             </Pressable>
