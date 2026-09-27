@@ -11,7 +11,7 @@ export const isDevelopmentPasswordSignInEnabled = process.env.EXPO_PUBLIC_ENABLE
 
 type AuthContextValue = {
   session: Session | null; loading: boolean; error: string | null;
-  sendMagicLink: (email: string) => Promise<void>; signInWithTestPassword: (email: string, password: string) => Promise<void>; setTestPassword: (password: string) => Promise<void>; signOut: () => Promise<void>;
+  signInWithGoogle: () => Promise<void>; sendMagicLink: (email: string) => Promise<void>; signInWithTestPassword: (email: string, password: string) => Promise<void>; setTestPassword: (password: string) => Promise<void>; signOut: () => Promise<void>;
   clearError: () => void;
 };
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -73,6 +73,17 @@ export function AuthProvider({ children }: PropsWithChildren) {
     return () => { active = false; subscription.unsubscribe(); links.remove(); appState?.remove(); if (Platform.OS !== 'web') client.auth.stopAutoRefresh(); };
   }, []);
 
+  async function signInWithGoogle() {
+    if (!supabase) throw new Error('Sign-in is not available just yet. Please try again later.');
+    if (Platform.OS !== 'web') throw new Error('Google sign-in is currently available on the Same Side website.');
+    const redirect = `${window.location.origin}/auth/callback`;
+    const { error: authError } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: redirect },
+    });
+    if (authError) throw new Error('Google sign-in is not available yet. Please try the email sign-in link.');
+  }
+
   async function sendMagicLink(email: string) {
     if (!supabase) throw new Error('Sign-in is not available just yet. Please try again later.');
     const redirect = Platform.OS === 'web'
@@ -102,7 +113,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     if (authError) throw new Error('We could not sign you out. Please try again.');
     setSession(null); setError(null); inFlight.current.clear();
   }
-  return <AuthContext.Provider value={{ session, loading, error, sendMagicLink, signInWithTestPassword, setTestPassword, signOut, clearError: () => setError(null) }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ session, loading, error, signInWithGoogle, sendMagicLink, signInWithTestPassword, setTestPassword, signOut, clearError: () => setError(null) }}>{children}</AuthContext.Provider>;
 }
 export function useAuth() {
   const value = useContext(AuthContext);
