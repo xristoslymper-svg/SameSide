@@ -87,7 +87,7 @@ export default function InvitePartnerScreen() {
     </Text>
 
     {isDemo ? <View style={styles.card}>
-      <Text style={styles.body}>Demo invitation: simulate your partner joining here. No real invitation is sent.</Text>
+      <Text style={styles.body}>Demo invitation: simulate your partner joining and completing their setup. No real invitation is sent.</Text>
       <Button label="Simulate partner joining" onPress={() => { if (simulateDemoPartnerJoin()) void save({ step: 'done' }); else setError('Finish your setup and choose a flower before simulating your partner.'); }}/>
     </View> : joined ? <View style={styles.card}>
       <Text style={styles.cardTitle}>{ready?'The Routine starts now':'One last step for them'}</Text>
