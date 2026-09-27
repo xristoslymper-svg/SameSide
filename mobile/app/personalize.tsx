@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Redirect } from 'expo-router';
 import { Text, View } from 'react-native';
 import { Button, Notice, styles } from '../src/components/ui';
 import { Choice, FlowScreen } from '../src/components/onboarding';
@@ -11,13 +12,15 @@ const choices:[Focus,string][]=[['fun','Fun'],['affection','Affection'],['conver
 
 export default function PersonalizeScreen(){
  const {session}=useAuth();
- const {progress,save,busy}=useOnboarding();
+ const {progress,save,busy,destination}=useOnboarding();
  const [starting,setStarting]=useState(false);
  const [error,setError]=useState<string|null>(null);
  const [role,setRole]=useState<string|null>(null);
  const selected=progress.focus??[];
 
  useEffect(()=>{let active=true;if(!session)return;void getRelationshipState(session.user.id).then(r=>{if(active)setRole(r?.role??null);}).catch(()=>{});return()=>{active=false};},[session]);
+
+ if(destination!=='/personalize') return <Redirect href={destination}/>;
 
  async function toggle(focus:Focus){
   const exists=selected.includes(focus);
