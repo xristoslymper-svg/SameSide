@@ -5,16 +5,16 @@ import { useOnboarding } from '../src/providers/OnboardingProvider';
 
 const steps = [
   ['Start with what feels off', 'Choose the pattern that’s been getting in the way lately. Routine, distance, the same argument, or something else. You’re not against each other. You’re on the same side against the pattern.'],
-  ['Build your way out of it', 'You each get a small private move every day, aimed at the other person. Over time, those moments help you build new habits and break out of the cycle you keep falling into.'],
-  ['Grow something together', 'Your digital flower grows as the journey unfolds. When it blooms, your path is complete and a real flower is planted in the Same Side Garden alongside flowers from other couples who took the same journey.'],
+  ['Build your way out of it', 'You each get a Move every day. Those actions are shaped by what both of you say you want more of, helping you change the everyday pattern together.'],
+  ['Grow something together', 'Your shared flower grows as you move through the four weeks. When it blooms, your Routine is complete and you can keep the changes that worked for you.'],
 ];
 export default function HowItWorksScreen() {
   const { save, busy } = useOnboarding();
-  return <FlowScreen><Text style={styles.eyebrow}>Different moves. Same side.</Text>
+  return <FlowScreen><Text style={styles.eyebrow}>ONE ROUTINE. TWO PEOPLE.</Text>
     <Text style={[styles.title,s.title]}>Small gestures{"\n"}Real connection</Text>
-    <Text style={s.promise}>Habits that will last forever</Text>
+    <Text style={s.promise}>Changes worth keeping</Text>
     <View style={s.steps}>{steps.map(([title, body], i) => <View key={title} style={[styles.card,s.card]}><Text style={s.number}>{i + 1}</Text><View style={s.copy}><Text style={[styles.cardTitle,s.cardTitle]}>{title}</Text><Text style={[styles.body,s.body]}>{body}</Text></View></View>)}</View>
-    <Button label="Continue" disabled={busy} onPress={() => { void save({ step: 'mode' }); }}/>
+    <Button label="Continue" disabled={busy} onPress={() => { void save({ step: 'auth' }); }}/>
     <Button label="Back" secondary disabled={busy} onPress={() => { void save({ step: 'opening' }); }}/>
   </FlowScreen>;
 }
