@@ -84,15 +84,24 @@ export function OnboardingProvider({ children }: PropsWithChildren) {
               ]);
               if (relationshipError) throw relationshipError;
 
+              // The database is authoritative after sign-in. Local onboarding storage only
+              // remembers in-progress choices; it must never send a returning account backwards.
               if (!activation.myReady) {
                 next = { ...next, path: 'routine', focus: [], step: 'personalize' };
               } else if (relationship.role === 'member_a' && !data.selected_flower) {
                 next = { ...next, path: 'routine', step: 'flower' };
+              } else if (relationship.role === 'member_a' && !activation.activated) {
+                // Person A waits here until Person B joins and completes personalization.
+                next = { ...next, path: 'routine', step: 'invite' };
               } else {
+                // Completed Person A and ready Person B enter the product. Today itself
+                // shows the waiting state when the couple has not activated yet.
                 next = { ...next, path: 'routine', step: 'done' };
               }
-            } else if (!['path', 'personalize', 'flower'].includes(next.step)) {
-              next = { ...next, step: 'path' };
+            } else {
+              // A signed-in account without a relationship always starts at Path.
+              // Never trust a stale local personalize/flower step to create setup out of order.
+              next = { ...initial, step: 'path' };
             }
             await sessionStorage.setItem(userKey(scope), JSON.stringify(next));
           }
