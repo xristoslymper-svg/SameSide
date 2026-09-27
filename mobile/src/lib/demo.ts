@@ -17,6 +17,19 @@ const initial = ():State => ({relationship:false,members:1,role:'member_a',myRea
 function read():State { try { const value=window.sessionStorage.getItem(prefix+'data'); return value?{...initial(),...JSON.parse(value)}:initial(); } catch {return initial();} }
 export const demoToday = () => read().today;
 function write(state:State) { window.sessionStorage.setItem(prefix+'data',JSON.stringify(state)); }
+
+export function simulateDemoPartnerJoin() {
+ if (!isDemo) return false;
+ const state = read();
+ if (!state.relationship || !state.flower || !state.myReady) return false;
+ state.members = 2;
+ state.role = 'member_a';
+ state.partnerReady = true;
+ state.activated = true;
+ state.start = state.today;
+ write(state);
+ return true;
+}
 export function demoDiaryRead(){ const state=read(); return state.diary??[]; }
 export function demoDiarySave(entries:Array<{date:string;text:string|null}>){ const state=read(); state.diary=entries; write(state); }
 function activeDays(state:State){return Object.values(state.daily).filter(value=>value>0).length;}
