@@ -23,6 +23,7 @@ export default function Roots(){
  const {session}=useAuth();const {save,busy:inviting}=useOnboarding();
  const load=useCallback(async()=>{
   const program=await getProgram(session!.user.id);
+  if(!program.routineActivated)return{program,roots:{pattern:null,target:null,can_edit:false,week_no:1} as Awaited<ReturnType<typeof readRoots>>,reflection:null,recent:[]};
   const [roots,reflection,recent]=await Promise.all([readRoots(),readReflection(),readRecentReflections(program.relationshipId).catch(()=>[])]);
   return{program,roots,reflection,recent};
  },[session!.user.id]);
@@ -36,7 +37,8 @@ export default function Roots(){
   <AppHeader/>
   <View style={local.intro}><Text style={local.title}>Roots</Text><Text style={local.subtitle}>A private space to reflect.</Text></View>
   <LoadState {...state}/>
-  {!state.loading&&state.data&&<View style={local.content}>
+  {!state.loading&&state.data&&!state.data.program.routineActivated&&<View style={local.checkCard}><Text style={styles.eyebrow}>THE ROUTINE</Text><Text style={local.question}>Roots opens with Day 1.</Text><Text style={local.helper}>Your Routine begins when both of you have joined and completed setup.</Text>{state.data.program.role==='member_a'&&state.data.program.memberCount<2&&<Button label="Invite your partner" disabled={inviting} onPress={()=>{void save({step:'invite'});}}/>}</View>}
+  {!state.loading&&state.data&&state.data.program.routineActivated&&<View style={local.content}>
    <View style={local.pathNote}><Text style={styles.eyebrow}>WEEK {week} OF 4</Text><View style={local.pathRow}><View style={{flex:1}}><Text style={local.pathTitle}>{weekInfo.title}</Text><Text style={local.pathCopy}>{weekInfo.copy}</Text></View></View></View>
 
    <View style={local.checkCard}>
@@ -55,7 +57,6 @@ export default function Roots(){
    </View>
    {error&&<Notice>{error}</Notice>}
    <DailyReflection value={state.data.reflection} recent={state.data.recent}/>
-   {state.data.program.memberCount===1&&!state.data.program.relationshipClosed&&<View style={local.quietSection}><Text style={styles.eyebrow}>WHEN YOU’RE READY</Text><Text style={local.quietTitle}>Bring your partner in</Text><Text style={local.quietBody}>You can keep beginning on your own. Invite them whenever it feels right.</Text><Pressable accessibilityRole="button" disabled={inviting} onPress={()=>{void save({step:'invite'});}} style={local.textAction}><Text style={local.textActionText}>{inviting?'A moment…':'Invite my partner →'}</Text></Pressable></View>}
    {state.data.program.relationshipClosed&&<View style={local.quietSection}><Text style={styles.eyebrow}>YOUR SHARED SPACE</Text><Text style={local.quietTitle}>This garden is no longer connected.</Text><Text style={local.quietBody}>You can keep this space as it is. If you want to begin with someone new, use Relationship settings in Account to start fresh.</Text></View>}
   </View>}
  </Screen>;
