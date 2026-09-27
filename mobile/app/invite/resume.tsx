@@ -26,10 +26,10 @@ export default function ResumeInvitationScreen() {
     })().catch(cause => setError(cause instanceof Error ? cause.message : 'Please try again.'));
   }, [token, session, retry]);
   async function finish() {
-    const saved = await save({ path: 'routine', step: 'done' });
-    if (!saved) return;
     await clearToken();
-    router.replace('/welcome');
+    const saved = await save({ path: 'routine', focus: [], step: 'personalize' });
+    if (!saved) return;
+    router.replace('/personalize');
   }
   async function leave() {
     await clearToken();
@@ -44,8 +44,8 @@ export default function ResumeInvitationScreen() {
   if (!session) return <Redirect href="/sign-in"/>;
   if (!joined && !error) return <Loading/>;
   return <Screen><Brand/><Botanical/>{joined ? <>
-    <Text style={styles.eyebrow}>Together, privately</Text><Text style={styles.title}>You're on the same side</Text>
-    <View style={styles.card}><Text style={styles.cardTitle}>{name ? `You joined ${name}` : 'You’re connected'}</Text><Text style={styles.body}>You now share one Routine and one garden. Your daily moves, completions and private reflections still stay yours.</Text></View>
-    <Button label="Go to Same Side" busy={saving} onPress={() => { void finish(); }}/>
+    <Text style={styles.eyebrow}>THE ROUTINE</Text><Text style={styles.title}>You’re in</Text>
+    <View style={styles.card}><Text style={styles.cardTitle}>{name ? `You joined ${name}` : 'You’re connected'}</Text><Text style={styles.body}>You’ve joined The Routine. Answer a few quick questions so Same Side can shape the daily Moves for both of you.</Text></View>
+    <Button label="Finish my setup" busy={saving} onPress={() => { void finish(); }}/>
   </> : <><Text style={styles.title}>We couldn’t join you</Text><Text style={styles.small}>Signed in as {session.user.email}</Text><Notice>{error}</Notice><Button label="Try again" onPress={() => { started.current = false; setError(null); setRetry(value => value + 1); }}/><Button label="Use a different account" secondary onPress={() => { void switchAccount(); }}/><Button label="Leave invitation" secondary onPress={() => { void leave(); }}/></>}</Screen>;
 }
