@@ -33,7 +33,7 @@ function FlowerSelection() {
    await chooseFlower(id);
    setDetail(null);
    if (legacy) { router.dismissTo('/garden'); return; }
-   const next = progress.intent === 'together' && state.data?.memberCount === 1 ? 'invite' : 'done';
+   const next = state.data?.memberCount === 1 ? 'invite' : 'done';
    if (await save({ step: next })) router.replace(next === 'invite' ? '/invite-partner' : '/today');
   } catch (e) { await state.refresh(); setDetail(null); setError((e as Error).message); } finally { setBusy(false); }
  }
