@@ -4,26 +4,26 @@ import { useAuth } from './AuthProvider';
 import { sessionStorage } from '../lib/storage';
 import { Brand, Button, Loading, Notice, Screen } from '../components/ui';
 import { supabase } from '../lib/supabase';
-import { getRelationshipState } from '../features/relationships';
+import { getRelationshipState, getRoutineActivationState } from '../features/relationships';
 import { useInvitation } from './InvitationProvider';
 
-type Step = 'opening' | 'how' | 'mode' | 'auth' | 'path' | 'personalize' | 'flower' | 'invite' | 'done';
-export type Intent = 'together' | 'solo';
+type Step = 'opening' | 'how' | 'auth' | 'path' | 'personalize' | 'flower' | 'invite' | 'done';
 export type Focus = 'fun' | 'affection' | 'conversation' | 'appreciation' | 'time' | 'novelty';
-type Progress = { version: 1; step: Step; intent: Intent | null; path: 'routine' | null; focus: Focus[] };
-const initial: Progress = { version: 1, step: 'opening', intent: null, path: null, focus: [] };
-const routes = { opening: '/', how: '/how-it-works', mode: '/starting-mode', auth: '/sign-in', path: '/choose-path', personalize: '/personalize', flower: '/choose-flower', invite: '/invite-partner', done: '/welcome' } as const;
+type Progress = { version: 2; step: Step; path: 'routine' | null; focus: Focus[] };
+const initial: Progress = { version: 2, step: 'opening', path: null, focus: [] };
+const routes = { opening: '/', how: '/how-it-works', auth: '/sign-in', path: '/choose-path', personalize: '/personalize', flower: '/choose-flower', invite: '/invite-partner', done: '/welcome' } as const;
 const draftKey = 'same-side.onboarding.v1.draft';
 const userKey = (id: string) => 'same-side.onboarding.v1.' + id;
+
 function parse(raw: string | null): Progress | null {
   if (!raw) return null;
   try {
     const value = JSON.parse(raw);
-    if (value?.version !== 1 || !Object.hasOwn(routes, value.step)
-      || ![null, 'solo', 'together'].includes(value.intent)
+    if (![1, 2].includes(value?.version)) return null;
+    const legacyStep = value.step === 'mode' ? 'auth' : value.step;
+    if (!Object.hasOwn(routes, legacyStep)
       || ![null, 'routine'].includes(value.path)
       || !(Array.isArray(value.focus) || [null, 'attention', 'playfulness', 'time'].includes(value.focus))) return null;
-    if (['personalize', 'flower', 'invite', 'done'].includes(value.step) && value.path !== 'routine') return null;
 
     const legacyMap: Record<string, Focus> = {
       attention: 'appreciation',
@@ -37,9 +37,14 @@ function parse(raw: string | null): Progress | null {
         ? [legacyMap[value.focus]]
         : [];
 
-    return { version: 1, step: value.step, intent: value.intent, path: value.path, focus: focus.slice(0, 3) };
+    const step = legacyStep as Step;
+    if (['personalize', 'flower', 'invite', 'done'].includes(step) && value.path !== 'routine') {
+      return { ...initial, step: 'path' };
+    }
+    return { version: 2, step, path: value.path, focus: focus.slice(0, 3) };
   } catch { return null; }
 }
+
 type Value = { progress: Progress; destination: typeof routes[Step]; busy: boolean; error: string | null; save: (patch: Partial<Omit<Progress, 'version'>>) => Promise<boolean> };
 const Context = createContext<Value | null>(null);
 
@@ -54,6 +59,7 @@ export function OnboardingProvider({ children }: PropsWithChildren) {
   const [retry, setRetry] = useState(0);
   const [busy, setBusy] = useState(false);
   const saving = useRef(false);
+
   useEffect(() => {
     if (authLoading) return;
     let active = true;
@@ -62,25 +68,29 @@ export function OnboardingProvider({ children }: PropsWithChildren) {
       try {
         let next = parse(await sessionStorage.getItem(scope === 'draft' ? draftKey : userKey(scope)));
         if (scope !== 'draft') {
-          // Adopt the pre-auth intent once, then keep each account's choices separate.
           if (!next) {
-            const draft = parse(await sessionStorage.getItem(draftKey));
-            next = { ...initial, intent: draft?.intent ?? null, step: 'path' };
+            next = { ...initial, step: 'path' };
             await sessionStorage.setItem(userKey(scope), JSON.stringify(next));
           }
           await sessionStorage.removeItem(draftKey);
-          // Pending acceptance owns navigation. Otherwise resolve membership
-          // before showing any account-specific onboarding screen.
+
+          // A pending invitation owns navigation until it is accepted.
           if (!token) {
             const relationship = await getRelationshipState(scope);
             if (relationship) {
-              let unfinishedFlower = next?.step === 'flower' && relationship.role === 'member_a';
-              if (unfinishedFlower) {
-                const { data, error } = await supabase!.from('relationships').select('selected_flower').eq('id', relationship.relationshipId).single();
-                if (error) throw error;
-                unfinishedFlower = !data.selected_flower;
+              const [{ data, error: relationshipError }, activation] = await Promise.all([
+                supabase!.from('relationships').select('selected_flower').eq('id', relationship.relationshipId).single(),
+                getRoutineActivationState(),
+              ]);
+              if (relationshipError) throw relationshipError;
+
+              if (!activation.myReady) {
+                next = { ...next, path: 'routine', focus: [], step: 'personalize' };
+              } else if (relationship.role === 'member_a' && !data.selected_flower) {
+                next = { ...next, path: 'routine', step: 'flower' };
+              } else {
+                next = { ...next, path: 'routine', step: 'done' };
               }
-              next = { ...(next ?? initial), path: 'routine', step: unfinishedFlower ? 'flower' : 'done' };
             } else if (!['path', 'personalize', 'flower'].includes(next.step)) {
               next = { ...next, step: 'path' };
             }
@@ -100,18 +110,23 @@ export function OnboardingProvider({ children }: PropsWithChildren) {
     saving.current = true; setBusy(true); setError(null);
     const next = { ...progress, ...patch };
     try {
-      // Persist before navigation or launching authentication, including on native.
       await sessionStorage.setItem(scope === 'draft' ? draftKey : userKey(scope), JSON.stringify(next));
       setProgress(next);
       if (next.step !== progress.step) router.replace(routes[next.step]);
       return true;
-    } catch { setError('We could not save your place. Please try again before continuing.'); return false; }
-    finally { saving.current = false; setBusy(false); }
+    } catch {
+      setError('We could not save your place. Please try again before continuing.');
+      return false;
+    } finally {
+      saving.current = false; setBusy(false);
+    }
   }
+
   if (loadError) return <Screen><Brand/><Notice>{error}</Notice><Button label="Try again" onPress={() => setRetry(value => value + 1)}/></Screen>;
   if (authLoading || loadedScope !== scope) return <Loading/>;
   return <Context.Provider value={{ progress, destination: routes[progress.step], busy, error, save }}>{children}</Context.Provider>;
 }
+
 export function useOnboarding() {
   const value = useContext(Context);
   if (!value) throw new Error('OnboardingProvider is missing');
