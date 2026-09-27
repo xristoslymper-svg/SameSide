@@ -14,21 +14,21 @@ import { theme } from '../../src/theme';
 
 export default function Garden(){
  const {session}=useAuth();const [story,setStory]=useState<FlowerId|null>(null);useFocusEffect(useCallback(()=>()=>{setStory(null);},[]));const {width}=useWindowDimensions();
- const state=useProductData(useCallback(async()=>{const [garden,program]=await Promise.all([getGardenState(),getProgram(session!.user.id)]);return{garden,program};},[session!.user.id]));
- const flower=findFlower(state.data?.program.selectedFlower??null);const stage=sharedGrowth(state.data?.garden.stage_key??'seed',state.data?.program.day??1);const paired=state.data?.program.memberCount===2;const partner=state.data?.program.partnerName;
+ const state=useProductData(useCallback(async()=>{const program=await getProgram(session!.user.id);if(!program.routineActivated)return{garden:null,program};const garden=await getGardenState();return{garden,program};},[session!.user.id]));
+ const flower=findFlower(state.data?.program.selectedFlower??null);const waiting=!!state.data&&!state.data.program.routineActivated;const stage=sharedGrowth(state.data?.garden?.stage_key??'seed',state.data?.program.day??1);const paired=state.data?.program.memberCount===2;const partner=state.data?.program.partnerName;
  return <Screen compact>
   <AppHeader/>
   <View style={local.intro}><Text style={local.title}>Our Garden</Text><Text style={local.subtitle}>Small moments. A stronger us.</Text></View>
   <View style={local.gardenCanvas}>
    <View style={local.canvasHeader}><View><Text style={styles.eyebrow}>THE ROUTINE</Text><Text style={local.flowerName}>{flower?flower.name:'Your flower'}</Text></View>{state.data&&<View style={local.stagePill}><Text style={local.stagePillText}>{stage.bloom?'IN BLOOM':`WEEK ${state.data.program.week} OF 4`}</Text></View>}</View>
    <View style={local.flowerWrap}><BotanicalFlower flower={flower?.id??'cosmos'} state={stage} size={Math.min(width-68,330)} label={flower?undefined:state.loading?'Botanical flower loading':'Botanical preview — choose your shared flower'}/></View>
-   <Text style={local.stageTitle}>{flower?stage.title:'Choose what you’ll grow together.'}</Text>
+   <Text style={local.stageTitle}>{waiting?'Your flower is waiting for Day 1.':flower?stage.title:'Choose what you’ll grow together.'}</Text>
    {flower&&<Text style={local.meaning}>{flower.meaning}</Text>}
   </View>
   <View style={local.statusCard}>
-   <Text style={local.statusKicker}>{paired?'GROWING TOGETHER':'GROWING FOR NOW'}</Text>
-   <Text style={local.statusTitle}>{paired?(partner?`You and ${partner} are growing this together.`:'You are growing this together.'):'Your partner can join this garden whenever they’re ready.'}</Text>
-   <Text style={local.statusBody}>There’s no streak to protect. Each completed move simply gives the garden another reason to grow.</Text>
+   <Text style={local.statusKicker}>{waiting?'READY WHEN YOU BOTH ARE':paired?'GROWING TOGETHER':'YOUR GARDEN'}</Text>
+   <Text style={local.statusTitle}>{waiting?(paired?'You’re both here. The Routine starts when setup is complete.':'Your partner needs to join before the flower starts growing.'):paired?(partner?`You and ${partner} are growing this together.`:'You are growing this together.'):'Your shared flower is here.'}</Text>
+   <Text style={local.statusBody}>{waiting?'Day 1 unlocks for both of you at the same time.':'There’s no streak to protect. Each completed Move gives the garden another reason to grow.'}</Text>
    {state.loading&&!state.data&&<Text style={styles.small}>Bringing your flower into view…</Text>}
    {state.error&&<><Notice>{state.error}</Notice><Button label="Try again" secondary onPress={()=>{void state.refresh();}}/></>}
    {state.data&&!flower&&<Button label="Choose your flower" onPress={()=>router.push('/choose-flower?returnTo=garden')}/>} 
