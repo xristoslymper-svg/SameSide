@@ -1,6 +1,5 @@
 import { router } from 'expo-router';
-import { isDemo, demoToken } from '../src/lib/demo';
-import { useInvitation } from '../src/providers/InvitationProvider';
+import { isDemo, simulateDemoPartnerJoin } from '../src/lib/demo';
 import { useEffect, useState } from 'react';
 import { Platform, Share, Text, TextInput, View } from 'react-native';
 import { Botanical, Button, Notice, styles } from '../src/components/ui';
@@ -12,7 +11,6 @@ import { theme } from '../src/theme';
 
 export default function InvitePartnerScreen() {
   const { session } = useAuth();
-  const { setInvitation } = useInvitation();
   const { save, busy: saving } = useOnboarding();
   const [name, setName] = useState('');
   const [link, setLink] = useState<string | null>(null);
@@ -91,7 +89,7 @@ export default function InvitePartnerScreen() {
 
     {isDemo ? <View style={styles.card}>
       <Text style={styles.body}>Demo invitation: simulate your partner joining here. No real invitation is sent.</Text>
-      <Button label="Simulate partner joining" onPress={() => { void setInvitation(demoToken, 'Alex').then(() => router.replace('/invite/resume')); }}/>
+      <Button label="Simulate partner joining" onPress={() => { if (simulateDemoPartnerJoin()) void save({ step: 'done' }); else setError('Finish your setup and choose a flower before simulating your partner.'); }}/>
     </View> : joined ? <View style={styles.card}>
       <Text style={styles.cardTitle}>{ready?'The Routine starts now':'One last step for them'}</Text>
       <Text style={styles.body}>{ready?'You can both open Today and see your first Move.':'They’ll answer the same personalization questions you did. Then Day 1 unlocks for both of you.'}</Text>
