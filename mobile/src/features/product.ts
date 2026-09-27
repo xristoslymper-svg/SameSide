@@ -61,10 +61,24 @@ export async function getPhysicalGardenState(): Promise<PhysicalGardenState> {
   return { status: 'growing', batch: null, plantedAt: null, photoUrl: null };
 }
 export async function getProgram(userId: string) {
-  const membership = await getRelationshipOverview(userId);
+  // These describe the same signed-in relationship and do not depend on each other.
+  const [membership, activation] = await Promise.all([
+    getRelationshipOverview(userId),
+    getRoutineActivationState(),
+  ]);
   if (!membership) throw new Error('We could not open your space. Please try again.');
-  const activation = await getRoutineActivationState();
-  let { data, error } = await client().from('relationships').select('active_path,selected_flower,legacy_flower_choice,path_started_at,timezone').eq('id', membership.relationshipId).single();
+
+  const relationshipRequest = client().from('relationships')
+    .select('active_path,selected_flower,legacy_flower_choice,path_started_at,timezone')
+    .eq('id', membership.relationshipId).single();
+  const progressRequest = activation.activated
+    ? client().rpc('get_routine_progress')
+    : Promise.resolve({ data: null, error: null });
+
+  let [{ data, error }, { data: progressData, error: progressError }] = await Promise.all([
+    relationshipRequest,
+    progressRequest,
+  ]);
   if (error?.code === '42703' || error?.code === 'PGRST204') {
     const old = await client().from('relationships').select('active_path,selected_flower,path_started_at,timezone').eq('id', membership.relationshipId).single();
     data = old.data ? { ...old.data, legacy_flower_choice: false } : null; error = old.error;
@@ -76,7 +90,6 @@ export async function getProgram(userId: string) {
   let day = 1;
   let week = 1;
   if (activation.activated) {
-    const { data: progressData, error: progressError } = await client().rpc('get_routine_progress');
     const progress = Array.isArray(progressData) ? progressData[0] : progressData;
     day = !progressError && progress?.program_day ? Number(progress.program_day) : calendarDay;
     week = !progressError && progress?.week_no ? Number(progress.week_no) : Math.min(4, Math.ceil(Math.min(day,28) / 7));
