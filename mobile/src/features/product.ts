@@ -1,7 +1,7 @@
 import { isDemo, demoToday } from '../lib/demo';
 import { supabase } from '../lib/supabase';
 import { journeyDay, relationshipDate } from './growth';
-import { getRelationshipOverview } from './relationships';
+import { getRelationshipOverview, getRoutineActivationState } from './relationships';
 
 export type Move = { id: string; task_title: string; task_body: string; task_minutes: number; task_why?: string | null; status: string; program_day: number; slot: number; assigned_for_date: string };
 export type SharedGardenState = { stage_key: 'seed'|'roots'|'shoot'|'leaves'|'established'|'bud'|'opening'|'bloom'; bloom: boolean; programme_complete: boolean };
@@ -62,6 +62,7 @@ export async function getPhysicalGardenState(): Promise<PhysicalGardenState> {
 export async function getProgram(userId: string) {
   const membership = await getRelationshipOverview(userId);
   if (!membership) throw new Error('We could not open your space. Please try again.');
+  const activation = await getRoutineActivationState();
   let { data, error } = await client().from('relationships').select('active_path,selected_flower,legacy_flower_choice,path_started_at,timezone').eq('id', membership.relationshipId).single();
   if (error?.code === '42703' || error?.code === 'PGRST204') {
     const old = await client().from('relationships').select('active_path,selected_flower,path_started_at,timezone').eq('id', membership.relationshipId).single();
@@ -71,12 +72,20 @@ export async function getProgram(userId: string) {
   if (!data.path_started_at) throw new Error('We could not load your journey dates. Please try again.');
   const today = isDemo ? demoToday() : relationshipDate(data.timezone ?? 'UTC');
   const calendarDay = journeyDay(data.path_started_at, today);
-  const { data: progressData, error: progressError } = await client().rpc('get_routine_progress');
-  const progress = Array.isArray(progressData) ? progressData[0] : progressData;
-  const day = !progressError && progress?.program_day ? Number(progress.program_day) : calendarDay;
-  const week = !progressError && progress?.week_no ? Number(progress.week_no) : Math.min(4, Math.ceil(Math.min(day,28) / 7));
+  let day = 1;
+  let week = 1;
+  if (activation.activated) {
+    const { data: progressData, error: progressError } = await client().rpc('get_routine_progress');
+    const progress = Array.isArray(progressData) ? progressData[0] : progressData;
+    day = !progressError && progress?.program_day ? Number(progress.program_day) : calendarDay;
+    week = !progressError && progress?.week_no ? Number(progress.week_no) : Math.min(4, Math.ceil(Math.min(day,28) / 7));
+  }
   return { ...membership, name: 'The Routine', selectedFlower: data.selected_flower as string | null,
     canChooseFlower: membership.role === 'member_a' || data.legacy_flower_choice === true,
     relationshipClosed: membership.hasDeparture,
+    routineActivated: activation.activated,
+    routineActivatedAt: activation.activatedAt,
+    myPersonalizationReady: activation.myReady,
+    partnerPersonalizationReady: activation.partnerReady,
     startDate: data.path_started_at as string, today, day, week };
 }
