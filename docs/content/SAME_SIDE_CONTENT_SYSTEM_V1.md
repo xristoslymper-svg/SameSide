@@ -466,3 +466,46 @@ These signals can later improve recommendation weights while the curated catalog
 Create **Routine Gold Set v1** with 50 fully labelled Moves.
 
 The set should be reviewed as content before database schema work begins. Once the ontology survives that exercise, encode it into Supabase tables and build the deterministic selector.
+
+
+## 19. Routine personalization contract
+
+Routine personalization uses one canonical set of behavioral targets:
+
+- curiosity
+- emotional_conversation
+- playfulness
+- novelty
+- spontaneity
+- quality_attention
+- physical_affection
+- verbal_affection
+- shared_experience
+- anticipation
+- appreciation
+- support
+
+Every approved Move carries numeric `personalization_weights` against the targets it genuinely serves. A Move may be generic and have no personalization weight.
+
+Opening choices map into the same target space:
+
+- Fun: playfulness, spontaneity
+- Affection: physical affection, verbal affection, appreciation
+- Good conversations: emotional conversation, curiosity, quality attention
+- Feeling appreciated: appreciation, verbal affection
+- Time together: shared experience, quality attention, anticipation
+- Something new: novelty, spontaneity, anticipation, shared experience
+
+Roots selects a more specific current behavioral target from the same target space. Related targets may contribute a smaller fallback signal so a preference remains useful when a particular program week intentionally has limited direct coverage.
+
+Assignment rules:
+
+1. Path and current week define eligibility first.
+2. Personalization ranks only eligible reviewed Moves.
+3. A partner's stated needs carry more weight when choosing the Move shown to the other person.
+4. A user's own signals still contribute, so the Move remains relevant to what they are noticing and trying to change.
+5. Recent repetition is penalized strongly.
+6. Unseen content receives a modest variety bonus.
+7. Personalization never generates or rewrites a Move at runtime.
+
+Opening answers and Roots answers are stored per member. They are recommendation inputs, not shared couple answers.
