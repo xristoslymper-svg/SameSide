@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Button, styles } from '../src/components/ui';
 import { FlowScreen } from '../src/components/onboarding';
 import { useOnboarding } from '../src/providers/OnboardingProvider';
+import { theme } from '../src/theme';
 
 const steps = [
   ['Start with what feels off', 'Choose the pattern that’s been getting in the way lately. Routine, distance, the same argument, or something else. You’re not against each other. You’re on the same side against the pattern.'],
@@ -18,4 +19,4 @@ export default function HowItWorksScreen() {
     <Button label="Back" secondary disabled={busy} onPress={() => { void save({ step: 'opening' }); }}/>
   </FlowScreen>;
 }
-const s=StyleSheet.create({title:{fontSize:39,lineHeight:44,letterSpacing:-1.2},promise:{fontFamily:'Georgia',fontSize:18,lineHeight:24,color:'#667C6A',marginTop:-4,marginBottom:6},steps:{gap:10},card:{padding:16,flexDirection:'row',alignItems:'flex-start',gap:14},number:{fontFamily:'Georgia',fontSize:31,lineHeight:35,color:'#405448',fontWeight:'700',minWidth:30},copy:{flex:1,gap:4},cardTitle:{fontSize:21,lineHeight:26},body:{fontSize:14,lineHeight:20}});
+const s=StyleSheet.create({title:{fontSize:39,lineHeight:44,letterSpacing:-1.2},promise:{fontFamily:'Georgia',fontSize:18,lineHeight:24,color:theme.colors.sageMid,marginTop:-4,marginBottom:6},steps:{gap:10},card:{padding:16,flexDirection:'row',alignItems:'flex-start',gap:14},number:{fontFamily:'Georgia',fontSize:31,lineHeight:35,color:theme.colors.sage,fontWeight:'700',minWidth:30},copy:{flex:1,gap:4},cardTitle:{fontSize:21,lineHeight:26},body:{fontSize:14,lineHeight:20}});
