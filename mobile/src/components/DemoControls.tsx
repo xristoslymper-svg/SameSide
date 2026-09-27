@@ -17,7 +17,7 @@ export function DemoControls() {
  </View>{open&&<Modal visible onRequestClose={()=>setOpen(false)}><Screen>
   <Button label="Close demo controls" secondary onPress={()=>setOpen(false)}/>
   <Text style={styles.cardTitle}>Explore Same Side</Text><Text style={styles.body}>These scenarios replace only this tab’s sample data. No real accounts, emails or garden history are changed.</Text>
-  {([['fresh','Restart demo from beginning'],['solo','Solo · Week 1'],['paired','Paired · Week 1'],['legacy','Choose a missing flower'],['week3','Week 3 · Established plant'],['bloom','Week 4 · Full bloom']] as [DemoScenario,string][]).map(([value,label])=><Button key={value} label={label} secondary onPress={()=>startDemo(value)}/>)}
+  {([['fresh','Restart demo from beginning'],['waiting','Waiting for partner'],['paired','Paired · Week 1'],['legacy','Choose a missing flower'],['week3','Week 3 · Established plant'],['bloom','Week 4 · Full bloom']] as [DemoScenario,string][]).map(([value,label])=><Button key={value} label={label} secondary onPress={()=>startDemo(value)}/>)}
   <Button label="Exit demo — return to real app" onPress={exitDemo}/>
  </Screen></Modal>}</>;
 }
