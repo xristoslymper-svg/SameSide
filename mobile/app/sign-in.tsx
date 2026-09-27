@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Redirect } from 'expo-router';
 import { useOnboarding } from '../src/providers/OnboardingProvider';
 import { FlowScreen } from '../src/components/onboarding';
-import { Text, TextInput, View } from 'react-native';
+import { Platform, Pressable, Text, TextInput, View } from 'react-native';
 import { Brand, Button, Notice, Screen, styles } from '../src/components/ui';
 import { isDevelopmentPasswordSignInEnabled, useAuth } from '../src/providers/AuthProvider';
 import { useInvitation } from '../src/providers/InvitationProvider';
@@ -14,7 +14,7 @@ import { theme } from '../src/theme';
 export default function SignInScreen() {
   const { destination, save, busy: saving } = useOnboarding();
   const { token, name } = useInvitation();
-  const { session, sendMagicLink, signInWithTestPassword, error: authError, clearError } = useAuth();
+  const { session, signInWithGoogle, sendMagicLink, signInWithTestPassword, error: authError, clearError } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [sentTo, setSentTo] = useState<string | null>(null);
@@ -22,6 +22,12 @@ export default function SignInScreen() {
   const [error, setError] = useState<string | null>(null);
   if (session) return <Redirect href={token ? '/invite/resume' : destination}/>;
   if (isDemo) return <DemoSignIn/>;
+  async function googleSignIn() {
+    if (busy) return;
+    clearError(); setError(null); setBusy(true);
+    try { await signInWithGoogle(); }
+    catch (cause) { setError(cause instanceof Error ? cause.message : 'Please try again.'); setBusy(false); }
+  }
   async function submit() {
     if (busy) return;
     clearError(); setError(null);
@@ -52,7 +58,15 @@ export default function SignInScreen() {
       {sentTo ? <><Text style={styles.body}>Your sign-in link is on its way to {sentTo}.</Text>
         <Text style={styles.small}>Open the link in this same browser or app to continue securely. If your email opens another browser, copy the link and paste it into this same private or incognito window.</Text>
         <Button label="Use another email" secondary onPress={() => { setSentTo(null); setError(null); }}/></>
-      : <><Text style={styles.small}>Sign in or create your account with an email link. No password needed.</Text>
+      : <>
+        {Platform.OS === 'web' && <><Pressable accessibilityRole="button" accessibilityLabel="Continue with Google" disabled={busy || !isConfigured}
+          onPress={() => { void googleSignIn(); }}
+          style={({ pressed }) => [google.button, pressed && google.pressed, (busy || !isConfigured) && google.disabled]}>
+          <View style={google.mark}><Text style={google.markText}>G</Text></View>
+          <Text style={google.label}>Continue with Google</Text>
+        </Pressable>
+        <View style={google.divider}><View style={google.line}/><Text style={google.or}>OR</Text><View style={google.line}/></View></>}
+        <Text style={styles.small}>Sign in or create your account with an email link. No password needed.</Text>
         <Text style={styles.label}>Email address</Text>
         <TextInput accessibilityLabel="Email address" style={styles.input} value={email} onChangeText={setEmail}
           placeholder="you@example.com" placeholderTextColor={theme.colors.muted} keyboardType="email-address"
@@ -72,3 +86,25 @@ export default function SignInScreen() {
   {!token && <Button label="Back" secondary disabled={busy || saving} onPress={() => { void save({ step: 'how' }); }}/>}</>;
   return token ? <Screen>{content}</Screen> : <FlowScreen>{content}</FlowScreen>;
 }
+
+
+const google = {
+  button: {
+    minHeight: 54, borderRadius: 18, borderWidth: 1, borderColor: theme.colors.lineStrong,
+    backgroundColor: theme.colors.card, flexDirection: 'row' as const, alignItems: 'center' as const,
+    justifyContent: 'center' as const, paddingHorizontal: 18, position: 'relative' as const,
+    ...theme.shadow.card,
+  },
+  pressed: { transform: [{ scale: 0.995 }], opacity: 0.92 },
+  disabled: { opacity: 0.5 },
+  mark: {
+    position: 'absolute' as const, left: 18, width: 28, height: 28, borderRadius: 14,
+    alignItems: 'center' as const, justifyContent: 'center' as const, backgroundColor: theme.colors.backgroundElevated,
+    borderWidth: 1, borderColor: theme.colors.line,
+  },
+  markText: { fontSize: 17, fontWeight: '700' as const, color: '#4285F4' },
+  label: { fontSize: 15, fontWeight: '700' as const, color: theme.colors.ink },
+  divider: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 12, marginVertical: 2 },
+  line: { flex: 1, height: 1, backgroundColor: theme.colors.line },
+  or: { fontSize: 10, letterSpacing: 1.4, fontWeight: '700' as const, color: theme.colors.mutedSoft },
+};
