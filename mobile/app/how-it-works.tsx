@@ -1,7 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { Redirect } from 'expo-router';
 import { Button, styles } from '../src/components/ui';
 import { FlowScreen } from '../src/components/onboarding';
 import { useOnboarding } from '../src/providers/OnboardingProvider';
+import { useAuth } from '../src/providers/AuthProvider';
 import { theme } from '../src/theme';
 
 const steps = [
@@ -10,7 +12,9 @@ const steps = [
   ['Grow something together', 'Your shared flower grows as you move through the four weeks. When it blooms, your Routine is complete and you can keep the changes that worked for you.'],
 ];
 export default function HowItWorksScreen() {
-  const { save, busy } = useOnboarding();
+  const { session } = useAuth();
+  const { save, busy, destination } = useOnboarding();
+  if (session) return <Redirect href={destination}/>;
   return <FlowScreen><Text style={styles.eyebrow}>ONE ROUTINE. TWO PEOPLE.</Text>
     <Text style={[styles.title,s.title]}>Small gestures{"\n"}Real connection</Text>
     <Text style={s.promise}>Changes worth keeping</Text>
