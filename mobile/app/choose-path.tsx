@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Redirect } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SetupExit } from '../src/components/SetupExit';
 import { FlowScreen } from '../src/components/onboarding';
@@ -27,7 +28,8 @@ const questions:{q:string;a:[string,PathId][]}[]=[
 ];
 
 export default function ChoosePathScreen(){
- const {save,busy}=useOnboarding(); const [quiz,setQuiz]=useState(false); const [i,setI]=useState(0); const [answers,setAnswers]=useState<PathId[]>([]); const [result,setResult]=useState<PathId|null>(null);
+ const {save,busy,destination}=useOnboarding(); const [quiz,setQuiz]=useState(false); const [i,setI]=useState(0); const [answers,setAnswers]=useState<PathId[]>([]); const [result,setResult]=useState<PathId|null>(null);
+ if(destination!=='/choose-path') return <Redirect href={destination}/>;
  function answer(id:PathId){const next=[...answers,id]; if(i<questions.length-1){setAnswers(next);setI(i+1);return;} const score=next.reduce((a,k)=>(a[k]=(a[k]||0)+1,a),{} as Record<string,number>); setResult((Object.keys(score) as PathId[]).sort((a,b)=>score[b]-score[a])[0]||'routine');}
  function back(){if(result){setResult(null);return;} if(i>0){setAnswers(answers.slice(0,-1));setI(i-1);}else setQuiz(false);}
  if(quiz){const q=questions[i];const p=result?paths.find(x=>x[0]===result):null;return <FlowScreen>
