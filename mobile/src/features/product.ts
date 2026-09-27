@@ -13,6 +13,7 @@ function client() {
 export async function getMove(slot = 0): Promise<Move> {
   const { data, error } = await client().rpc('get_or_create_today_assignment', { requested_slot: slot });
   if (error) {
+    if (error.message.includes('routine_not_ready')) throw new Error('Your first Move unlocks when both of you have finished setup.');
     if (error.message.includes('path_not_available') || error.message.includes('path_complete')) throw new Error('No new move today. Your flower is still here to enjoy.');
     if (error.message.includes('daily_limit_reached')) throw new Error('That’s plenty for today. Your flower is here to enjoy.');
     if (error.message.includes('previous_slot_not_completed')) throw new Error('Let’s come back to your current move. Try again to bring it up.');
