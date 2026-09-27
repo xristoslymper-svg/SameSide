@@ -44,8 +44,8 @@ export default function SignInScreen() {
   }
   const content = <>
     {token && <Brand/>}
-    <View style={{ gap: 14 }}><Text style={styles.title}>{token ? `Join ${name || 'your partner'} on Same Side` : 'A small step\ncloser'}</Text>
-      <Text style={styles.body}>{token ? 'Sign in to create your private space' : 'Save your place with a private sign-in link'}</Text></View>
+    <View style={{ gap: 14 }}><Text style={styles.title}>{token ? `${name || 'Your partner'} invited you to The Routine` : 'A small step\ncloser'}</Text>
+      <Text style={styles.body}>{token ? 'Sign in to join your partner and finish your setup' : 'Save your place with a private sign-in link'}</Text></View>
     <View style={styles.card}>
       <Text style={styles.eyebrow}>{sentTo ? 'A little note for you' : 'Your private space'}</Text>
       <Text style={styles.cardTitle}>{sentTo ? 'Check your email' : 'Begin with a small step'}</Text>
@@ -69,6 +69,6 @@ export default function SignInScreen() {
       {!isConfigured && <Notice>Sign-in is not available just yet. Please try again later.</Notice>}
       {(error || authError) && <Notice>{error || authError}</Notice>}
     </View><Text style={[styles.small, { textAlign: 'center' }]}>Small gestures. A little more connection.</Text>
-  {!token && <Button label="Back to starting mode" secondary disabled={busy || saving} onPress={() => { void save({ step: 'mode' }); }}/>}</>;
+  {!token && <Button label="Back" secondary disabled={busy || saving} onPress={() => { void save({ step: 'how' }); }}/>}</>;
   return token ? <Screen>{content}</Screen> : <FlowScreen>{content}</FlowScreen>;
 }
