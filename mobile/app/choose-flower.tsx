@@ -35,8 +35,9 @@ function FlowerSelection() {
    await chooseFlower(id);
    setDetail(null);
    if (legacy) { router.dismissTo('/garden'); return; }
-   const next = state.data?.memberCount === 1 ? 'invite' : 'done';
-   if (await save({ step: next })) router.replace(next === 'invite' ? '/invite-partner' : '/today');
+   // Person A always completes setup through the partner invitation/waiting step.
+   // That screen is also the correct handoff when the partner has already joined.
+   if (await save({ step: 'invite' })) router.replace('/invite-partner');
   } catch (e) { await state.refresh(); setDetail(null); setError((e as Error).message); } finally { setBusy(false); }
  }
  return <Screen><Brand/>{legacy && <Button label="Back to Garden" secondary disabled={busy} onPress={() => router.dismissTo('/garden')}/>}<LoadState {...state}/>
