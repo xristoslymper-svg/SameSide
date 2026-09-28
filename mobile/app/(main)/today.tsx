@@ -1,6 +1,6 @@
 import { useCallback,useEffect,useRef,useState } from 'react';
 import { router } from 'expo-router';
-import { ActivityIndicator,Pressable,StyleSheet,Text,View } from 'react-native';
+import { ActivityIndicator,Image,Pressable,StyleSheet,Text,View } from 'react-native';
 import { Button,Notice,Screen,styles } from '../../src/components/ui';
 import { AccountMenu } from '../../src/components/AccountMenu';
 import { BotanicalFlower } from '../../src/components/BotanicalFlower';
@@ -179,7 +179,9 @@ export default function Today(){
     </View>
 
     <View style={s.moveHero}>
-     {flower&&<View pointerEvents="none" style={s.heroFlower}><BotanicalFlower flower={flower.id} size={330}/></View>}
+     <View pointerEvents="none" style={s.heroFlower}>
+      <Image source={require('../../assets/today-botanical-reference.png')} style={s.heroFlowerImage} resizeMode="contain"/>
+     </View>
      <View style={s.heroCopy}>
       {!primary&&<Text style={s.extraMove}>YOUR EXTRA MOVE</Text>}
       <Text style={s.moveTitle}>{move.task_title}</Text>
@@ -196,7 +198,9 @@ export default function Today(){
     <View style={s.growingTogether}><LeafMark/><Text style={s.growingText}>{move.program_day} days together</Text></View>
    </>:<View style={s.completedState}>
     <View style={s.completedHero}>
-     {flower&&<View pointerEvents="none" style={s.completedFlower}><BotanicalFlower flower={flower.id} size={320}/></View>}
+     <View pointerEvents="none" style={s.completedFlower}>
+      <Image source={require('../../assets/today-botanical-reference.png')} style={s.completedFlowerImage} resizeMode="contain"/>
+     </View>
      <View style={s.completeBadge}><Text style={s.completeCheck}>✓</Text><Text style={s.completeBadgeText}>Completed</Text></View>
      <Text style={s.completedTitle}>{move.task_title}</Text>
      <Text style={s.completedMessage}>You made space for connection today.</Text>
@@ -215,40 +219,42 @@ export default function Today(){
 const s=StyleSheet.create({
  paperWashTop:{position:'absolute',width:390,height:390,borderRadius:195,backgroundColor:theme.colors.rose,opacity:.11,top:72,right:-258},
  paperWashBottom:{position:'absolute',width:430,height:220,borderRadius:220,backgroundColor:theme.colors.sand,opacity:.34,bottom:-76,left:-220},
- topBar:{minHeight:48,flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginTop:0,marginBottom:14},
- todayTitle:{fontFamily:theme.fonts.heading,fontSize:24,lineHeight:30,color:theme.colors.ink,letterSpacing:-.45},
- dayMeta:{gap:9,marginTop:0,marginBottom:11},
+ topBar:{minHeight:46,flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginTop:0,marginBottom:16},
+ todayTitle:{fontFamily:theme.fonts.heading,fontSize:23,lineHeight:29,color:theme.colors.ink,letterSpacing:-.4,fontWeight:'400'},
+ dayMeta:{gap:8,marginTop:0,marginBottom:13},
  dayMetaText:{fontSize:10,lineHeight:14,letterSpacing:1.55,fontWeight:'700',color:theme.colors.muted,textTransform:'uppercase'},
  weekProgress:{flexDirection:'row',alignItems:'center',gap:5},
  progressDot:{width:6,height:6,borderRadius:3,backgroundColor:theme.colors.line},
  progressDotFilled:{backgroundColor:theme.colors.sageMid},
  progressDotCurrent:{width:18,backgroundColor:theme.colors.sage},
- moveHero:{position:'relative',minHeight:252,marginHorizontal:-2,overflow:'hidden'},
- heroCopy:{position:'relative',zIndex:2,paddingTop:4,maxWidth:292},
- heroFlower:{position:'absolute',zIndex:1,right:-112,top:-56,opacity:.92},
+ moveHero:{position:'relative',minHeight:236,marginHorizontal:-2,overflow:'visible'},
+ heroCopy:{position:'relative',zIndex:2,paddingTop:2,maxWidth:280},
+ heroFlower:{position:'absolute',zIndex:1,right:-66,top:-46,width:214,height:332,opacity:.96},
+ heroFlowerImage:{width:'100%',height:'100%'},
  extraMove:{fontSize:9.5,lineHeight:13,letterSpacing:1.55,fontWeight:'800',color:theme.colors.sageMid,marginBottom:7},
- moveTitle:{fontFamily:theme.fonts.heading,fontSize:38,lineHeight:41.5,color:theme.colors.black,letterSpacing:-1.05,maxWidth:242,marginBottom:14},
- moveBody:{fontSize:14.5,lineHeight:21.5,color:theme.colors.black,maxWidth:270,letterSpacing:-.04},
- whySurface:{borderRadius:20,borderWidth:1,borderColor:'rgba(210,197,181,0.62)',backgroundColor:'rgba(255,252,247,0.76)',paddingHorizontal:16,paddingVertical:14,marginTop:2,marginBottom:14,...theme.shadow.card},
+ moveTitle:{fontFamily:theme.fonts.heading,fontSize:37,lineHeight:40.5,color:theme.colors.black,letterSpacing:-1.0,maxWidth:236,marginBottom:15,fontWeight:'400'},
+ moveBody:{fontSize:14.25,lineHeight:21.2,color:theme.colors.black,maxWidth:252,letterSpacing:-.03},
+ whySurface:{borderRadius:19,borderWidth:1,borderColor:'rgba(210,197,181,0.48)',backgroundColor:'rgba(255,252,247,0.70)',paddingHorizontal:15,paddingVertical:13,marginTop:1,marginBottom:14,shadowColor:theme.colors.ink,shadowOpacity:.035,shadowRadius:18,shadowOffset:{width:0,height:7},elevation:1},
  whySurfaceOpen:{paddingBottom:17},
  whyHeader:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12},
  whyTitleRow:{flexDirection:'row',alignItems:'center',gap:10},
- whyLabel:{fontSize:14.5,lineHeight:20,fontWeight:'600',color:theme.colors.black},
+ whyLabel:{fontSize:14,lineHeight:20,fontWeight:'600',color:theme.colors.black},
  whyChevron:{fontSize:18,lineHeight:20,color:theme.colors.inkSoft},
  whyBody:{fontSize:13.5,lineHeight:20.5,color:theme.colors.inkSoft,marginTop:12,paddingRight:4},
  leafMark:{width:20,height:20,position:'relative'},
  leafBlade:{position:'absolute',width:13,height:8,borderTopLeftRadius:12,borderBottomRightRadius:12,backgroundColor:theme.colors.sageLight,transform:[{rotate:'-30deg'}],top:3,left:4,borderWidth:1,borderColor:theme.colors.sageMid},
  leafStem:{position:'absolute',width:1.2,height:12,backgroundColor:theme.colors.sageMid,transform:[{rotate:'35deg'}],left:9,top:8,borderRadius:2},
- primaryButton:{minHeight:54,borderRadius:999,backgroundColor:theme.colors.sage,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:13,paddingHorizontal:22,...theme.shadow.floating},
+ primaryButton:{width:'82%',alignSelf:'center',minHeight:52,borderRadius:999,backgroundColor:theme.colors.sage,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:12,paddingHorizontal:22,shadowColor:theme.colors.ink,shadowOpacity:.10,shadowRadius:20,shadowOffset:{width:0,height:9},elevation:4},
  primaryButtonPressed:{transform:[{scale:.987}],opacity:.95},
  primaryButtonText:{fontSize:15.5,lineHeight:21,fontWeight:'600',color:theme.colors.white,letterSpacing:.02},
  primaryArrow:{fontSize:19,lineHeight:20,color:theme.colors.white,fontWeight:'400'},
  buttonDisabled:{opacity:.55},
- growingTogether:{minHeight:42,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:5},
+ growingTogether:{minHeight:40,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:5},
  growingText:{fontSize:11.5,lineHeight:17,color:theme.colors.sageMid},
  completedState:{paddingTop:2},
  completedHero:{position:'relative',minHeight:350,overflow:'hidden',paddingTop:12},
- completedFlower:{position:'absolute',right:-92,top:-66,opacity:.96},
+ completedFlower:{position:'absolute',right:-54,top:-52,width:224,height:347,opacity:.97},
+ completedFlowerImage:{width:'100%',height:'100%'},
  completeBadge:{flexDirection:'row',alignItems:'center',gap:8,zIndex:2,alignSelf:'flex-start'},
  completeCheck:{width:26,height:26,borderRadius:13,backgroundColor:theme.colors.sageLight,color:theme.colors.sage,textAlign:'center',textAlignVertical:'center',fontSize:15,lineHeight:26,fontWeight:'800',overflow:'hidden'},
  completeBadgeText:{fontSize:13,lineHeight:18,color:theme.colors.sage,fontWeight:'600'},
