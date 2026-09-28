@@ -176,7 +176,7 @@ export default function Today(){
 
   {!state.loading&&!state.error&&move&&program&&program.routineActivated&&!joinIntro&&!(state.data?.garden?.bloom&&move.status==='completed')&&<>
    <View pointerEvents="none" style={s.botanicalLayer}>
-    <Image source={require('../../assets/today-botanical-reference.png')} style={s.botanicalImage} resizeMode="stretch"/>
+    <Image source={require('../../assets/today-botanical-reference.png')} style={s.botanicalImage} resizeMode="contain"/>
    </View>
 
    <View style={s.dayMeta}>
@@ -212,14 +212,14 @@ const s=StyleSheet.create({
  paperWashTop:{position:'absolute',width:330,height:330,borderRadius:180,backgroundColor:theme.colors.rose,opacity:.055,top:72,right:-230},
  paperWashBottom:{position:'absolute',width:360,height:210,borderRadius:190,backgroundColor:theme.colors.sand,opacity:.22,bottom:-94,left:-165},
 
- topBar:{position:'relative',zIndex:3,minHeight:42,flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginTop:0,marginBottom:24},
+ topBar:{position:'relative',zIndex:3,minHeight:40,flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginTop:0,marginBottom:18,paddingHorizontal:2},
  todayTitle:{fontSize:20,lineHeight:27,color:'#24392F',letterSpacing:-.2,fontWeight:'500'},
  accountButton:{transform:[{scale:.84}],marginRight:-4},
 
- botanicalLayer:{position:'absolute',zIndex:0,right:-46,top:58,width:242,height:500,opacity:.86},
+ botanicalLayer:{position:'absolute',zIndex:0,right:-78,top:96,width:220,height:438,opacity:.69},
  botanicalImage:{width:'100%',height:'100%'},
 
- dayMeta:{position:'relative',zIndex:2,gap:7,marginTop:0,marginBottom:26},
+ dayMeta:{position:'relative',zIndex:2,gap:7,marginTop:0,marginBottom:22},
  dayMetaText:{fontSize:9.5,lineHeight:13,letterSpacing:1.55,fontWeight:'700',color:'#74766D',textTransform:'uppercase'},
  weekProgress:{flexDirection:'row',alignItems:'center',gap:5},
  progressDot:{width:5.5,height:5.5,borderRadius:3,backgroundColor:'#E4DCCD'},
@@ -227,7 +227,7 @@ const s=StyleSheet.create({
  progressDotCurrent:{width:18,backgroundColor:'#BFA98A'},
 
  moveHero:{position:'relative',zIndex:2,overflow:'visible'},
- heroCopy:{position:'relative',zIndex:2,maxWidth:272},
+ heroCopy:{position:'relative',zIndex:2,maxWidth:264},
  heroFlower:{position:'absolute',zIndex:1,right:-56,top:-78,width:238,height:369,opacity:.94},
  heroFlowerImage:{width:'100%',height:'100%'},
  extraMove:{fontSize:9,lineHeight:13,letterSpacing:1.5,fontWeight:'800',color:'#718773',marginBottom:8,textTransform:'uppercase'},
@@ -236,8 +236,8 @@ const s=StyleSheet.create({
  moveTitleLong:{fontSize:31,lineHeight:34,maxWidth:228,letterSpacing:-.65},
  moveBody:{fontSize:14.25,lineHeight:21.25,color:'#25342D',maxWidth:250,letterSpacing:-.02,fontWeight:'400'},
 
- whySurface:{position:'relative',zIndex:2,width:'86%',alignSelf:'center',minHeight:58,borderRadius:22,borderWidth:1,borderColor:'rgba(210,197,181,0.30)',backgroundColor:'rgba(255,252,247,0.68)',paddingHorizontal:16,paddingVertical:14,marginTop:34,marginBottom:50,shadowColor:'#263A2F',shadowOpacity:.028,shadowRadius:22,shadowOffset:{width:0,height:9},elevation:1},
- whySurfaceOpen:{paddingBottom:17,marginBottom:38},
+ whySurface:{position:'relative',zIndex:2,width:'88%',maxWidth:334,alignSelf:'center',minHeight:58,borderRadius:22,borderWidth:1,borderColor:'rgba(210,197,181,0.28)',backgroundColor:'rgba(255,252,247,0.70)',paddingHorizontal:17,paddingVertical:14,marginTop:28,marginBottom:28,shadowColor:'#263A2F',shadowOpacity:.026,shadowRadius:20,shadowOffset:{width:0,height:8},elevation:1},
+ whySurfaceOpen:{paddingBottom:17,marginBottom:26},
  whyHeader:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,minHeight:28},
  whyTitleRow:{flexDirection:'row',alignItems:'center',gap:11},
  whyLabel:{fontSize:14.5,lineHeight:20,fontWeight:'600',color:'#203229'},
@@ -248,11 +248,11 @@ const s=StyleSheet.create({
  leafBlade:{position:'absolute',width:13,height:8,borderTopLeftRadius:12,borderBottomRightRadius:12,backgroundColor:'#E2E9DF',transform:[{rotate:'-30deg'}],top:3,left:4,borderWidth:1,borderColor:'#78917B'},
  leafStem:{position:'absolute',width:1.2,height:12,backgroundColor:'#78917B',transform:[{rotate:'35deg'}],left:9,top:8,borderRadius:2},
 
- primaryButton:{position:'relative',zIndex:2,width:'82%',alignSelf:'center',minHeight:52,borderRadius:999,backgroundColor:'#285A43',flexDirection:'row',alignItems:'center',justifyContent:'center',gap:12,paddingHorizontal:22,shadowColor:'#20372A',shadowOpacity:.075,shadowRadius:20,shadowOffset:{width:0,height:9},elevation:3},
+ primaryButton:{position:'relative',zIndex:2,width:'88%',maxWidth:334,alignSelf:'center',minHeight:50,borderRadius:999,backgroundColor:'#285A43',flexDirection:'row',alignItems:'center',justifyContent:'center',paddingHorizontal:24,shadowColor:'#20372A',shadowOpacity:.065,shadowRadius:18,shadowOffset:{width:0,height:7},elevation:3},
  primaryButtonPressed:{transform:[{scale:.987}],opacity:.95},
  completedPrimary:{opacity:.93,shadowOpacity:.055,elevation:2},
  primaryButtonText:{fontSize:15.5,lineHeight:21,fontWeight:'500',color:theme.colors.white,letterSpacing:.02},
- primaryArrow:{fontSize:18,lineHeight:20,color:theme.colors.white,fontWeight:'400'},
+ primaryArrow:{position:'absolute',right:24,fontSize:17,lineHeight:20,color:theme.colors.white,fontWeight:'400'},
  buttonDisabled:{opacity:.55},
 
  extraAction:{position:'relative',zIndex:2,alignSelf:'center',minHeight:34,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:8,paddingHorizontal:14,marginTop:6},
@@ -260,7 +260,7 @@ const s=StyleSheet.create({
  extraActionText:{fontSize:13,lineHeight:19,color:'#567460',fontWeight:'600'},
  extraActionArrow:{fontSize:15,lineHeight:19,color:'#567460'},
 
- growingTogether:{position:'relative',zIndex:2,minHeight:40,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:6,marginTop:10},
+ growingTogether:{position:'relative',zIndex:2,minHeight:38,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:6,marginTop:12},
  growingText:{fontSize:11.5,lineHeight:17,color:'#78917B'},
 
  completedState:{paddingTop:2},
