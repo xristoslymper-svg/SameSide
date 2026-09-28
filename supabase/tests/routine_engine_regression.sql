@@ -128,7 +128,7 @@ insert into public.relationship_members(relationship_id,user_id,member_role) val
 ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb','33333333-3333-3333-3333-333333333333','member_a'),
 ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb','44444444-4444-4444-4444-444444444444','member_b');
 
-do $
+do $$
 declare active boolean; started date; today date:=(statement_timestamp() at time zone 'UTC')::date;
 begin
  perform set_config('request.jwt.claim.sub','33333333-3333-3333-3333-333333333333',true);
@@ -149,6 +149,6 @@ begin
  from public.relationships where id='bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb';
  if not active then raise exception 'second personalization profile did not activate Routine'; end if;
  if started<>today then raise exception 'activation did not reset Day 1'; end if;
-end $;
+end $$;
 
 rollback;
