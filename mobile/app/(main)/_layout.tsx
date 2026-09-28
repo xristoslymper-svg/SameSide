@@ -50,7 +50,7 @@ export default function ProductLayout() {
   const shellWidth = Math.min(Math.max(width - 48, 280), 366);
   const safeBottom = Math.max(insets.bottom, Platform.OS === 'web' ? 18 : 12);
   const barBottom = safeBottom + 8;
-  const barHeight = 72;
+  const barHeight = 78;
 
   return (
     <Tabs
@@ -67,8 +67,8 @@ export default function ProductLayout() {
           left: (width - shellWidth) / 2,
           bottom: barBottom,
           height: barHeight,
-          paddingTop: 6,
-          paddingBottom: 6,
+          paddingTop: 7,
+          paddingBottom: 7,
           paddingHorizontal: 14,
           backgroundColor: 'rgba(255,252,247,0.985)',
           borderWidth: 1,
@@ -82,8 +82,7 @@ export default function ProductLayout() {
           overflow: 'visible',
         },
         tabBarItemStyle: {
-          height: 60,
-          paddingTop: 6,
+          paddingTop: 5,
           paddingBottom: 5,
           margin: 0,
           borderRadius: 28,
@@ -91,16 +90,20 @@ export default function ProductLayout() {
         tabBarIconStyle: {
           width: 24,
           height: 24,
-          marginTop: 0,
-          marginBottom: 2,
+          marginTop: 2,
+          marginBottom: 1,
+          overflow: 'visible',
         },
         tabBarLabelStyle: {
           fontSize: 10.5,
-          lineHeight: 13,
+          lineHeight: 16,
+          height: 16,
           fontWeight: '600',
           letterSpacing: 0.05,
-          marginTop: 1,
-          marginBottom: 0,
+          marginTop: 0,
+          marginBottom: 2,
+          textAlign: 'center',
+          overflow: 'visible',
         },
         sceneStyle: {
           backgroundColor: theme.colors.background,
