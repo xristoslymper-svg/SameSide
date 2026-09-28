@@ -172,15 +172,16 @@ export default function Today(){
   </View>}
 
   {!state.loading&&!state.error&&move&&program&&program.routineActivated&&!joinIntro&&!(state.data?.garden?.bloom&&move.status==='completed')&&<>
+   <View pointerEvents="none" style={s.botanicalLayer}>
+    <Image source={require('../../assets/today-botanical-reference.png')} style={s.botanicalImage} resizeMode="contain"/>
+   </View>
+
    <View style={s.dayMeta}>
     <Text style={s.dayMetaText}>{afterRoutine?'KEEP WHAT HELPED':`WEEK ${goal} · DAY ${move.program_day}`}</Text>
     <WeekProgress day={move.program_day}/>
    </View>
 
    <View style={s.moveHero}>
-    <View pointerEvents="none" style={s.heroFlower}>
-     <Image source={require('../../assets/today-botanical-reference.png')} style={s.heroFlowerImage} resizeMode="contain"/>
-    </View>
     <View style={s.heroCopy}>
      {!primary&&<Text style={s.extraMove}>YOUR EXTRA MOVE</Text>}
      <Text style={s.moveTitle}>{move.task_title}</Text>
@@ -205,46 +206,58 @@ export default function Today(){
 }
 
 const s=StyleSheet.create({
- paperWashTop:{position:'absolute',width:280,height:280,borderRadius:140,backgroundColor:theme.colors.rose,opacity:.045,top:92,right:-192},
- paperWashBottom:{position:'absolute',width:310,height:190,borderRadius:160,backgroundColor:theme.colors.sand,opacity:.19,bottom:-118,left:-130},
- topBar:{minHeight:44,flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginTop:0,marginBottom:18},
- todayTitle:{fontSize:21,lineHeight:28,color:theme.colors.ink,letterSpacing:-.25,fontWeight:'500'},
- accountButton:{transform:[{scale:.86}],marginRight:-3},
- dayMeta:{gap:8,marginTop:0,marginBottom:11},
- dayMetaText:{fontSize:10,lineHeight:14,letterSpacing:1.55,fontWeight:'700',color:theme.colors.muted,textTransform:'uppercase'},
+ paperWashTop:{position:'absolute',width:330,height:330,borderRadius:180,backgroundColor:theme.colors.rose,opacity:.055,top:72,right:-230},
+ paperWashBottom:{position:'absolute',width:360,height:210,borderRadius:190,backgroundColor:theme.colors.sand,opacity:.22,bottom:-94,left:-165},
+
+ topBar:{position:'relative',zIndex:3,minHeight:44,flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginTop:0,marginBottom:28},
+ todayTitle:{fontSize:21,lineHeight:28,color:'#24392F',letterSpacing:-.25,fontWeight:'500'},
+ accountButton:{transform:[{scale:.84}],marginRight:-4},
+
+ botanicalLayer:{position:'absolute',zIndex:0,right:-78,top:72,width:300,height:465,opacity:.94},
+ botanicalImage:{width:'100%',height:'100%'},
+
+ dayMeta:{position:'relative',zIndex:2,gap:8,marginTop:0,marginBottom:36},
+ dayMetaText:{fontSize:9.5,lineHeight:13,letterSpacing:1.55,fontWeight:'700',color:'#74766D',textTransform:'uppercase'},
  weekProgress:{flexDirection:'row',alignItems:'center',gap:5},
- progressDot:{width:6,height:6,borderRadius:3,backgroundColor:theme.colors.line},
- progressDotFilled:{backgroundColor:theme.colors.sageMid},
- progressDotCurrent:{width:18,backgroundColor:theme.colors.sage},
- moveHero:{position:'relative',minHeight:198,marginHorizontal:-2,overflow:'visible'},
- heroCopy:{position:'relative',zIndex:2,paddingTop:4,maxWidth:270},
+ progressDot:{width:5.5,height:5.5,borderRadius:3,backgroundColor:'#E4DCCD'},
+ progressDotFilled:{backgroundColor:'#47705C'},
+ progressDotCurrent:{width:18,backgroundColor:'#BFA98A'},
+
+ moveHero:{position:'relative',zIndex:2,overflow:'visible'},
+ heroCopy:{position:'relative',zIndex:2,maxWidth:272},
  heroFlower:{position:'absolute',zIndex:1,right:-56,top:-78,width:238,height:369,opacity:.94},
  heroFlowerImage:{width:'100%',height:'100%'},
- extraMove:{fontSize:9.5,lineHeight:13,letterSpacing:1.55,fontWeight:'800',color:theme.colors.sageMid,marginBottom:7},
- moveTitle:{fontFamily:theme.fonts.heading,fontSize:36,lineHeight:39.5,color:theme.colors.black,letterSpacing:-.95,maxWidth:232,marginBottom:14,fontWeight:'400'},
- moveBody:{fontSize:14,lineHeight:21,color:theme.colors.black,maxWidth:248,letterSpacing:-.02},
- whySurface:{borderRadius:20,borderWidth:1,borderColor:'rgba(210,197,181,0.40)',backgroundColor:'rgba(255,252,247,0.66)',paddingHorizontal:15,paddingVertical:12,marginTop:0,marginBottom:14,shadowColor:theme.colors.ink,shadowOpacity:.025,shadowRadius:16,shadowOffset:{width:0,height:6},elevation:1},
- whySurfaceOpen:{paddingBottom:17},
- whyHeader:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12},
- whyTitleRow:{flexDirection:'row',alignItems:'center',gap:10},
- whyLabel:{fontSize:14,lineHeight:20,fontWeight:'600',color:theme.colors.black},
- whyChevron:{fontSize:18,lineHeight:20,color:theme.colors.inkSoft},
- whyBody:{fontSize:13.5,lineHeight:20.5,color:theme.colors.inkSoft,marginTop:12,paddingRight:4},
+ extraMove:{fontSize:9,lineHeight:13,letterSpacing:1.5,fontWeight:'800',color:'#718773',marginBottom:8,textTransform:'uppercase'},
+ moveTitle:{fontFamily:theme.fonts.heading,fontSize:38,lineHeight:40,color:'#1F3027',letterSpacing:-1.05,maxWidth:240,marginBottom:26,fontWeight:'400'},
+ moveBody:{fontSize:14.5,lineHeight:21.5,color:'#25342D',maxWidth:264,letterSpacing:-.03,fontWeight:'400'},
+
+ whySurface:{position:'relative',zIndex:2,width:'94%',alignSelf:'center',minHeight:60,borderRadius:22,borderWidth:1,borderColor:'rgba(210,197,181,0.34)',backgroundColor:'rgba(255,252,247,0.70)',paddingHorizontal:17,paddingVertical:15,marginTop:48,marginBottom:70,shadowColor:'#263A2F',shadowOpacity:.035,shadowRadius:24,shadowOffset:{width:0,height:10},elevation:1},
+ whySurfaceOpen:{paddingBottom:18,marginBottom:52},
+ whyHeader:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,minHeight:28},
+ whyTitleRow:{flexDirection:'row',alignItems:'center',gap:11},
+ whyLabel:{fontSize:14.5,lineHeight:20,fontWeight:'600',color:'#203229'},
+ whyChevron:{fontSize:17,lineHeight:20,color:'#4B5E53'},
+ whyBody:{fontSize:13.5,lineHeight:20.5,color:'#536158',marginTop:13,paddingRight:6},
+
  leafMark:{width:20,height:20,position:'relative'},
- leafBlade:{position:'absolute',width:13,height:8,borderTopLeftRadius:12,borderBottomRightRadius:12,backgroundColor:theme.colors.sageLight,transform:[{rotate:'-30deg'}],top:3,left:4,borderWidth:1,borderColor:theme.colors.sageMid},
- leafStem:{position:'absolute',width:1.2,height:12,backgroundColor:theme.colors.sageMid,transform:[{rotate:'35deg'}],left:9,top:8,borderRadius:2},
- primaryButton:{width:'86%',alignSelf:'center',minHeight:50,borderRadius:999,backgroundColor:theme.colors.sage,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:12,paddingHorizontal:22,shadowColor:theme.colors.ink,shadowOpacity:.08,shadowRadius:18,shadowOffset:{width:0,height:8},elevation:3},
+ leafBlade:{position:'absolute',width:13,height:8,borderTopLeftRadius:12,borderBottomRightRadius:12,backgroundColor:'#E2E9DF',transform:[{rotate:'-30deg'}],top:3,left:4,borderWidth:1,borderColor:'#78917B'},
+ leafStem:{position:'absolute',width:1.2,height:12,backgroundColor:'#78917B',transform:[{rotate:'35deg'}],left:9,top:8,borderRadius:2},
+
+ primaryButton:{position:'relative',zIndex:2,width:'88%',alignSelf:'center',minHeight:54,borderRadius:999,backgroundColor:'#285A43',flexDirection:'row',alignItems:'center',justifyContent:'center',gap:13,paddingHorizontal:22,shadowColor:'#20372A',shadowOpacity:.09,shadowRadius:22,shadowOffset:{width:0,height:10},elevation:4},
  primaryButtonPressed:{transform:[{scale:.987}],opacity:.95},
- completedPrimary:{opacity:.92,shadowOpacity:.04,elevation:1},
- extraAction:{alignSelf:'center',minHeight:40,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:9,paddingHorizontal:18,marginTop:5},
- extraActionPressed:{opacity:.65},
- extraActionText:{fontSize:13.5,lineHeight:19,color:theme.colors.sage,fontWeight:'600'},
- extraActionArrow:{fontSize:16,lineHeight:19,color:theme.colors.sage},
- primaryButtonText:{fontSize:15.5,lineHeight:21,fontWeight:'600',color:theme.colors.white,letterSpacing:.02},
- primaryArrow:{fontSize:19,lineHeight:20,color:theme.colors.white,fontWeight:'400'},
+ completedPrimary:{opacity:.93,shadowOpacity:.055,elevation:2},
+ primaryButtonText:{fontSize:15.5,lineHeight:21,fontWeight:'500',color:theme.colors.white,letterSpacing:.02},
+ primaryArrow:{fontSize:18,lineHeight:20,color:theme.colors.white,fontWeight:'400'},
  buttonDisabled:{opacity:.55},
- growingTogether:{minHeight:38,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:5},
- growingText:{fontSize:11.5,lineHeight:17,color:theme.colors.sageMid},
+
+ extraAction:{position:'relative',zIndex:2,alignSelf:'center',minHeight:36,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:9,paddingHorizontal:16,marginTop:8},
+ extraActionPressed:{opacity:.65},
+ extraActionText:{fontSize:13,lineHeight:19,color:'#567460',fontWeight:'600'},
+ extraActionArrow:{fontSize:15,lineHeight:19,color:'#567460'},
+
+ growingTogether:{position:'relative',zIndex:2,minHeight:54,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:6,marginTop:14},
+ growingText:{fontSize:11.5,lineHeight:17,color:'#78917B'},
+
  completedState:{paddingTop:2},
  completedHero:{position:'relative',minHeight:350,overflow:'hidden',paddingTop:12},
  completedFlower:{position:'absolute',right:-54,top:-52,width:224,height:347,opacity:.97},
@@ -254,6 +267,7 @@ const s=StyleSheet.create({
  completeBadgeText:{fontSize:13,lineHeight:18,color:theme.colors.sage,fontWeight:'600'},
  completedTitle:{fontFamily:theme.fonts.heading,fontSize:38,lineHeight:42,color:theme.colors.mutedSoft,letterSpacing:-1.05,maxWidth:238,marginTop:86,zIndex:2},
  completedMessage:{fontSize:14.5,lineHeight:22,color:theme.colors.muted,maxWidth:238,marginTop:14,zIndex:2},
+
  secondaryButton:{minHeight:54,borderRadius:999,borderWidth:1,borderColor:'rgba(228,218,204,0.82)',backgroundColor:'rgba(255,252,247,0.78)',flexDirection:'row',alignItems:'center',justifyContent:'center',gap:12,paddingHorizontal:20,...theme.shadow.card},
  secondaryButtonPressed:{transform:[{scale:.988}],backgroundColor:theme.colors.card},
  secondaryButtonText:{fontSize:14.5,lineHeight:20,fontWeight:'600',color:theme.colors.black},
@@ -261,15 +275,18 @@ const s=StyleSheet.create({
  flowerAction:{minHeight:48,marginTop:8,borderRadius:999,backgroundColor:'rgba(255,252,247,0.5)',flexDirection:'row',alignItems:'center',justifyContent:'center',gap:8,paddingHorizontal:18},
  flowerActionText:{fontSize:13.5,lineHeight:19,color:theme.colors.inkSoft,fontWeight:'500'},
  flowerActionArrow:{fontSize:16,color:theme.colors.inkSoft,marginLeft:2},
+
  enoughState:{paddingVertical:15,paddingHorizontal:4,alignItems:'center',gap:4},
  enoughTitle:{fontFamily:theme.fonts.heading,fontSize:20,lineHeight:25,color:theme.colors.ink},
  enoughBody:{fontSize:13,lineHeight:19,color:theme.colors.muted},
- errorWrap:{gap:10,marginTop:8},
+ errorWrap:{position:'relative',zIndex:3,gap:10,marginTop:8},
+
  editorialState:{paddingTop:28,paddingBottom:20,gap:15},
  stateKicker:{fontSize:10,lineHeight:14,letterSpacing:1.5,fontWeight:'800',color:theme.colors.sageMid},
  stateTitle:{fontFamily:theme.fonts.heading,fontSize:37,lineHeight:42,color:theme.colors.ink,letterSpacing:-1,maxWidth:320},
  stateBody:{fontSize:15,lineHeight:23,color:theme.colors.muted,maxWidth:320},
  stateFlower:{height:180,overflow:'hidden',alignItems:'center',justifyContent:'center'},
+
  routineComplete:{paddingTop:14,paddingBottom:16,gap:16},
  bloomArt:{height:235,alignItems:'center',justifyContent:'center',overflow:'hidden',marginTop:-12,marginBottom:-16},
  routineCompleteTitle:{fontFamily:theme.fonts.heading,fontSize:39,lineHeight:44,color:theme.colors.ink,letterSpacing:-1.1},
