@@ -30,10 +30,9 @@ function RootsGlyph({color}:{color:string}) {
   </View>;
 }
 
-function NavItem({label,color,kind}:{label:string;color:string;kind:'home'|'garden'|'roots'}) {
-  return <View style={nav.item}>
+function NavIcon({color,kind}:{color:string;kind:'home'|'garden'|'roots'}) {
+  return <View style={nav.iconWrap}>
     {kind==='home'?<HomeGlyph color={color}/>:kind==='garden'?<GardenGlyph color={color}/>:<RootsGlyph color={color}/>}
-    <Text style={[nav.label,{color}]}>{label}</Text>
   </View>;
 }
 
@@ -59,7 +58,7 @@ export default function ProductLayout() {
       screenOptions={{
         headerShown: false,
         tabBarHideOnKeyboard: true,
-        tabBarShowLabel: false,
+        tabBarShowLabel: true,
         tabBarActiveTintColor: '#416B58',
         tabBarInactiveTintColor: '#9A978E',
         tabBarStyle: {
@@ -84,17 +83,24 @@ export default function ProductLayout() {
         },
         tabBarItemStyle: {
           height: 60,
-          padding: 0,
+          paddingTop: 6,
+          paddingBottom: 5,
           margin: 0,
           borderRadius: 28,
-          alignItems: 'center',
-          justifyContent: 'center',
         },
         tabBarIconStyle: {
-          width: '100%',
-          height: 58,
-          margin: 0,
-          padding: 0,
+          width: 24,
+          height: 24,
+          marginTop: 0,
+          marginBottom: 2,
+        },
+        tabBarLabelStyle: {
+          fontSize: 10.5,
+          lineHeight: 13,
+          fontWeight: '600',
+          letterSpacing: 0.05,
+          marginTop: 1,
+          marginBottom: 0,
         },
         sceneStyle: {
           backgroundColor: theme.colors.background,
@@ -102,17 +108,16 @@ export default function ProductLayout() {
         },
       }}
     >
-      <Tabs.Screen name="today" options={{title:'Today',tabBarIcon:({color})=><NavItem label="Today" color={color} kind="home"/>}}/>
-      <Tabs.Screen name="garden" options={{title:'Garden',tabBarIcon:({color})=><NavItem label="Garden" color={color} kind="garden"/>}}/>
-      <Tabs.Screen name="roots" options={{title:'Roots',tabBarIcon:({color})=><NavItem label="Roots" color={color} kind="roots"/>}}/>
+      <Tabs.Screen name="today" options={{title:'Today',tabBarIcon:({color})=><NavIcon color={color} kind="home"/>}}/>
+      <Tabs.Screen name="garden" options={{title:'Garden',tabBarIcon:({color})=><NavIcon color={color} kind="garden"/>}}/>
+      <Tabs.Screen name="roots" options={{title:'Roots',tabBarIcon:({color})=><NavIcon color={color} kind="roots"/>}}/>
       <Tabs.Screen name="diary" options={{href:null}}/>
     </Tabs>
   );
 }
 
 const nav = StyleSheet.create({
-  item:{height:58,width:'100%',alignItems:'center',justifyContent:'center',gap:4},
-  label:{fontSize:10.5,lineHeight:13,fontWeight:'600',letterSpacing:.05},
+  iconWrap:{width:24,height:24,alignItems:'center',justifyContent:'center'},
   homeGlyph:{width:22,height:21,position:'relative'},
   homeRoof:{position:'absolute',width:13,height:13,left:4.5,top:1.5,borderLeftWidth:1.8,borderTopWidth:1.8,transform:[{rotate:'45deg'}],borderTopLeftRadius:1.5},
   homeBody:{position:'absolute',width:14,height:11,left:4,bottom:1,borderWidth:1.8,borderTopWidth:0,borderBottomLeftRadius:1.5,borderBottomRightRadius:1.5},
