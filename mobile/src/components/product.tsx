@@ -34,6 +34,9 @@ export function useProductData<T>(load: () => Promise<T>) {
     }
   }, [load]);
   const mutate = useCallback((value: T) => {
+    // A local mutation is newer than any refresh already in flight.
+    // Invalidate those requests so stale server reads cannot overwrite immediate UI state.
+    generation.current++;
     hasData.current = true;
     setData(value);
     setLoading(false);
