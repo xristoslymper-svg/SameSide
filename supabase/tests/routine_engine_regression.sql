@@ -116,4 +116,39 @@ begin
  then raise exception 'relationship timezone failed'; end if;
 end $$;
 
+
+-- Activation gate: two members, both personalization rows, and a flower are required.
+insert into auth.users(id,email,is_anonymous,is_sso_user) values
+('33333333-3333-3333-3333-333333333333','activation-a@example.invalid',false,false),
+('44444444-4444-4444-4444-444444444444','activation-b@example.invalid',false,false);
+insert into public.relationships(id,created_by,active_path,path_started_at,status,timezone)
+values('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb','33333333-3333-3333-3333-333333333333','routine',
+(statement_timestamp() at time zone 'UTC')::date,'active','UTC');
+insert into public.relationship_members(relationship_id,user_id,member_role) values
+('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb','33333333-3333-3333-3333-333333333333','member_a'),
+('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb','44444444-4444-4444-4444-444444444444','member_b');
+
+do $
+declare active boolean; started date; today date:=(statement_timestamp() at time zone 'UTC')::date;
+begin
+ perform set_config('request.jwt.claim.sub','33333333-3333-3333-3333-333333333333',true);
+ begin
+  perform public.get_or_create_today_assignment(0);
+  raise exception 'move issued before activation';
+ exception when others then
+  if sqlerrm<>'routine_not_ready' then raise; end if;
+ end;
+ perform public.save_my_routine_preferences(array['conversation','appreciation']);
+ perform public.choose_shared_flower('cosmos');
+ select routine_activated_at is not null into active from public.relationships where id='bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb';
+ if active then raise exception 'one personalization profile activated Routine'; end if;
+
+ perform set_config('request.jwt.claim.sub','44444444-4444-4444-4444-444444444444',true);
+ perform public.save_my_routine_preferences(array['fun','time']);
+ select routine_activated_at is not null,path_started_at into active,started
+ from public.relationships where id='bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb';
+ if not active then raise exception 'second personalization profile did not activate Routine'; end if;
+ if started<>today then raise exception 'activation did not reset Day 1'; end if;
+end $;
+
 rollback;
