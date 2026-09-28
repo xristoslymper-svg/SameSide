@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Redirect } from 'expo-router';
 import { Text, View } from 'react-native';
-import { Button, Notice, styles } from '../src/components/ui';
+import { Button, Loading, Notice, styles } from '../src/components/ui';
 import { Choice, FlowScreen } from '../src/components/onboarding';
 import { useOnboarding, type Focus } from '../src/providers/OnboardingProvider';
 import { ensureRelationship, getRelationshipState } from '../src/features/relationships';
@@ -16,11 +16,13 @@ export default function PersonalizeScreen(){
  const [starting,setStarting]=useState(false);
  const [error,setError]=useState<string|null>(null);
  const [role,setRole]=useState<string|null>(null);
+ const [roleLoaded,setRoleLoaded]=useState(false);
  const selected=progress.focus??[];
 
- useEffect(()=>{let active=true;if(!session)return;void getRelationshipState(session.user.id).then(r=>{if(active)setRole(r?.role??null);}).catch(()=>{});return()=>{active=false};},[session]);
+ useEffect(()=>{let active=true;if(!session)return;setRoleLoaded(false);void getRelationshipState(session.user.id).then(r=>{if(active)setRole(r?.role??null);}).catch(()=>{if(active)setRole(null);}).finally(()=>{if(active)setRoleLoaded(true);});return()=>{active=false};},[session]);
 
  if(destination!=='/personalize') return <Redirect href={destination}/>;
+ if(!roleLoaded) return <Loading/>;
 
  async function toggle(focus:Focus){
   const exists=selected.includes(focus);
