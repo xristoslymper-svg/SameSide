@@ -1,5 +1,6 @@
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Redirect, Tabs } from 'expo-router';
-import { Platform, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../../src/providers/AuthProvider';
 import { useInvitation } from '../../src/providers/InvitationProvider';
@@ -30,15 +31,44 @@ function RootsGlyph({color}:{color:string}) {
   </View>;
 }
 
-function NavIcon({color,kind}:{color:string;kind:'home'|'garden'|'roots'}) {
-  return <View style={nav.iconWrap}>
-    {kind==='home'?<HomeGlyph color={color}/>:kind==='garden'?<GardenGlyph color={color}/>:<RootsGlyph color={color}/>}
+function Glyph({route,color}:{route:string;color:string}) {
+  if(route==='today') return <HomeGlyph color={color}/>;
+  if(route==='garden') return <GardenGlyph color={color}/>;
+  return <RootsGlyph color={color}/>;
+}
+
+function FloatingTabBar({state,descriptors,navigation}:BottomTabBarProps) {
+  const insets=useSafeAreaInsets();
+  const visible=state.routes.filter(route=>descriptors[route.key].options.href!==null);
+
+  return <View pointerEvents="box-none" style={[nav.floatingWrap,{bottom:Math.max(insets.bottom,12)+12}]}>
+    <View style={nav.floatingBar}>
+      {visible.map(route=>{
+        const index=state.routes.findIndex(item=>item.key===route.key);
+        const focused=state.index===index;
+        const color=focused?'#416B58':'#99968D';
+        const label=route.name==='today'?'Today':route.name==='garden'?'Garden':'Roots';
+        return <Pressable
+          key={route.key}
+          accessibilityRole="button"
+          accessibilityState={focused?{selected:true}:{}}
+          accessibilityLabel={label}
+          onPress={()=>{
+            const event=navigation.emit({type:'tabPress',target:route.key,canPreventDefault:true});
+            if(!focused&&!event.defaultPrevented)navigation.navigate(route.name,route.params);
+          }}
+          onLongPress={()=>navigation.emit({type:'tabLongPress',target:route.key})}
+          style={({pressed})=>[nav.tab,focused&&nav.tabActive,pressed&&nav.tabPressed]}>
+          <View style={nav.iconBox}><Glyph route={route.name} color={color}/></View>
+          <Text style={[nav.label,{color},focused&&nav.labelActive]}>{label}</Text>
+          {focused&&<View style={nav.activeMark}/>}
+        </Pressable>;
+      })}
+    </View>
   </View>;
 }
 
 export default function ProductLayout() {
-  const insets = useSafeAreaInsets();
-  const { width } = useWindowDimensions();
   const { session } = useAuth();
   const { token } = useInvitation();
   const { destination } = useOnboarding();
@@ -47,88 +77,74 @@ export default function ProductLayout() {
   if (token) return <Redirect href="/invite/resume"/>;
   if (destination !== '/welcome') return <Redirect href={destination}/>;
 
-  const shellWidth = Math.min(Math.max(width - 48, 280), 366);
-  const safeBottom = Math.max(insets.bottom, Platform.OS === 'web' ? 18 : 12);
-  const barBottom = safeBottom + 8;
-  const barHeight = 78;
-
   return (
     <Tabs
       key={session.user.id}
+      tabBar={props=><FloatingTabBar {...props}/>}
       screenOptions={{
-        headerShown: false,
-        tabBarHideOnKeyboard: true,
-        tabBarShowLabel: true,
-        tabBarActiveTintColor: '#416B58',
-        tabBarInactiveTintColor: '#9A978E',
-        tabBarStyle: {
-          position: 'absolute',
-          width: shellWidth,
-          left: (width - shellWidth) / 2,
-          bottom: barBottom,
-          height: barHeight,
-          paddingTop: 7,
-          paddingBottom: 13,
-          paddingHorizontal: 14,
-          backgroundColor: 'rgba(255,252,247,0.985)',
-          borderWidth: 1,
-          borderColor: 'rgba(221,213,201,0.72)',
-          borderRadius: 36,
-          shadowColor: '#24352D',
-          shadowOpacity: 0.085,
-          shadowRadius: 20,
-          shadowOffset: { width: 0, height: 7 },
-          elevation: 8,
-          overflow: 'visible',
-        },
-        tabBarItemStyle: {
-          paddingTop: 3,
-          paddingBottom: 8,
-          margin: 0,
-          borderRadius: 28,
-        },
-        tabBarIconStyle: {
-          width: 24,
-          height: 24,
-          marginTop: 0,
-          marginBottom: 0,
-          overflow: 'visible',
-        },
-        tabBarLabelStyle: {
-          fontSize: 10.5,
-          lineHeight: 16,
-          height: 16,
-          fontWeight: '600',
-          letterSpacing: 0.05,
-          marginTop: -1,
-          marginBottom: 6,
-          textAlign: 'center',
-          overflow: 'visible',
-        },
-        sceneStyle: {
-          backgroundColor: theme.colors.background,
-          paddingBottom: barHeight + barBottom + 22,
-        },
-      }}
-    >
-      <Tabs.Screen name="today" options={{title:'Today',tabBarIcon:({color})=><NavIcon color={color} kind="home"/>}}/>
-      <Tabs.Screen name="garden" options={{title:'Garden',tabBarIcon:({color})=><NavIcon color={color} kind="garden"/>}}/>
-      <Tabs.Screen name="roots" options={{title:'Roots',tabBarIcon:({color})=><NavIcon color={color} kind="roots"/>}}/>
+        headerShown:false,
+        tabBarHideOnKeyboard:true,
+        sceneStyle:{backgroundColor:theme.colors.background,paddingBottom:112},
+      }}>
+      <Tabs.Screen name="today" options={{title:'Today'}}/>
+      <Tabs.Screen name="garden" options={{title:'Garden'}}/>
+      <Tabs.Screen name="roots" options={{title:'Roots'}}/>
       <Tabs.Screen name="diary" options={{href:null}}/>
     </Tabs>
   );
 }
 
-const nav = StyleSheet.create({
-  iconWrap:{width:24,height:24,alignItems:'center',justifyContent:'center'},
+const nav=StyleSheet.create({
+  floatingWrap:{
+    position:'absolute',
+    left:24,
+    right:24,
+    zIndex:50,
+    alignItems:'center',
+  },
+  floatingBar:{
+    width:'100%',
+    maxWidth:366,
+    height:76,
+    flexDirection:'row',
+    alignItems:'stretch',
+    paddingHorizontal:8,
+    paddingVertical:7,
+    borderRadius:38,
+    backgroundColor:'rgba(255,252,247,0.985)',
+    borderWidth:1,
+    borderColor:'rgba(221,213,201,0.76)',
+    shadowColor:'#24352D',
+    shadowOpacity:.09,
+    shadowRadius:22,
+    shadowOffset:{width:0,height:8},
+    elevation:10,
+  },
+  tab:{
+    flex:1,
+    minWidth:0,
+    borderRadius:30,
+    alignItems:'center',
+    justifyContent:'center',
+    paddingTop:5,
+    paddingBottom:4,
+    position:'relative',
+  },
+  tabActive:{backgroundColor:'rgba(230,238,231,0.32)'},
+  tabPressed:{opacity:.68},
+  iconBox:{height:24,alignItems:'center',justifyContent:'center',marginBottom:3},
+  label:{fontSize:10.5,lineHeight:14,fontWeight:'500',letterSpacing:.08,textAlign:'center'},
+  labelActive:{fontWeight:'700'},
+  activeMark:{position:'absolute',bottom:1,width:16,height:2,borderRadius:2,backgroundColor:'#416B58',opacity:.82},
+
   homeGlyph:{width:22,height:21,position:'relative'},
   homeRoof:{position:'absolute',width:13,height:13,left:4.5,top:1.5,borderLeftWidth:1.8,borderTopWidth:1.8,transform:[{rotate:'45deg'}],borderTopLeftRadius:1.5},
   homeBody:{position:'absolute',width:14,height:11,left:4,bottom:1,borderWidth:1.8,borderTopWidth:0,borderBottomLeftRadius:1.5,borderBottomRightRadius:1.5},
   gardenGlyph:{width:22,height:22,position:'relative'},
   petal:{position:'absolute',width:7,height:9,borderWidth:1.4,borderRadius:6},
-  petalTop:{left:7.5,top:0.5},
+  petalTop:{left:7.5,top:.5},
   petalRight:{right:1,top:6.5,transform:[{rotate:'90deg'}]},
-  petalBottom:{left:7.5,bottom:0.5},
+  petalBottom:{left:7.5,bottom:.5},
   petalLeft:{left:1,top:6.5,transform:[{rotate:'90deg'}]},
   flowerCore:{position:'absolute',width:4.5,height:4.5,borderRadius:3,left:8.75,top:8.75},
   rootsOuter:{width:20,height:20,borderWidth:1.4,borderRadius:10,alignItems:'center',justifyContent:'center'},
