@@ -172,44 +172,32 @@ export default function Today(){
   </View>}
 
   {!state.loading&&!state.error&&move&&program&&program.routineActivated&&!joinIntro&&!(state.data?.garden?.bloom&&move.status==='completed')&&<>
-   {move.status!=='completed'?<>
-    <View style={s.dayMeta}>
-     <Text style={s.dayMetaText}>{afterRoutine?'KEEP WHAT HELPED':`WEEK ${goal} · DAY ${move.program_day}`}</Text>
-     <WeekProgress day={move.program_day}/>
+   <View style={s.dayMeta}>
+    <Text style={s.dayMetaText}>{afterRoutine?'KEEP WHAT HELPED':`WEEK ${goal} · DAY ${move.program_day}`}</Text>
+    <WeekProgress day={move.program_day}/>
+   </View>
+
+   <View style={s.moveHero}>
+    <View pointerEvents="none" style={s.heroFlower}>
+     <Image source={require('../../assets/today-botanical-reference.png')} style={s.heroFlowerImage} resizeMode="contain"/>
     </View>
-
-    <View style={s.moveHero}>
-     <View pointerEvents="none" style={s.heroFlower}>
-      <Image source={require('../../assets/today-botanical-reference.png')} style={s.heroFlowerImage} resizeMode="contain"/>
-     </View>
-     <View style={s.heroCopy}>
-      {!primary&&<Text style={s.extraMove}>YOUR EXTRA MOVE</Text>}
-      <Text style={s.moveTitle}>{move.task_title}</Text>
-      <Text style={s.moveBody}>{move.task_body}</Text>
-     </View>
+    <View style={s.heroCopy}>
+     {!primary&&<Text style={s.extraMove}>YOUR EXTRA MOVE</Text>}
+     <Text style={s.moveTitle}>{move.task_title}</Text>
+     <Text style={s.moveBody}>{move.task_body}</Text>
     </View>
+   </View>
 
-    <Pressable accessibilityRole="button" accessibilityState={{expanded:whyOpen}} onPress={()=>setWhyOpen(value=>!value)} style={[s.whySurface,whyOpen&&s.whySurfaceOpen]}>
-     <View style={s.whyHeader}><View style={s.whyTitleRow}><LeafMark/><Text style={s.whyLabel}>Why this Move?</Text></View><Text style={s.whyChevron}>{whyOpen?'⌃':'⌄'}</Text></View>
-     {whyOpen&&<Text style={s.whyBody}>{why}</Text>}
-    </Pressable>
+   <Pressable accessibilityRole="button" accessibilityState={{expanded:whyOpen}} onPress={()=>setWhyOpen(value=>!value)} style={[s.whySurface,whyOpen&&s.whySurfaceOpen]}>
+    <View style={s.whyHeader}><View style={s.whyTitleRow}><LeafMark/><Text style={s.whyLabel}>Why this Move?</Text></View><Text style={s.whyChevron}>{whyOpen?'⌃':'⌄'}</Text></View>
+    {whyOpen&&<Text style={s.whyBody}>{why}</Text>}
+   </Pressable>
 
-    <PrimaryMoveButton busy={busy} onPress={()=>{void complete();}}/>
-    <View style={s.growingTogether}><LeafMark/><Text style={s.growingText}>{move.program_day===1?'1 day together':`${move.program_day} days together`}</Text></View>
-   </>:<View style={s.completedState}>
-    <View style={s.completedHero}>
-     <View pointerEvents="none" style={s.completedFlower}>
-      <Image source={require('../../assets/today-botanical-reference.png')} style={s.completedFlowerImage} resizeMode="contain"/>
-     </View>
-     <View style={s.completeBadge}><Text style={s.completeCheck}>✓</Text><Text style={s.completeBadgeText}>Completed</Text></View>
-     <Text style={s.completedTitle}>{move.task_title}</Text>
-     <Text style={s.completedMessage}>You made space for connection today.</Text>
-    </View>
-
-    {move.slot<2?<SecondaryMoveButton label="Show me another Move" busy={busy} onPress={()=>{void oneMore();}}/>:<View style={s.enoughState}><Text style={s.enoughTitle}>That’s plenty for today.</Text><Text style={s.enoughBody}>Come back tomorrow for your next Move.</Text></View>}
-    <Pressable accessibilityRole="button" onPress={()=>router.navigate('/garden')} style={s.flowerAction}><LeafMark/><Text style={s.flowerActionText}>See your flower</Text><Text style={s.flowerActionArrow}>→</Text></Pressable>
-    <View style={s.growingTogether}><LeafMark/><Text style={s.growingText}>Growing together · Day {move.program_day}</Text></View>
-   </View>}
+   {move.status!=='completed'?<PrimaryMoveButton busy={busy} onPress={()=>{void complete();}}/>:<>
+    <View style={[s.primaryButton,s.completedPrimary]}><Text style={s.primaryButtonText}>Completed</Text><Text style={s.primaryArrow}>✓</Text></View>
+    {move.slot<2&&<Pressable accessibilityRole="button" disabled={busy} onPress={()=>{void oneMore();}} style={({pressed})=>[s.extraAction,pressed&&!busy&&s.extraActionPressed,busy&&s.buttonDisabled]}><Text style={s.extraActionText}>Show me another Move</Text><Text style={s.extraActionArrow}>→</Text></Pressable>}
+   </>}
+   <View style={s.growingTogether}><LeafMark/><Text style={s.growingText}>{move.program_day===1?'1 day together':`${move.program_day} days together`}</Text></View>
 
    {error&&<View style={s.errorWrap}><Notice>{error}</Notice><Button label="Try again" secondary disabled={busy} onPress={()=>{setError(null);void state.refresh();}}/></View>}
   </>}
@@ -247,6 +235,11 @@ const s=StyleSheet.create({
  leafStem:{position:'absolute',width:1.2,height:12,backgroundColor:theme.colors.sageMid,transform:[{rotate:'35deg'}],left:9,top:8,borderRadius:2},
  primaryButton:{width:'86%',alignSelf:'center',minHeight:50,borderRadius:999,backgroundColor:theme.colors.sage,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:12,paddingHorizontal:22,shadowColor:theme.colors.ink,shadowOpacity:.08,shadowRadius:18,shadowOffset:{width:0,height:8},elevation:3},
  primaryButtonPressed:{transform:[{scale:.987}],opacity:.95},
+ completedPrimary:{opacity:.92,shadowOpacity:.04,elevation:1},
+ extraAction:{alignSelf:'center',minHeight:40,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:9,paddingHorizontal:18,marginTop:5},
+ extraActionPressed:{opacity:.65},
+ extraActionText:{fontSize:13.5,lineHeight:19,color:theme.colors.sage,fontWeight:'600'},
+ extraActionArrow:{fontSize:16,lineHeight:19,color:theme.colors.sage},
  primaryButtonText:{fontSize:15.5,lineHeight:21,fontWeight:'600',color:theme.colors.white,letterSpacing:.02},
  primaryArrow:{fontSize:19,lineHeight:20,color:theme.colors.white,fontWeight:'400'},
  buttonDisabled:{opacity:.55},
