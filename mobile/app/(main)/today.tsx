@@ -233,7 +233,7 @@ const s=StyleSheet.create({
  whySurfaceOpen:{paddingBottom:20},
  whyHeader:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12},
  whyTitleRow:{flexDirection:'row',alignItems:'center',gap:11},
- whyLabel:{fontSize:15.5,lineHeight:21,fontWeight:'650',color:theme.colors.black},
+ whyLabel:{fontSize:15.5,lineHeight:21,fontWeight:'600',color:theme.colors.black},
  whyChevron:{fontSize:20,lineHeight:22,color:theme.colors.inkSoft},
  whyBody:{fontSize:14.5,lineHeight:22.5,color:theme.colors.inkSoft,marginTop:15,paddingRight:6},
  leafMark:{width:22,height:22,position:'relative'},
