@@ -239,9 +239,9 @@ const s=StyleSheet.create({
  todayTitle:{fontSize:20,lineHeight:27,color:'#24392F',letterSpacing:-.2,fontWeight:'500'},
  accountButton:{transform:[{scale:.84}],marginRight:-4},
 
- botanicalLayer:{position:'absolute',zIndex:0,right:-86,top:72,width:300,height:500,overflow:'visible'},
- botanicalWash:{position:'absolute',right:-42,top:-24,width:320,height:470,opacity:.24},
- botanicalMain:{position:'absolute',right:-66,top:8,width:282,height:448,opacity:.68},
+ botanicalLayer:{position:'absolute',zIndex:0,right:-58,top:70,width:330,height:520,overflow:'visible'},
+ botanicalWash:{position:'absolute',right:-62,top:-6,width:300,height:430,opacity:.09},
+ botanicalMain:{position:'absolute',right:-36,top:2,width:326,height:500,opacity:.78},
 
  dayMeta:{position:'relative',zIndex:2,gap:7,marginTop:0,marginBottom:22},
  dayMetaText:{fontSize:9.5,lineHeight:13,letterSpacing:1.55,fontWeight:'700',color:'#74766D',textTransform:'uppercase'},
@@ -251,17 +251,17 @@ const s=StyleSheet.create({
  progressDotCurrent:{width:18,backgroundColor:'#BFA98A'},
 
  moveHero:{position:'relative',zIndex:2,overflow:'visible'},
- heroCopy:{position:'relative',zIndex:2,maxWidth:268,paddingRight:8},
+ heroCopy:{position:'relative',zIndex:2,maxWidth:260,paddingRight:10},
  heroFlower:{position:'absolute',zIndex:1,right:-56,top:-78,width:238,height:369,opacity:.94},
  heroFlowerImage:{width:'100%',height:'100%'},
  extraMove:{fontSize:9,lineHeight:13,letterSpacing:1.5,fontWeight:'800',color:'#718773',marginBottom:8,textTransform:'uppercase'},
- moveTitle:{fontFamily:theme.fonts.heading,fontSize:37,lineHeight:39.5,color:'#1F3027',letterSpacing:-1.0,maxWidth:230,marginBottom:17,fontWeight:'400'},
- moveTitleCompact:{fontSize:34,lineHeight:36.5,maxWidth:226,letterSpacing:-.85},
- moveTitleLong:{fontSize:31,lineHeight:34,maxWidth:222,letterSpacing:-.65},
- moveBody:{fontSize:14.25,lineHeight:21.25,color:'#25342D',maxWidth:248,letterSpacing:-.02,fontWeight:'400'},
+ moveTitle:{fontFamily:theme.fonts.heading,fontSize:37,lineHeight:39.5,color:'#1F3027',letterSpacing:-1.0,maxWidth:222,marginBottom:16,fontWeight:'400'},
+ moveTitleCompact:{fontSize:34,lineHeight:36.5,maxWidth:220,letterSpacing:-.85},
+ moveTitleLong:{fontSize:31,lineHeight:34,maxWidth:214,letterSpacing:-.65},
+ moveBody:{fontSize:14.25,lineHeight:21.25,color:'#25342D',maxWidth:244,letterSpacing:-.02,fontWeight:'400'},
 
- whySurface:{position:'relative',zIndex:2,width:'100%',maxWidth:346,alignSelf:'flex-start',minHeight:60,borderRadius:23,borderWidth:1,borderColor:'rgba(210,197,181,0.20)',backgroundColor:'rgba(255,252,247,0.64)',paddingHorizontal:20,paddingVertical:15,marginTop:30,marginBottom:46,shadowColor:'#263A2F',shadowOpacity:.018,shadowRadius:18,shadowOffset:{width:0,height:7},elevation:1},
- whySurfaceOpen:{paddingBottom:18,marginBottom:38},
+ whySurface:{position:'relative',zIndex:2,width:'84%',maxWidth:318,alignSelf:'flex-start',minHeight:58,borderRadius:22,borderWidth:1,borderColor:'rgba(210,197,181,0.18)',backgroundColor:'rgba(255,252,247,0.66)',paddingHorizontal:18,paddingVertical:14,marginTop:22,marginBottom:30,shadowColor:'#263A2F',shadowOpacity:.015,shadowRadius:16,shadowOffset:{width:0,height:6},elevation:1},
+ whySurfaceOpen:{paddingBottom:17,marginBottom:26},
  whyHeader:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,minHeight:28},
  whyTitleRow:{flexDirection:'row',alignItems:'center',gap:12},
  whyLabel:{fontSize:14.5,lineHeight:20,fontWeight:'600',color:'#203229'},
@@ -272,7 +272,7 @@ const s=StyleSheet.create({
  leafBlade:{position:'absolute',width:13,height:8,borderTopLeftRadius:12,borderBottomRightRadius:12,backgroundColor:'#E2E9DF',transform:[{rotate:'-30deg'}],top:3,left:4,borderWidth:1,borderColor:'#78917B'},
  leafStem:{position:'absolute',width:1.2,height:12,backgroundColor:'#78917B',transform:[{rotate:'35deg'}],left:9,top:8,borderRadius:2},
 
- primaryButton:{position:'relative',zIndex:2,width:'94%',maxWidth:342,alignSelf:'center',minHeight:52,borderRadius:999,backgroundColor:'#285A43',flexDirection:'row',alignItems:'center',justifyContent:'center',paddingHorizontal:26,shadowColor:'#20372A',shadowOpacity:.05,shadowRadius:16,shadowOffset:{width:0,height:6},elevation:3},
+ primaryButton:{position:'relative',zIndex:2,width:'90%',maxWidth:326,alignSelf:'center',minHeight:50,borderRadius:999,backgroundColor:'#285A43',flexDirection:'row',alignItems:'center',justifyContent:'center',paddingHorizontal:24,shadowColor:'#20372A',shadowOpacity:.045,shadowRadius:15,shadowOffset:{width:0,height:6},elevation:3},
  primaryButtonPressed:{transform:[{scale:.987}],opacity:.95},
  completedPrimary:{opacity:.93,shadowOpacity:.055,elevation:2},
  primaryButtonText:{fontSize:15.5,lineHeight:21,fontWeight:'500',color:theme.colors.white,letterSpacing:.02},
@@ -284,7 +284,7 @@ const s=StyleSheet.create({
  extraActionText:{fontSize:13,lineHeight:19,color:'#567460',fontWeight:'600'},
  extraActionArrow:{fontSize:15,lineHeight:19,color:'#567460'},
 
- growingTogether:{position:'relative',zIndex:2,minHeight:36,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:7,marginTop:18,marginBottom:0},
+ growingTogether:{position:'relative',zIndex:2,minHeight:34,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:7,marginTop:12,marginBottom:0},
  growingText:{fontSize:11.5,lineHeight:17,color:'#78917B'},
 
  completedState:{paddingTop:2},
@@ -305,7 +305,7 @@ const s=StyleSheet.create({
  flowerActionText:{fontSize:13.5,lineHeight:19,color:theme.colors.inkSoft,fontWeight:'500'},
  flowerActionArrow:{fontSize:16,color:theme.colors.inkSoft,marginLeft:2},
 
- pathCard:{position:'relative',zIndex:2,marginTop:24,marginBottom:112,paddingTop:16,paddingHorizontal:4,paddingBottom:8,borderTopWidth:1,borderTopColor:'rgba(210,197,181,0.30)'},
+ pathCard:{position:'relative',zIndex:2,marginTop:10,marginBottom:112,paddingTop:14,paddingHorizontal:4,paddingBottom:8,borderTopWidth:1,borderTopColor:'rgba(210,197,181,0.26)'},
  pathKicker:{fontSize:10,lineHeight:14,letterSpacing:1.65,fontWeight:'800',color:theme.colors.sageMid,marginBottom:12,paddingHorizontal:8},
  goalList:{gap:2},
  goalRow:{flexDirection:'row',gap:12,paddingVertical:11,paddingHorizontal:8,borderRadius:18,opacity:.52},
