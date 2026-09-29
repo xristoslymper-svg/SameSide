@@ -90,7 +90,7 @@ export default function SignInScreen() {
 
 const google = {
   button: {
-    minHeight: 54, borderRadius: 18, borderWidth: 1, borderColor: theme.colors.lineStrong,
+    minHeight: 52, borderRadius: theme.radius.button, borderWidth: 1, borderColor: theme.colors.lineStrong,
     backgroundColor: theme.colors.card, flexDirection: 'row' as const, alignItems: 'center' as const,
     justifyContent: 'center' as const, paddingHorizontal: 18, position: 'relative' as const,
     ...theme.shadow.card,
@@ -103,7 +103,7 @@ const google = {
     borderWidth: 1, borderColor: theme.colors.line,
   },
   markText: { fontSize: 17, fontWeight: '700' as const, color: '#4285F4' },
-  label: { fontSize: 15, fontWeight: '700' as const, color: theme.colors.ink },
+  label: { fontSize: 14, fontWeight: '600' as const, color: theme.colors.ink },
   divider: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 12, marginVertical: 2 },
   line: { flex: 1, height: 1, backgroundColor: theme.colors.line },
   or: { fontSize: 10, letterSpacing: 1.4, fontWeight: '700' as const, color: theme.colors.mutedSoft },

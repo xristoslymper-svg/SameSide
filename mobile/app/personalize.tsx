@@ -46,8 +46,8 @@ export default function PersonalizeScreen(){
 
  return <FlowScreen>
   <Text style={styles.eyebrow}>{role==='member_b'?'YOUR PART OF THE SETUP':'A LITTLE INTENTION'}</Text>
-  <Text style={[styles.title,{fontSize:35,lineHeight:40,letterSpacing:-1}]}>What feels most{'\n'}missing lately?</Text>
-  <Text style={[styles.body,{fontSize:15,lineHeight:22}]}>Choose one to three. Your answers help shape the Moves you both receive.</Text>
+  <Text style={[styles.title,{fontSize:36,lineHeight:43,letterSpacing:-0.8}]}>What feels most{'\n'}missing lately?</Text>
+  <Text style={[styles.body,{fontSize:15,lineHeight:24}]}>Choose one to three. Your answers help shape the Moves you both receive.</Text>
   <View style={{gap:10}}>{choices.map(([focus,title])=><Choice compact key={focus} title={title} selected={selected.includes(focus)} disabled={busy} onPress={()=>{void toggle(focus);}}/>)}</View>
   {error&&<Notice>{error}</Notice>}
   <Button label={role==='member_b'?'Finish setup':'Continue'} busy={starting} disabled={busy||selected.length===0} onPress={()=>{void start();}}/>

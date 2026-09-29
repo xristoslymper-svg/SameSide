@@ -49,7 +49,7 @@ export function DailyReflection({ value, recent = [] }: { value: Reflection; rec
    <Text style={[styles.small,{color:theme.colors.muted}]}>🔒 Private</Text>
   </View>
   {editing ? <>
-    <TextInput accessibilityLabel="Your private diary entry" multiline editable={!busy} value={text} onChangeText={setText} placeholder="What’s on your mind today?" style={[styles.input, { minHeight: 118, textAlignVertical: 'top' }]}/>
+    <TextInput accessibilityLabel="Your private diary entry" multiline editable={!busy} value={text} onChangeText={setText} placeholder="What’s on your mind today?" style={[styles.input, { minHeight: 148, backgroundColor: theme.colors.backgroundElevated, textAlignVertical: 'top' }]}/>
     <View style={{flexDirection:'row',gap:10,alignItems:'center'}}>
      <View style={{flex:1}}><Button label={saved.text ? 'Save changes' : 'Save entry'} busy={busy} disabled={!text.trim()} onPress={() => { void keep(); }}/></View>
      {saved.text && <Pressable accessibilityRole="button" disabled={busy} onPress={() => { setText(saved.text!); setEditing(false); }} style={{padding:10}}><Text style={{fontSize:13,fontWeight:'700',color:theme.colors.muted}}>Cancel</Text></Pressable>}
@@ -59,8 +59,8 @@ export function DailyReflection({ value, recent = [] }: { value: Reflection; rec
     <Text style={[styles.small,{fontWeight:'700',color:theme.colors.muted}]}>{shortDate(saved.date)}</Text>
     <Text style={[styles.body, { color: theme.colors.inkSoft, lineHeight: 23 }]}>{saved.text}</Text>
     <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
-     <Pressable accessibilityRole="button" onPress={() => setEditing(true)} style={{paddingVertical:5,paddingRight:12}}><Text style={{fontSize:13,fontWeight:'700',color:theme.colors.sage}}>Edit</Text></Pressable>
-     <Pressable accessibilityRole="button" onPress={() => router.push('/diary')} style={{paddingVertical:5,paddingLeft:12}}><Text style={{fontSize:13,fontWeight:'700',color:theme.colors.sage}}>View diary →</Text></Pressable>
+     <Pressable accessibilityRole="button" onPress={() => setEditing(true)} style={{minHeight:44,justifyContent:'center',paddingVertical:5,paddingRight:12}}><Text style={{fontSize:13,fontWeight:'700',color:theme.colors.sage}}>Edit</Text></Pressable>
+     <Pressable accessibilityRole="button" onPress={() => router.push('/diary')} style={{minHeight:44,justifyContent:'center',paddingVertical:5,paddingLeft:12}}><Text style={{fontSize:13,fontWeight:'700',color:theme.colors.sage}}>View diary →</Text></Pressable>
     </View>
    </View>}
   {older.length > 0 && !editing && <View style={{ borderTopWidth: 1, borderTopColor: theme.colors.line, paddingTop: 12, gap: 9 }}>

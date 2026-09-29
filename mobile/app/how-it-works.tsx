@@ -23,4 +23,4 @@ export default function HowItWorksScreen() {
     <Button label="Back" secondary disabled={busy} onPress={() => { void save({ step: 'opening' }); }}/>
   </FlowScreen>;
 }
-const s=StyleSheet.create({title:{fontSize:39,lineHeight:44,letterSpacing:-1.2},promise:{fontFamily:'Georgia',fontSize:18,lineHeight:24,color:theme.colors.sageMid,marginTop:-4,marginBottom:6},steps:{gap:10},card:{padding:16,flexDirection:'row',alignItems:'flex-start',gap:14},number:{fontFamily:'Georgia',fontSize:31,lineHeight:35,color:theme.colors.sage,fontWeight:'700',minWidth:30},copy:{flex:1,gap:4},cardTitle:{fontSize:21,lineHeight:26},body:{fontSize:14,lineHeight:20}});
+const s=StyleSheet.create({title:{fontSize:36,lineHeight:43,letterSpacing:-0.8},promise:{fontFamily:'Georgia',fontSize:18,lineHeight:26,color:theme.colors.sageMid,marginTop:-4,marginBottom:6},steps:{gap:14},card:{padding:20,flexDirection:'row',alignItems:'flex-start',gap:16},number:{fontFamily:'Georgia',fontSize:27,lineHeight:34,color:theme.colors.sage,fontWeight:'400',minWidth:30},copy:{flex:1,gap:4},cardTitle:{fontSize:22,lineHeight:29},body:{fontSize:14,lineHeight:23}});
