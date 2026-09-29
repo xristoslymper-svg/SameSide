@@ -164,15 +164,18 @@ export default function Today(){
   {!state.loading&&!state.error&&program&&!program.routineActivated&&<View style={s.lockedRoutine}>
    <View style={s.lockedIntro}>
     <Text style={s.stateKicker}>THE ROUTINE · DAY 1</Text>
-    <Text style={s.stateTitle}>{program.memberCount<2?'Your first Move is waiting for both of you.':'You’re connected. One last step.'}</Text>
-    <Text style={s.stateBody}>{program.memberCount<2?'The Routine begins together. Invite your partner; Day 1 unlocks only when you have both joined and finished setup.':'Your partner has joined. Day 1 will unlock automatically as soon as both of your setups are complete.'}</Text>
+    <Text style={s.stateTitle}>{program.memberCount<2?'Day 1 starts together.':'You’re almost there.'}</Text>
+    <Text style={s.stateBody}>{program.memberCount<2?'Your first Moves will appear when you’re both here and ready.':'You’re connected now. Your first Moves will appear as soon as both setups are complete.'}</Text>
    </View>
 
-   <View accessibilityLabel="Day 1 Move locked" style={s.lockedMove}>
-    <View style={s.lockedMoveTop}>
-     <View style={s.lockBadge}><Text style={s.lockIcon}>⌑</Text><Text style={s.lockBadgeText}>LOCKED</Text></View>
-     <Text style={s.lockedDay}>DAY 1</Text>
-    </View>
+   <View style={s.readinessCard}>
+    <View style={s.readyPerson}><View style={[s.readyDot,s.readyDotDone]}><Text style={s.readyCheck}>✓</Text></View><View><Text style={s.readyName}>You</Text><Text style={s.readyState}>Ready</Text></View></View>
+    <View style={s.readyConnector}/>
+    <View style={s.readyPerson}><View style={[s.readyDot,program.memberCount>=2&&s.readyDotJoined]}><Text style={s.readyDotText}>{program.memberCount>=2?'✓':'·'}</Text></View><View><Text style={s.readyName}>Your partner</Text><Text style={s.readyState}>{program.memberCount<2?'Waiting to join':program.partnerReady?'Ready':'Finishing setup'}</Text></View></View>
+   </View>
+
+   <View accessibilityLabel="Day 1 Move waiting for both partners" style={s.lockedMove}>
+    <View style={s.lockedMoveTop}><Text style={s.waitingLabel}>YOUR FIRST MOVE</Text><Text style={s.lockedDay}>DAY 1 · WAITING</Text></View>
     <View style={s.lockedCopy}>
      <View style={[s.lockedLine,{width:'72%'}]}/>
      <View style={[s.lockedLine,s.lockedLineTitle,{width:'88%'}]}/>
@@ -181,13 +184,13 @@ export default function Today(){
      <View style={[s.lockedLine,{width:'80%'}]}/>
     </View>
     <View style={s.lockedRule}/>
-    <View style={s.lockedWhy}><LeafMark/><Text style={s.lockedWhyText}>Why this Move?</Text><Text style={s.lockedWhyLock}>⌑</Text></View>
-    <View style={s.lockedAction}><Text style={s.lockedActionText}>Complete Move</Text><Text style={s.lockedActionLock}>⌑</Text></View>
+    <View style={s.lockedWhy}><LeafMark/><Text style={s.lockedWhyText}>A small Move, just for you</Text></View>
+    <View style={s.dormantAction}><Text style={s.dormantActionText}>Begins when you’re both ready</Text></View>
    </View>
 
    <View style={s.unlockPanel}>
-    <Text style={s.unlockTitle}>{program.memberCount<2?'Unlock Day 1 together':'Waiting for both setups'}</Text>
-    <Text style={s.unlockBody}>{program.memberCount<2?'Your partner needs to join this relationship before either of you can receive a Move.':'No action is needed here. This screen checks automatically and unlocks for both of you when setup is complete.'}</Text>
+    <Text style={s.unlockTitle}>{program.memberCount<2?'Bring your partner in':'Waiting together'}</Text>
+    <Text style={s.unlockBody}>{program.memberCount<2?'Send them your invitation. There’s nothing else you need to do while you wait.':'No need to refresh or do anything else. Day 1 will begin automatically when both of you are ready.'}</Text>
     {program.role==='member_a'&&program.memberCount<2&&<Button label="Invite your partner" onPress={()=>router.push({pathname:'/invite-partner',params:{returnTo:'today'}})}/>}
    </View>
 
@@ -196,7 +199,7 @@ export default function Today(){
     <View style={s.goalList}>
      {goals.map((item,index)=><View key={item.title} style={s.goalRow}>
       <View style={s.goalNumber}><Text style={s.goalNumberText}>{index+1}</Text></View>
-      <View style={s.goalCopy}><Text style={s.goalLabel}>{index===0?'STARTS WHEN YOU’RE BOTH READY':'LOCKED'}</Text><Text style={s.goalTitle}>{item.title}</Text></View>
+      <View style={s.goalCopy}><Text style={s.goalLabel}>{index===0?'BEGINS WITH DAY 1':'AHEAD'}</Text><Text style={s.goalTitle}>{item.title}</Text></View>
      </View>)}
     </View>
    </View>
@@ -374,28 +377,34 @@ const s=StyleSheet.create({
  stateBody:{fontSize:15,lineHeight:23,color:theme.colors.muted,maxWidth:undefined},
  stateFlower:{height:180,overflow:'hidden',alignItems:'center',justifyContent:'center'},
 
- lockedRoutine:{paddingBottom:18,gap:22},
+ lockedRoutine:{paddingBottom:18,gap:24},
  lockedIntro:{gap:10,paddingTop:4},
- lockedMove:{position:'relative',overflow:'hidden',backgroundColor:theme.colors.card,borderWidth:1,borderColor:theme.colors.line,borderRadius:theme.radius.card,padding:22,opacity:.82},
+ readinessCard:{flexDirection:'row',alignItems:'center',paddingVertical:14,paddingHorizontal:4},
+ readyPerson:{flexDirection:'row',alignItems:'center',gap:9},
+ readyConnector:{height:1,flex:1,backgroundColor:theme.colors.line,marginHorizontal:12},
+ readyDot:{width:28,height:28,borderRadius:14,borderWidth:1,borderColor:theme.colors.lineStrong,backgroundColor:theme.colors.card,alignItems:'center',justifyContent:'center'},
+ readyDotDone:{backgroundColor:theme.colors.sageWash,borderColor:theme.colors.sageMid},
+ readyDotJoined:{backgroundColor:theme.colors.cardWarm,borderColor:theme.colors.sageMid},
+ readyCheck:{fontSize:13,color:theme.colors.sage,fontWeight:'700'},
+ readyDotText:{fontSize:17,lineHeight:19,color:theme.colors.sageMid,fontWeight:'600'},
+ readyName:{fontSize:13,lineHeight:17,color:theme.colors.ink,fontWeight:'600'},
+ readyState:{fontSize:10.5,lineHeight:15,color:theme.colors.muted,marginTop:1},
+ lockedMove:{position:'relative',overflow:'hidden',backgroundColor:theme.colors.card,borderWidth:1,borderColor:theme.colors.line,borderRadius:theme.radius.card,padding:22,opacity:.94},
  lockedMoveTop:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginBottom:24},
- lockBadge:{flexDirection:'row',alignItems:'center',gap:7,borderRadius:999,backgroundColor:theme.colors.cardWarm,paddingHorizontal:10,paddingVertical:6},
- lockIcon:{fontSize:14,color:theme.colors.muted,fontWeight:'700'},
- lockBadgeText:{fontSize:9.5,lineHeight:13,letterSpacing:1.2,fontWeight:'700',color:theme.colors.muted},
- lockedDay:{fontSize:10,lineHeight:14,letterSpacing:1.4,fontWeight:'600',color:theme.colors.mutedSoft},
- lockedCopy:{gap:10},
- lockedLine:{height:8,borderRadius:6,backgroundColor:theme.colors.line},
- lockedLineTitle:{height:18,backgroundColor:theme.colors.lineStrong},
- lockedRule:{height:1,backgroundColor:theme.colors.line,marginTop:26,marginBottom:16},
+ waitingLabel:{fontSize:9.5,lineHeight:13,letterSpacing:1.25,fontWeight:'600',color:theme.colors.sageMid},
+ lockedDay:{fontSize:9.5,lineHeight:14,letterSpacing:1.15,fontWeight:'500',color:theme.colors.mutedSoft},
+ lockedCopy:{gap:10,opacity:.62},
+ lockedLine:{height:7,borderRadius:6,backgroundColor:theme.colors.line},
+ lockedLineTitle:{height:17,backgroundColor:theme.colors.lineStrong},
+ lockedRule:{height:1,backgroundColor:theme.colors.line,marginTop:26,marginBottom:16,opacity:.75},
  lockedWhy:{flexDirection:'row',alignItems:'center',gap:8,minHeight:34},
- lockedWhyText:{fontSize:14,color:theme.colors.muted,flex:1,fontWeight:'500'},
- lockedWhyLock:{fontSize:14,color:theme.colors.mutedSoft},
- lockedAction:{minHeight:52,borderRadius:theme.radius.button,backgroundColor:theme.colors.line,marginTop:16,paddingHorizontal:18,flexDirection:'row',alignItems:'center',justifyContent:'space-between'},
- lockedActionText:{fontSize:14,fontWeight:'600',color:theme.colors.muted},
- lockedActionLock:{fontSize:15,color:theme.colors.muted},
+ lockedWhyText:{fontSize:13.5,color:theme.colors.muted,flex:1,fontWeight:'500'},
+ dormantAction:{minHeight:48,borderRadius:theme.radius.button,backgroundColor:theme.colors.sageWash,marginTop:14,paddingHorizontal:18,alignItems:'center',justifyContent:'center'},
+ dormantActionText:{fontSize:13,fontWeight:'500',color:theme.colors.sageMid},
  unlockPanel:{gap:10,paddingVertical:2},
  unlockTitle:{fontFamily:theme.fonts.heading,fontSize:23,lineHeight:29,color:theme.colors.ink,fontWeight:'400'},
  unlockBody:{fontSize:14.5,lineHeight:23,color:theme.colors.muted,marginBottom:2},
- lockedPath:{opacity:.72,marginTop:2},
+ lockedPath:{opacity:.88,marginTop:2},
 
  routineComplete:{paddingTop:14,paddingBottom:16,gap:16},
  bloomArt:{height:235,alignItems:'center',justifyContent:'center',overflow:'hidden',marginTop:-12,marginBottom:-16},
