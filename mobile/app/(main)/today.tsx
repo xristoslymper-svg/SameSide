@@ -1,7 +1,7 @@
 import { useCallback,useEffect,useRef,useState } from 'react';
 import { router } from 'expo-router';
 import { ActivityIndicator,Image,Pressable,StyleSheet,Text,View } from 'react-native';
-import { Button,Notice,Screen,styles } from '../../src/components/ui';
+import { Brand,Button,Notice,Screen,styles } from '../../src/components/ui';
 import { AccountMenu } from '../../src/components/AccountMenu';
 import { BotanicalFlower } from '../../src/components/BotanicalFlower';
 import { LoadState,useProductData } from '../../src/components/product';
@@ -148,7 +148,7 @@ export default function Today(){
   <View pointerEvents="none" style={s.paperWashBottom}/>
 
   <View style={s.topBar}>
-   <Text style={s.todayTitle}>Today</Text>
+   <Brand/>
    <View style={s.accountButton}><AccountMenu/></View>
   </View>
 
