@@ -176,19 +176,25 @@ export default function Today(){
     <View style={s.moveHero}>
      <View style={s.heroCopy}>
       <Text style={s.moveTitle}>Notice the effort</Text>
-      <Text style={[s.moveBody,s.waitingMoveBody]}>Thank your partner for one ordinary thing they do that is easy to overlook.</Text>
+      <Text style={s.moveBody}>Thank your partner for one ordinary thing they do <Text style={s.waitingFade}>that is easy to overlook.</Text></Text>
      </View>
     </View>
 
-    <View style={s.waitingStatus}>
-     <View style={s.waitingStatusDot}/>
-     <Text style={s.waitingStatusText}>{program.memberCount<2?'Waiting for your partner':'Waiting for your partner to finish setup'}</Text>
+    <View style={s.whySurface}>
+     <View style={s.whyHeader}>
+      <View style={s.whyTitleRow}><View style={s.whyIcon}><LeafMark/></View><Text style={s.whyLabel}>{program.memberCount<2?'Waiting for your partner':'Waiting for setup'}</Text></View>
+     </View>
     </View>
-   </View>
 
-   {program.role==='member_a'&&program.memberCount<2
-    ?<View style={s.waitingPrimaryWrap}><Button label="Invite your partner" onPress={()=>router.push({pathname:'/invite-partner',params:{returnTo:'today'}})}/></View>
-    :<View style={[s.primaryButton,s.waitingPrimary]}><Text style={s.waitingPrimaryText}>Day 1 will start automatically</Text></View>}
+    {program.role==='member_a'&&program.memberCount<2
+     ?<Pressable accessibilityRole="button" onPress={()=>router.push('/invite-partner')} style={({pressed})=>[s.primaryButton,pressed&&s.primaryButtonPressed]}>
+       <Text style={s.primaryButtonText}>Invite your partner</Text><Text style={s.primaryArrow}>→</Text>
+      </Pressable>
+     :<Pressable accessibilityRole="button" disabled={busy} onPress={()=>{void state.refresh();}} style={({pressed})=>[s.primaryButton,pressed&&!busy&&s.primaryButtonPressed,busy&&s.buttonDisabled]}>
+       <Text style={s.primaryButtonText}>Check readiness</Text><Text style={s.primaryArrow}>→</Text>
+      </Pressable>}
+    <Text style={s.enoughNote}>Starts when you’re both ready.</Text>
+   </View>
 
    <View style={s.pathCard}>
     <Pressable accessibilityRole="button" accessibilityState={{expanded:journeyOpen}} onPress={()=>setJourneyOpen(value=>!value)} style={s.pathHeader}>
@@ -196,10 +202,21 @@ export default function Today(){
      <Text style={s.pathToggle}>{journeyOpen?'−':'+'}</Text>
     </Pressable>
     {journeyOpen&&<View style={s.goalList}>
-     {goals.map((item,index)=><View key={item.title} style={s.goalRow}>
-      <View style={s.goalNumber}><Text style={s.goalNumberText}>{index+1}</Text></View>
-      <View style={s.goalCopy}><Text style={s.goalLabel}>{index===0?'WEEK 1':'AHEAD'}</Text><Text style={s.goalTitle}>{item.title}</Text></View>
-     </View>)}
+     {goals.map((item,index)=>{
+      const n=index+1;
+      const current=n===1;
+      const next=n===2;
+      return <View key={item.title} style={[s.goalRow,current&&s.goalCurrent]}>
+       <View style={[s.goalNumber,current&&s.goalNumberCurrent]}>
+        <Text style={[s.goalNumberText,current&&s.goalNumberTextActive]}>{n}</Text>
+       </View>
+       <View style={s.goalCopy}>
+        <Text style={[s.goalLabel,current&&s.goalLabelCurrent]}>{current?'CURRENT WEEK':next?'NEXT WEEK':'LATER'}</Text>
+        <Text style={[s.goalTitle,current&&s.goalTitleCurrent]}>{item.title}</Text>
+        {next&&<Text style={s.goalBody}>{item.body}</Text>}
+       </View>
+      </View>;
+     })}
     </View>}
    </View>
   </>}
@@ -435,6 +452,7 @@ const s=StyleSheet.create({
  routineCompleteTitle:{fontFamily:theme.fonts.heading,fontSize:32,lineHeight:39,color:theme.colors.ink,letterSpacing:-0.8, fontWeight: '400'},
  routineCompleteBody:{fontSize:15,lineHeight:23,color:theme.colors.muted,maxWidth:320,marginBottom:3},
  waitingMoveBody:{opacity:.42},
+ waitingFade:{opacity:.34},
  waitingStatus:{flexDirection:'row',alignItems:'center',gap:8,marginTop:-6},
  waitingStatusDot:{width:6,height:6,borderRadius:3,backgroundColor:theme.colors.sageMid},
  waitingStatusText:{fontSize:12.5,lineHeight:18,fontWeight:'600',color:theme.colors.sageMid},
