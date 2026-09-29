@@ -7,12 +7,18 @@ import { OpeningMedia } from '../src/components/OpeningMedia';
 import { FlowScreen } from '../src/components/onboarding';
 import { useOnboarding } from '../src/providers/OnboardingProvider';
 import { useAuth } from '../src/providers/AuthProvider';
+import { useInvitation } from '../src/providers/InvitationProvider';
 import { theme } from '../src/theme';
 
 export default function OpeningScreen() {
   const { session } = useAuth();
+  const { token: pendingInvitation } = useInvitation();
   const { save, busy, destination } = useOnboarding();
   const insets = useSafeAreaInsets();
+  // A partner may close the app after opening/accepting an invite but before
+  // finishing setup. The persisted bearer token must win over normal onboarding
+  // routing so the pairing can safely resume (acceptance is idempotent server-side).
+  if (pendingInvitation) return <Redirect href={session ? '/invite/resume' : '/sign-in'}/>;
   if (session) return <Redirect href={destination}/>;
   return <FlowScreen immersive>
     <View style={local.screen}>
