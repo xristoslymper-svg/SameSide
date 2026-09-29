@@ -162,55 +162,47 @@ export default function Today(){
    <Button label="Start from here" onPress={()=>{void dismissJoinIntro();}}/>
   </View>}
 
-  {!state.loading&&!state.error&&program&&!program.routineActivated&&<View style={s.lockedRoutine}>
-   <View style={s.lockedIntro}>
-    <Text style={s.stateKicker}>THE ROUTINE · DAY 1</Text>
-    <Text style={s.stateTitle}>{program.memberCount<2?'Day 1 starts together.':'You’re almost there.'}</Text>
-    <Text style={s.stateBody}>{program.memberCount<2?'Your first Moves will appear when you’re both here and ready.':'You’re connected now. Your first Moves will appear as soon as both setups are complete.'}</Text>
-   </View>
-
-   <View style={s.readinessCard}>
-    <View style={s.readyPerson}><View style={[s.readyDot,s.readyDotDone]}><Text style={s.readyCheck}>✓</Text></View><View><Text style={s.readyName}>You</Text><Text style={s.readyState}>Ready</Text></View></View>
-    <View style={s.readyConnector}/>
-    <View style={s.readyPerson}><View style={[s.readyDot,program.memberCount>=2&&s.readyDotJoined]}><Text style={s.readyDotText}>{program.memberCount>=2?'✓':'·'}</Text></View><View><Text style={s.readyName}>Your partner</Text><Text style={s.readyState}>{program.memberCount<2?'Waiting to join':program.partnerReady?'Ready':'Finishing setup'}</Text></View></View>
-   </View>
-
-   <View accessibilityLabel="Day 1 Move waiting for both partners" style={s.lockedMove}>
-    <View style={s.lockedMoveTop}><Text style={s.waitingLabel}>YOUR FIRST MOVE</Text><Text style={s.lockedDay}>DAY 1 · WAITING</Text></View>
-    <View style={s.lockedCopy}>
-     <Text style={s.lockedPreviewTitle}>Notice the effort</Text>
-     <Text style={s.lockedPreviewBody}>Thank your partner for one ordinary thing they do</Text>
-     <Text style={s.lockedPreviewFade}>that is easy to overlook.</Text>
+  {!state.loading&&!state.error&&program&&!program.routineActivated&&<>
+   <View style={s.heroStage}>
+    <View pointerEvents="none" style={s.heroArtWrap} accessible={false}>
+     <Image source={require('../../assets/today-botanical-bespoke.png')} style={s.heroArt} resizeMode="cover"/>
     </View>
-    <View style={s.lockedHint}><View style={s.lockedHintDot}/><Text style={s.lockedHintText}>{program.memberCount<2?'Unlocks when your partner joins':'Unlocks when your partner is ready'}</Text></View>
-   </View>
 
-   <View style={s.unlockPanel}>
-    <View style={s.unlockCopy}>
-     <Text style={s.unlockTitle}>{program.memberCount<2?'Waiting for your partner':'Almost ready'}</Text>
-     <Text style={s.unlockBody}>{program.memberCount<2?'Day 1 begins when you’re both here.':'Day 1 begins when your partner finishes setup.'}</Text>
+    <View style={s.dayMeta}>
+     <Text style={s.dayMetaText}>WEEK 1 · DAY 1</Text>
+     <WeekProgress day={1}/>
     </View>
-    {program.role==='member_a'&&program.memberCount<2&&<Pressable accessibilityRole="button" onPress={()=>router.push({pathname:'/invite-partner',params:{returnTo:'today'}})} style={({pressed})=>[s.inviteInline,pressed&&s.inviteInlinePressed]}>
-     <Text style={s.inviteInlineText}>Invite</Text><Text style={s.inviteInlineArrow}>→</Text>
-    </Pressable>}
-   </View>
 
-   <View style={[s.pathCard,s.lockedPath]}>
-    <Pressable accessibilityRole="button" accessibilityState={{expanded:journeyOpen}} onPress={()=>setJourneyOpen(value=>!value)} style={s.pathHeader}>
-     <View>
-      <Text style={s.pathKicker}>THE FOUR WEEKS</Text>
-      <Text style={s.pathHeading}>Your four-week journey</Text>
+    <View style={s.moveHero}>
+     <View style={s.heroCopy}>
+      <Text style={s.moveTitle}>Notice the effort</Text>
+      <Text style={[s.moveBody,s.waitingMoveBody]}>Thank your partner for one ordinary thing they do that is easy to overlook.</Text>
      </View>
+    </View>
+
+    <View style={s.waitingStatus}>
+     <View style={s.waitingStatusDot}/>
+     <Text style={s.waitingStatusText}>{program.memberCount<2?'Waiting for your partner':'Waiting for your partner to finish setup'}</Text>
+    </View>
+   </View>
+
+   {program.role==='member_a'&&program.memberCount<2
+    ?<View style={s.waitingPrimaryWrap}><Button label="Invite your partner" onPress={()=>router.push({pathname:'/invite-partner',params:{returnTo:'today'}})}/></View>
+    :<View style={[s.primaryButton,s.waitingPrimary]}><Text style={s.waitingPrimaryText}>Day 1 will start automatically</Text></View>}
+
+   <View style={s.pathCard}>
+    <Pressable accessibilityRole="button" accessibilityState={{expanded:journeyOpen}} onPress={()=>setJourneyOpen(value=>!value)} style={s.pathHeader}>
+     <Text style={s.pathHeading}>Your four-week journey</Text>
      <Text style={s.pathToggle}>{journeyOpen?'−':'+'}</Text>
     </Pressable>
-    {journeyOpen&&<View style={[s.goalList,s.lockedGoalList]}>
+    {journeyOpen&&<View style={s.goalList}>
      {goals.map((item,index)=><View key={item.title} style={s.goalRow}>
       <View style={s.goalNumber}><Text style={s.goalNumberText}>{index+1}</Text></View>
-      <View style={s.goalCopy}><Text style={s.goalLabel}>{index===0?'BEGINS WITH DAY 1':'AHEAD'}</Text><Text style={s.goalTitle}>{item.title}</Text></View>
+      <View style={s.goalCopy}><Text style={s.goalLabel}>{index===0?'WEEK 1':'AHEAD'}</Text><Text style={s.goalTitle}>{item.title}</Text></View>
      </View>)}
     </View>}
    </View>
-  </View>}
+  </>}
 
   {!state.loading&&!state.error&&program&&program.routineActivated&&state.data?.garden?.bloom&&(!move||move.status==='completed')&&<View style={s.routineComplete}>
    <View style={s.completeBadge}><Text style={s.completeCheck}>✓</Text><Text style={s.completeBadgeText}>The Routine is complete</Text></View>
@@ -442,6 +434,13 @@ const s=StyleSheet.create({
  bloomArt:{height:235,alignItems:'center',justifyContent:'center',overflow:'hidden',marginTop:-12,marginBottom:-16},
  routineCompleteTitle:{fontFamily:theme.fonts.heading,fontSize:32,lineHeight:39,color:theme.colors.ink,letterSpacing:-0.8, fontWeight: '400'},
  routineCompleteBody:{fontSize:15,lineHeight:23,color:theme.colors.muted,maxWidth:320,marginBottom:3},
+ waitingMoveBody:{opacity:.34},
+ waitingStatus:{flexDirection:'row',alignItems:'center',gap:8,marginTop:-6},
+ waitingStatusDot:{width:6,height:6,borderRadius:3,backgroundColor:theme.colors.sageMid},
+ waitingStatusText:{fontSize:12.5,lineHeight:18,fontWeight:'600',color:theme.colors.sageMid},
+ waitingPrimaryWrap:{marginTop:-4},
+ waitingPrimary:{opacity:.45},
+ waitingPrimaryText:{fontSize:14,fontWeight:'600',color:theme.colors.card},
  quietAction:{minHeight:42,alignSelf:'center',justifyContent:'center',paddingHorizontal:12},
  quietActionText:{fontSize:13,lineHeight:18,fontWeight:'600',color:theme.colors.sage},
 });
