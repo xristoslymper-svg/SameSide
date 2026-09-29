@@ -68,7 +68,8 @@ export default function InvitePartnerScreen() {
 
   // This screen is also an in-product management surface. When Today explicitly
   // sends member_a here, completed onboarding must not immediately redirect back.
-  if (!recovery && destination !== '/invite-partner') return <Redirect href={destination}/>;
+  // Do not gate this authenticated utility screen on onboarding destination.
+  // Completed users legitimately return here from Today to create/manage an invite.
 
   async function makeInvite() {
     if (!session || busy) return;
