@@ -1,6 +1,6 @@
 import { isDemo, simulateDemoPartnerJoin } from '../src/lib/demo';
 import { useEffect, useState } from 'react';
-import { Redirect } from 'expo-router';
+import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { Platform, Share, Text, TextInput, View } from 'react-native';
 import { Botanical, Button, Notice, styles } from '../src/components/ui';
 import { FlowScreen } from '../src/components/onboarding';
@@ -11,6 +11,8 @@ import { theme } from '../src/theme';
 
 export default function InvitePartnerScreen() {
   const { session } = useAuth();
+  const { returnTo } = useLocalSearchParams<{ returnTo?: string }>();
+  const recovery = returnTo === 'today';
   const { save, busy: saving, destination } = useOnboarding();
   const [name, setName] = useState('');
   const [link, setLink] = useState<string | null>(null);
@@ -39,7 +41,7 @@ export default function InvitePartnerScreen() {
     return () => { active = false; clearInterval(timer); };
   }, [session, joined, ready]);
 
-  if (destination !== '/invite-partner') return <Redirect href={destination}/>;
+  if (!recovery && destination !== '/invite-partner') return <Redirect href={destination}/>;
 
   async function makeInvite() {
     if (!session || busy) return;
