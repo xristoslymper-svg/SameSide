@@ -14,7 +14,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 const mechanics = [
   ['01', 'Choose your path', 'Start with the journey that best matches what you want to change or strengthen in your relationship.'],
   ['02', 'Make it personal', 'A few questions help Same Side understand what each of you needs, so your experience and daily actions can be shaped around you.'],
-  ['03', 'Get a small action each day', 'You each receive your own private, CBT-informed daily Move. Something small and practical to try in real life.'],
+  ['03', 'Get a small action each day', 'You each receive your own private, CBT (Cognitive Behavioral Therapy) informed daily Move. Something small and practical to try in real life.'],
   ['04', 'Move through it together', 'Your Moves may be different, but you progress through the same journey as a couple, one day at a time.'],
 ];
 
@@ -54,7 +54,7 @@ export default function HowItWorksScreen() {
         open={open==='about'}
         onToggle={()=>toggle('about')}>
         <Text style={s.aboutBody}>Same Side is built on a simple belief: you and your partner are on the same team, even when you’re stuck in patterns that make it feel otherwise.</Text>
-        <Text style={s.aboutBody}>Through small, CBT-informed daily actions, Same Side helps you interrupt those patterns, respond differently, and gradually bring back the sense of being two people working together, not against each other.</Text>
+        <Text style={s.aboutBody}>Through small, CBT (Cognitive Behavioral Therapy) informed daily actions, Same Side helps you interrupt those patterns, respond differently, and gradually bring back the sense of being two people working together, not against each other.</Text>
       </ExpandCard>
 
       <ExpandCard
