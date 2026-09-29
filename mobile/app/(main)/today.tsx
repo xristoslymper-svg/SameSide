@@ -13,10 +13,10 @@ import { useAuth } from '../../src/providers/AuthProvider';
 import { theme } from '../../src/theme';
 
 const goals=[
- {title:'Notice each other again',fallback:'Routine makes familiar effort easy to stop seeing. Naming one concrete thing trains your attention back toward what your partner is already bringing into the relationship.'},
- {title:'Change the default',fallback:'A routine only changes when something different happens inside it. This move creates a positive break from the automatic version of the day.'},
- {title:'Change the pattern in the moment',fallback:'Negative patterns are kept alive by repeated reactions. This move gives you one simple alternative to practise in the moment.'},
- {title:'Keep what works',fallback:'One good moment matters, but repetition is what makes it easier to happen again. This move helps turn something useful into a habit you can keep.'},
+ {title:'Notice each other again',body:'Notice the effort and attention that can disappear into routine.',fallback:'Routine makes familiar effort easy to stop seeing. Naming one concrete thing trains your attention back toward what your partner is already bringing into the relationship.'},
+ {title:'Change the default',body:'Put small moments of warmth, play and choice back into ordinary days.',fallback:'A routine only changes when something different happens inside it. This move creates a positive break from the automatic version of the day.'},
+ {title:'Change the pattern in the moment',body:'Catch an old reaction and practise one different response when it matters.',fallback:'Negative patterns are kept alive by repeated reactions. This move gives you one simple alternative to practise in the moment.'},
+ {title:'Keep what works',body:'Repeat the moments that helped so they become easier to return to.',fallback:'One good moment matters, but repetition is what makes it easier to happen again. This move helps turn something useful into a habit you can keep.'},
 ];
 
 function LeafMark(){
@@ -203,6 +203,28 @@ export default function Today(){
    </>}
    <View style={s.growingTogether}><LeafMark/><Text style={s.growingText}>{move.program_day===1?'1 day together':`${move.program_day} days together`}</Text></View>
 
+   {!afterRoutine&&<View style={s.pathCard}>
+    <Text style={s.pathKicker}>THE FOUR WEEKS</Text>
+    <View style={s.goalList}>
+     {goals.map((item,index)=>{
+      const n=index+1;
+      const current=n===goal;
+      const past=n<goal;
+      const next=n===goal+1;
+      return <View key={item.title} style={[s.goalRow,current&&s.goalCurrent]}>
+       <View style={[s.goalNumber,current&&s.goalNumberCurrent,past&&s.goalNumberPast]}>
+        <Text style={[s.goalNumberText,(current||past)&&s.goalNumberTextActive]}>{past?'✓':n}</Text>
+       </View>
+       <View style={s.goalCopy}>
+        <Text style={[s.goalLabel,current&&s.goalLabelCurrent]}>{current?'CURRENT WEEK':past?'COMPLETED':next?'NEXT WEEK':'LATER'}</Text>
+        <Text style={[s.goalTitle,current&&s.goalTitleCurrent]}>{item.title}</Text>
+        {next&&<Text style={s.goalBody}>{item.body}</Text>}
+       </View>
+      </View>;
+     })}
+    </View>
+   </View>}
+
    {error&&<View style={s.errorWrap}><Notice>{error}</Notice><Button label="Try again" secondary disabled={busy} onPress={()=>{setError(null);void state.refresh();}}/></View>}
   </>}
  </Screen>;
@@ -281,6 +303,22 @@ const s=StyleSheet.create({
  flowerActionText:{fontSize:13.5,lineHeight:19,color:theme.colors.inkSoft,fontWeight:'500'},
  flowerActionArrow:{fontSize:16,color:theme.colors.inkSoft,marginLeft:2},
 
+ pathCard:{position:'relative',zIndex:2,marginTop:34,marginBottom:10,padding:18,borderRadius:26,backgroundColor:'rgba(241,234,223,0.72)',borderWidth:1,borderColor:'rgba(210,197,181,0.55)'},
+ pathKicker:{fontSize:10,lineHeight:14,letterSpacing:1.65,fontWeight:'800',color:theme.colors.sageMid,marginBottom:10},
+ goalList:{gap:4},
+ goalRow:{flexDirection:'row',gap:12,paddingVertical:10,paddingHorizontal:10,borderRadius:20,opacity:.56},
+ goalCurrent:{backgroundColor:'rgba(237,242,236,0.92)',opacity:1},
+ goalNumber:{width:32,height:32,borderRadius:16,borderWidth:1,borderColor:theme.colors.lineStrong,alignItems:'center',justifyContent:'center',marginTop:1},
+ goalNumberCurrent:{backgroundColor:theme.colors.sageMid,borderColor:theme.colors.sageMid},
+ goalNumberPast:{backgroundColor:'#DDE9DA',borderColor:'#DDE9DA'},
+ goalNumberText:{fontSize:12,fontWeight:'800',color:theme.colors.muted},
+ goalNumberTextActive:{color:theme.colors.white},
+ goalCopy:{flex:1,minWidth:0},
+ goalLabel:{fontSize:9,lineHeight:12,letterSpacing:1.15,fontWeight:'800',color:theme.colors.mutedSoft},
+ goalLabelCurrent:{color:theme.colors.sage},
+ goalTitle:{fontFamily:theme.fonts.heading,fontSize:17.5,lineHeight:22.5,color:theme.colors.inkSoft,marginTop:2},
+ goalTitleCurrent:{color:theme.colors.ink},
+ goalBody:{fontSize:12.5,lineHeight:18.5,color:theme.colors.muted,marginTop:4},
  enoughState:{paddingVertical:15,paddingHorizontal:4,alignItems:'center',gap:4},
  enoughTitle:{fontFamily:theme.fonts.heading,fontSize:20,lineHeight:25,color:theme.colors.ink},
  enoughBody:{fontSize:13,lineHeight:19,color:theme.colors.muted},

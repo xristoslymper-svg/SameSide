@@ -39,7 +39,7 @@ function Glyph({route,color}:{route:string;color:string}) {
 
 function FloatingTabBar({state,descriptors,navigation}:BottomTabBarProps) {
   const insets=useSafeAreaInsets();
-  const visible=state.routes.filter(route=>descriptors[route.key].options.href!==null);
+  const visible=state.routes.filter(route=>route.name==='today'||route.name==='garden'||route.name==='roots');
 
   return <View pointerEvents="box-none" style={[nav.floatingWrap,{bottom:Math.max(insets.bottom,12)+12}]}>
     <View style={nav.floatingBar}>
