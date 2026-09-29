@@ -1,5 +1,6 @@
 import { useCallback,useEffect,useRef,useState } from 'react';
 import { Pressable,StyleSheet,Text,View } from 'react-native';
+import { router } from 'expo-router';
 import { Button,Notice,Screen,styles } from '../../src/components/ui';
 import { AppHeader } from '../../src/components/AppHeader';
 import { LoadState,useProductData } from '../../src/components/product';
@@ -7,7 +8,6 @@ import { getProgram } from '../../src/features/product';
 import { readRoots,saveRoots,patternCopy,targetLabels,type RoutinePattern,type BehavioralTarget } from '../../src/features/roots';
 import { readReflection,readRecentReflections } from '../../src/features/reflections';
 import { useAuth } from '../../src/providers/AuthProvider';
-import { useOnboarding } from '../../src/providers/OnboardingProvider';
 import { DailyReflection } from '../../src/components/DailyNoticing';
 import { theme } from '../../src/theme';
 
@@ -20,7 +20,7 @@ const weeks=[
 const patterns=Object.keys(patternCopy) as RoutinePattern[];
 
 export default function Roots(){
- const {session}=useAuth();const {save,busy:inviting}=useOnboarding();
+ const {session}=useAuth();
  const load=useCallback(async()=>{
   const program=await getProgram(session!.user.id);
   if(!program.routineActivated)return{program,roots:{pattern:null,target:null,can_edit:false,week_no:1} as Awaited<ReturnType<typeof readRoots>>,reflection:null,recent:[]};
@@ -37,7 +37,7 @@ export default function Roots(){
   <AppHeader/>
   <View style={local.intro}><Text style={local.title}>Roots</Text><Text style={local.subtitle}>A private space to reflect.</Text></View>
   <LoadState {...state}/>
-  {!state.loading&&state.data&&!state.data.program.routineActivated&&<View style={local.checkCard}><Text style={styles.eyebrow}>THE ROUTINE</Text><Text style={local.question}>Roots opens with Day 1.</Text><Text style={local.helper}>Your Routine begins when both of you have joined and completed setup.</Text>{state.data.program.role==='member_a'&&state.data.program.memberCount<2&&<Button label="Invite your partner" disabled={inviting} onPress={()=>{void save({step:'invite'});}}/>}</View>}
+  {!state.loading&&state.data&&!state.data.program.routineActivated&&<View style={local.checkCard}><Text style={styles.eyebrow}>THE ROUTINE</Text><Text style={local.question}>Roots opens with Day 1.</Text><Text style={local.helper}>Your Routine begins when both of you have joined and completed setup.</Text>{state.data.program.role==='member_a'&&state.data.program.memberCount<2&&<Button label="Invite your partner" onPress={()=>router.push({pathname:'/invite-partner',params:{returnTo:'today'}})}/>}</View>}
   {!state.loading&&state.data&&state.data.program.routineActivated&&<View style={local.content}>
    <View style={local.pathNote}><Text style={styles.eyebrow}>WEEK {week} OF 4</Text><View style={local.pathRow}><View style={{flex:1}}><Text style={local.pathTitle}>{weekInfo.title}</Text><Text style={local.pathCopy}>{weekInfo.copy}</Text></View></View></View>
 
