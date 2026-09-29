@@ -64,6 +64,8 @@ export default function InvitePartnerScreen() {
     return () => { active = false; clearInterval(timer); };
   }, [session, joined, ready]);
 
+  // This screen is also an in-product management surface. When Today explicitly
+  // sends member_a here, completed onboarding must not immediately redirect back.
   if (!recovery && destination !== '/invite-partner') return <Redirect href={destination}/>;
 
   async function makeInvite() {
@@ -71,8 +73,9 @@ export default function InvitePartnerScreen() {
     setBusy(true); setError(null); setCopied(false);
     try {
       const relationship = await getRelationshipState(session.user.id);
-      if (!relationship) { await save({ step: 'path' }); return; }
-      if (relationship.memberCount >= 2 || relationship.role === 'member_b') { await save({ step: 'done' }); return; }
+      if (!relationship) { setError('We could not find your relationship. Please return to Today and try again.'); return; }
+      if (relationship.memberCount >= 2) { setJoined(true); setError('Your partner has already joined this relationship.'); return; }
+      if (relationship.role === 'member_b') { setError('Only the person who started this relationship can create an invitation.'); return; }
       await saveDisplayName(session.user.id, name);
       const nextLink = invitationUrl(await createInvite());
       setLink(nextLink);
