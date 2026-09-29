@@ -189,8 +189,8 @@ export default function Today(){
    </View>
 
    <View style={s.unlockPanel}>
-    <Text style={s.unlockTitle}>{program.memberCount<2?'Bring your partner in':'Waiting together'}</Text>
-    <Text style={s.unlockBody}>{program.memberCount<2?'Send them your invitation. There’s nothing else you need to do while you wait.':'No need to refresh or do anything else. Day 1 will begin automatically when both of you are ready.'}</Text>
+    <Text style={s.unlockTitle}>{program.memberCount<2?'You’re not alone in this.':'Waiting together'}</Text>
+    <Text style={s.unlockBody}>{program.memberCount<2?'Invite your partner to join you and begin your four-week transformation together.':'No need to refresh or do anything else. Day 1 will begin automatically when both of you are ready.'}</Text>
     {program.role==='member_a'&&program.memberCount<2&&<Button label="Invite your partner" onPress={()=>router.push({pathname:'/invite-partner',params:{returnTo:'today'}})}/>}
    </View>
 
