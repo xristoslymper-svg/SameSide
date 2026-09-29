@@ -1,12 +1,10 @@
-import { isDemo } from '../src/lib/demo';
-import { DemoSignIn } from '../src/components/DemoControls';
 import { useState } from 'react';
 import { Redirect } from 'expo-router';
 import { useOnboarding } from '../src/providers/OnboardingProvider';
 import { FlowScreen } from '../src/components/onboarding';
 import { Platform, Pressable, Text, TextInput, View } from 'react-native';
 import { Brand, Button, Notice, Screen, styles } from '../src/components/ui';
-import { isDevelopmentPasswordSignInEnabled, useAuth } from '../src/providers/AuthProvider';
+import { useAuth } from '../src/providers/AuthProvider';
 import { useInvitation } from '../src/providers/InvitationProvider';
 import { isConfigured } from '../src/lib/supabase';
 import { theme } from '../src/theme';
@@ -14,14 +12,12 @@ import { theme } from '../src/theme';
 export default function SignInScreen() {
   const { destination, save, busy: saving } = useOnboarding();
   const { token, name } = useInvitation();
-  const { session, signInWithGoogle, sendMagicLink, signInWithTestPassword, error: authError, clearError } = useAuth();
+  const { session, signInWithGoogle, sendMagicLink, error: authError, clearError } = useAuth();
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [sentTo, setSentTo] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   if (session) return <Redirect href={token ? '/invite/resume' : destination}/>;
-  if (isDemo) return <DemoSignIn/>;
   async function googleSignIn() {
     if (busy) return;
     clearError(); setError(null); setBusy(true);
@@ -38,16 +34,7 @@ export default function SignInScreen() {
     catch (cause) { setError(cause instanceof Error ? cause.message : 'Please try again.'); }
     finally { setBusy(false); }
   }
-  async function submitTestLogin() {
-    if (busy) return;
-    clearError(); setError(null);
-    const address = email.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address) || !password) { setError('Enter the test email and password.'); return; }
-    setBusy(true);
-    try { await signInWithTestPassword(address, password); }
-    catch (cause) { setError(cause instanceof Error ? cause.message : 'Please try again.'); }
-    finally { setBusy(false); }
-  }
+
   const content = <>
     {token && <Brand/>}
     <View style={{ gap: 14 }}><Text style={styles.title}>{token ? `${name || 'Your partner'} invited you to The Routine` : 'A small step\ncloser'}</Text>
@@ -73,13 +60,6 @@ export default function SignInScreen() {
           autoCapitalize="none" autoCorrect={false} autoComplete="email" textContentType="emailAddress"
           editable={!busy} returnKeyType="go" onSubmitEditing={() => { void submit(); }}/>
         <Button label="Email me a sign-in link" onPress={() => { void submit(); }} busy={busy} disabled={!isConfigured}/></>}
-      {!sentTo && isDevelopmentPasswordSignInEnabled && <View style={{ gap: 10 }}>
-        <Text style={styles.eyebrow}>Local testing only</Text>
-        <TextInput accessibilityLabel="Test password" style={styles.input} value={password} onChangeText={setPassword}
-          placeholder="Test password" placeholderTextColor={theme.colors.muted} secureTextEntry editable={!busy}
-          autoCapitalize="none" autoCorrect={false} autoComplete="off" textContentType="password"/>
-        <Button label="Test sign in" secondary onPress={() => { void submitTestLogin(); }} busy={busy} disabled={!isConfigured}/>
-      </View>}
       {!isConfigured && <Notice>Sign-in is not available just yet. Please try again later.</Notice>}
       {(error || authError) && <Notice>{error || authError}</Notice>}
     </View><Text style={[styles.small, { textAlign: 'center' }]}>Small gestures. A little more connection.</Text>
