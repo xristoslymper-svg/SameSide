@@ -238,8 +238,8 @@ const s=StyleSheet.create({
  todayTitle:{fontSize:20,lineHeight:27,color:'#24392F',letterSpacing:-.2,fontWeight:'500'},
  accountButton:{transform:[{scale:.84}],marginRight:-4},
 
- bespokeBotanicalWrap:{position:'absolute',zIndex:0,right:-88,top:66,width:330,height:470,overflow:'visible'},
- bespokeBotanical:{width:'100%',height:'100%',opacity:.68},
+ bespokeBotanicalWrap:{position:'absolute',zIndex:0,left:-20,right:-20,top:72,height:540,overflow:'hidden'},
+ bespokeBotanical:{position:'absolute',left:0,top:0,width:'100%',height:'100%',opacity:.72},
 
  dayMeta:{position:'relative',zIndex:2,gap:7,marginTop:0,marginBottom:22},
  dayMetaText:{fontSize:9.5,lineHeight:13,letterSpacing:1.55,fontWeight:'700',color:'#74766D',textTransform:'uppercase'},
