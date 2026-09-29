@@ -1,6 +1,6 @@
 import { useCallback,useEffect,useRef,useState } from 'react';
 import { router } from 'expo-router';
-import { ActivityIndicator,Image,Pressable,StyleSheet,Text,View } from 'react-native';
+import { ActivityIndicator,Pressable,StyleSheet,Text,View } from 'react-native';
 import { Button,Notice,Screen,styles } from '../../src/components/ui';
 import { AccountMenu } from '../../src/components/AccountMenu';
 import { BotanicalFlower } from '../../src/components/BotanicalFlower';
@@ -21,6 +21,23 @@ const goals=[
 
 function LeafMark(){
  return <View style={s.leafMark} accessible={false}><View style={s.leafBlade}/><View style={s.leafStem}/></View>;
+}
+
+function BotanicalMotif(){
+ return <View pointerEvents="none" style={s.botanicalMotif} accessible={false}>
+  <View style={s.botanicalHalo}/>
+  <View style={[s.botanicalPetal,s.botanicalPetalA]}/>
+  <View style={[s.botanicalPetal,s.botanicalPetalB]}/>
+  <View style={[s.botanicalPetal,s.botanicalPetalC]}/>
+  <View style={[s.botanicalPetal,s.botanicalPetalD]}/>
+  <View style={[s.botanicalPetal,s.botanicalPetalE]}/>
+  <View style={s.botanicalCore}/>
+  <View style={s.botanicalStem}/>
+  <View style={[s.botanicalLeaf,s.botanicalLeafA]}/>
+  <View style={[s.botanicalLeaf,s.botanicalLeafB]}/>
+  <View style={[s.botanicalGhost,s.botanicalGhostA]}/>
+  <View style={[s.botanicalGhost,s.botanicalGhostB]}/>
+ </View>;
 }
 
 function WeekProgress({day}:{day:number}){
@@ -175,10 +192,7 @@ export default function Today(){
   </View>}
 
   {!state.loading&&!state.error&&move&&program&&program.routineActivated&&!joinIntro&&!(state.data?.garden?.bloom&&move.status==='completed')&&<>
-   <View pointerEvents="none" style={s.botanicalLayer}>
-    <Image source={require('../../assets/today-botanical-wash.png')} style={s.botanicalWash} resizeMode="contain"/>
-    <Image source={require('../../assets/today-botanical-main.png')} style={s.botanicalMain} resizeMode="contain"/>
-   </View>
+   <BotanicalMotif/>
 
    <View style={s.dayMeta}>
     <Text style={s.dayMetaText}>{afterRoutine?'KEEP WHAT HELPED':`WEEK ${goal} · DAY ${move.program_day}`}</Text>
@@ -239,9 +253,22 @@ const s=StyleSheet.create({
  todayTitle:{fontSize:20,lineHeight:27,color:'#24392F',letterSpacing:-.2,fontWeight:'500'},
  accountButton:{transform:[{scale:.84}],marginRight:-4},
 
- botanicalLayer:{position:'absolute',zIndex:0,right:-58,top:70,width:330,height:520,overflow:'visible'},
- botanicalWash:{position:'absolute',right:-62,top:-6,width:300,height:430,opacity:.09},
- botanicalMain:{position:'absolute',right:-36,top:2,width:326,height:500,opacity:.78},
+ botanicalMotif:{position:'absolute',zIndex:0,right:-62,top:104,width:250,height:360,overflow:'visible'},
+ botanicalHalo:{position:'absolute',right:-14,top:6,width:235,height:235,borderRadius:118,backgroundColor:'rgba(233,213,201,0.12)'},
+ botanicalPetal:{position:'absolute',backgroundColor:'rgba(241,220,211,0.42)',borderTopLeftRadius:80,borderTopRightRadius:80,borderBottomLeftRadius:60,borderBottomRightRadius:60},
+ botanicalPetalA:{width:116,height:54,right:62,top:56,transform:[{rotate:'-18deg'}]},
+ botanicalPetalB:{width:126,height:58,right:20,top:92,backgroundColor:'rgba(238,208,202,0.34)',transform:[{rotate:'18deg'}]},
+ botanicalPetalC:{width:100,height:46,right:78,top:112,backgroundColor:'rgba(248,234,224,0.62)',transform:[{rotate:'8deg'}]},
+ botanicalPetalD:{width:92,height:42,right:2,top:130,backgroundColor:'rgba(246,229,217,0.46)',transform:[{rotate:'34deg'}]},
+ botanicalPetalE:{width:86,height:38,right:104,top:150,backgroundColor:'rgba(234,198,191,0.24)',transform:[{rotate:'-8deg'}]},
+ botanicalCore:{position:'absolute',right:87,top:132,width:18,height:18,borderRadius:9,backgroundColor:'rgba(201,154,83,0.58)'},
+ botanicalStem:{position:'absolute',right:63,top:166,width:2.2,height:176,borderRadius:2,backgroundColor:'rgba(100,123,89,0.42)',transform:[{rotate:'-10deg'}]},
+ botanicalLeaf:{position:'absolute',backgroundColor:'rgba(119,141,105,0.28)',borderTopLeftRadius:40,borderBottomRightRadius:40},
+ botanicalLeafA:{width:84,height:28,right:20,top:210,transform:[{rotate:'24deg'}]},
+ botanicalLeafB:{width:74,height:25,right:72,top:254,backgroundColor:'rgba(128,148,111,0.22)',transform:[{rotate:'-28deg'}]},
+ botanicalGhost:{position:'absolute',borderRadius:999,backgroundColor:'rgba(236,218,206,0.09)'},
+ botanicalGhostA:{width:180,height:92,right:74,top:2,transform:[{rotate:'-12deg'}]},
+ botanicalGhostB:{width:148,height:74,right:102,top:178,backgroundColor:'rgba(229,211,198,0.07)',transform:[{rotate:'18deg'}]},
 
  dayMeta:{position:'relative',zIndex:2,gap:7,marginTop:0,marginBottom:22},
  dayMetaText:{fontSize:9.5,lineHeight:13,letterSpacing:1.55,fontWeight:'700',color:'#74766D',textTransform:'uppercase'},
@@ -251,14 +278,14 @@ const s=StyleSheet.create({
  progressDotCurrent:{width:18,backgroundColor:'#BFA98A'},
 
  moveHero:{position:'relative',zIndex:2,overflow:'visible'},
- heroCopy:{position:'relative',zIndex:2,maxWidth:260,paddingRight:10},
+ heroCopy:{position:'relative',zIndex:2,maxWidth:270,paddingRight:6},
  heroFlower:{position:'absolute',zIndex:1,right:-56,top:-78,width:238,height:369,opacity:.94},
  heroFlowerImage:{width:'100%',height:'100%'},
  extraMove:{fontSize:9,lineHeight:13,letterSpacing:1.5,fontWeight:'800',color:'#718773',marginBottom:8,textTransform:'uppercase'},
- moveTitle:{fontFamily:theme.fonts.heading,fontSize:37,lineHeight:39.5,color:'#1F3027',letterSpacing:-1.0,maxWidth:222,marginBottom:16,fontWeight:'400'},
- moveTitleCompact:{fontSize:34,lineHeight:36.5,maxWidth:220,letterSpacing:-.85},
- moveTitleLong:{fontSize:31,lineHeight:34,maxWidth:214,letterSpacing:-.65},
- moveBody:{fontSize:14.25,lineHeight:21.25,color:'#25342D',maxWidth:244,letterSpacing:-.02,fontWeight:'400'},
+ moveTitle:{fontFamily:theme.fonts.heading,fontSize:37,lineHeight:39.5,color:'#1F3027',letterSpacing:-1.0,maxWidth:236,marginBottom:16,fontWeight:'400'},
+ moveTitleCompact:{fontSize:34,lineHeight:36.5,maxWidth:230,letterSpacing:-.85},
+ moveTitleLong:{fontSize:31,lineHeight:34,maxWidth:224,letterSpacing:-.65},
+ moveBody:{fontSize:14.25,lineHeight:21.25,color:'#25342D',maxWidth:252,letterSpacing:-.02,fontWeight:'400'},
 
  whySurface:{position:'relative',zIndex:2,width:'84%',maxWidth:318,alignSelf:'flex-start',minHeight:58,borderRadius:22,borderWidth:1,borderColor:'rgba(210,197,181,0.18)',backgroundColor:'rgba(255,252,247,0.66)',paddingHorizontal:18,paddingVertical:14,marginTop:22,marginBottom:30,shadowColor:'#263A2F',shadowOpacity:.015,shadowRadius:16,shadowOffset:{width:0,height:6},elevation:1},
  whySurfaceOpen:{paddingBottom:17,marginBottom:26},
