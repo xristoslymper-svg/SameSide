@@ -178,9 +178,9 @@ export default function Today(){
    <View accessibilityLabel="Day 1 Move waiting for both partners" style={s.lockedMove}>
     <View style={s.lockedMoveTop}><Text style={s.waitingLabel}>YOUR FIRST MOVE</Text><Text style={s.lockedDay}>DAY 1 · WAITING</Text></View>
     <View style={s.lockedCopy}>
-     <Text style={s.lockedPreviewTitle}>Notice one specific effort</Text>
-     <Text style={s.lockedPreviewBody}>Your partner makes today — something small that can be easy to miss.</Text>
-     <Text style={s.lockedPreviewFade}>When you notice it, let them know you saw it.</Text>
+     <Text style={s.lockedPreviewTitle}>Notice the effort</Text>
+     <Text style={s.lockedPreviewBody}>Thank your partner for one ordinary thing they do</Text>
+     <Text style={s.lockedPreviewFade}>that is easy to overlook.</Text>
     </View>
     <View style={s.lockedHint}><View style={s.lockedHintDot}/><Text style={s.lockedHintText}>{program.memberCount<2?'Unlocks when your partner joins':'Unlocks when your partner is ready'}</Text></View>
    </View>
@@ -411,9 +411,9 @@ const s=StyleSheet.create({
  waitingLabel:{fontSize:9.5,lineHeight:13,letterSpacing:1.25,fontWeight:'600',color:theme.colors.sageMid},
  lockedDay:{fontSize:9.5,lineHeight:14,letterSpacing:1.15,fontWeight:'500',color:theme.colors.mutedSoft},
  lockedCopy:{gap:8,paddingBottom:8},
- lockedPreviewTitle:{fontFamily:theme.fonts.heading,fontSize:24,lineHeight:30,color:theme.colors.ink,fontWeight:'600',opacity:.82},
- lockedPreviewBody:{fontSize:14.5,lineHeight:23,color:theme.colors.inkSoft,opacity:.42,maxWidth:'94%'},
- lockedPreviewFade:{fontSize:14.5,lineHeight:23,color:theme.colors.inkSoft,opacity:.14,maxWidth:'88%'},
+ lockedPreviewTitle:{fontFamily:theme.fonts.heading,fontSize:28,lineHeight:34,color:theme.colors.ink,fontWeight:'700',opacity:.88,letterSpacing:-0.35},
+ lockedPreviewBody:{fontSize:15.5,lineHeight:24,color:theme.colors.inkSoft,opacity:.48,maxWidth:'94%',fontWeight:'400'},
+ lockedPreviewFade:{fontSize:15.5,lineHeight:24,color:theme.colors.inkSoft,opacity:.13,maxWidth:'88%',fontWeight:'400'},
  lockedHint:{flexDirection:'row',alignItems:'center',gap:8,marginTop:16,paddingTop:14,borderTopWidth:1,borderTopColor:theme.colors.line},
  lockedHintDot:{width:6,height:6,borderRadius:3,backgroundColor:theme.colors.sageMid,opacity:.65},
  lockedHintText:{fontSize:12.5,lineHeight:18,color:theme.colors.sageMid,fontWeight:'500'},
