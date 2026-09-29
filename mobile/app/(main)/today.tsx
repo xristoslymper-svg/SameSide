@@ -182,7 +182,7 @@ export default function Today(){
      <Text style={s.lockedPreviewBody}>Your partner makes today — something small that can be easy to miss.</Text>
      <Text style={s.lockedPreviewFade}>When you notice it, let them know you saw it.</Text>
     </View>
-    <View style={s.dormantAction}><Text style={s.dormantActionText}>Begins when you’re both ready</Text></View>
+    <View style={s.lockedHint}><View style={s.lockedHintDot}/><Text style={s.lockedHintText}>{program.memberCount<2?'Unlocks when your partner joins':'Unlocks when your partner is ready'}</Text></View>
    </View>
 
    <View style={s.unlockPanel}>
