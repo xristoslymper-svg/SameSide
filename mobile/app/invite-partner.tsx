@@ -12,8 +12,10 @@ import { sessionStorage } from '../src/lib/storage';
 
 export default function InvitePartnerScreen() {
   const { session } = useAuth();
-  const { returnTo } = useLocalSearchParams<{ returnTo?: string }>();
-  const recovery = returnTo === 'today';
+  const { returnTo } = useLocalSearchParams<{ returnTo?: string | string[] }>();
+  // Expo Router may expose repeated/query params as arrays on web. Treat any
+  // explicit Today entry as in-product invitation management.
+  const recovery = Array.isArray(returnTo) ? returnTo.includes('today') : returnTo === 'today';
   const { save, busy: saving, destination } = useOnboarding();
   const [name, setName] = useState('');
   const [link, setLink] = useState<string | null>(null);
