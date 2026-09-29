@@ -6,8 +6,9 @@ import { Botanical, Button, Notice, styles } from '../src/components/ui';
 import { FlowScreen } from '../src/components/onboarding';
 import { useAuth } from '../src/providers/AuthProvider';
 import { useOnboarding } from '../src/providers/OnboardingProvider';
-import { createInvite, getRelationshipState, getRoutineActivationState, invitationUrl, revokeInvites, saveDisplayName } from '../src/features/relationships';
+import { createInvite, getRelationshipState, getRoutineActivationState, invitationUrl, previewInvite, revokeInvites, saveDisplayName } from '../src/features/relationships';
 import { theme } from '../src/theme';
+import { sessionStorage } from '../src/lib/storage';
 
 export default function InvitePartnerScreen() {
   const { session } = useAuth();
@@ -23,6 +24,23 @@ export default function InvitePartnerScreen() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!session || isDemo) return;
+    let active = true;
+    const key = `same-side.outgoing-invite.${session.user.id}`;
+    void sessionStorage.getItem(key).then(async stored => {
+      if (!active || !stored) return;
+      try {
+        const token = stored.split('/invite/').pop() ?? '';
+        const preview = await previewInvite(token);
+        if (!active) return;
+        if (preview.state === 'ready') setLink(stored);
+        else await sessionStorage.removeItem(key);
+      } catch {}
+    });
+    return () => { active = false; };
+  }, [session]);
+
+  useEffect(() => {
     if (!session || joined && ready || isDemo) return;
     let active = true;
     async function check() {
@@ -32,8 +50,13 @@ export default function InvitePartnerScreen() {
           getRoutineActivationState(),
         ]);
         if (!active) return;
-        setJoined((relationship?.memberCount ?? 1) === 2);
+        const hasJoined = (relationship?.memberCount ?? 1) === 2;
+        setJoined(hasJoined);
         setReady(activation.activated);
+        if (hasJoined) {
+          setLink(null);
+          await sessionStorage.removeItem(`same-side.outgoing-invite.${session!.user.id}`);
+        }
       } catch {}
     }
     void check();
@@ -51,7 +74,9 @@ export default function InvitePartnerScreen() {
       if (!relationship) { await save({ step: 'path' }); return; }
       if (relationship.memberCount >= 2 || relationship.role === 'member_b') { await save({ step: 'done' }); return; }
       await saveDisplayName(session.user.id, name);
-      setLink(invitationUrl(await createInvite()));
+      const nextLink = invitationUrl(await createInvite());
+      setLink(nextLink);
+      await sessionStorage.setItem(`same-side.outgoing-invite.${session.user.id}`, nextLink);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Please try again.');
     } finally { setBusy(false); }
@@ -74,7 +99,7 @@ export default function InvitePartnerScreen() {
   async function cancelInvite(){
     if(busy)return;
     setBusy(true);setError(null);
-    try{await revokeInvites();setLink(null);setCopied(false);}
+    try{await revokeInvites();if(session)await sessionStorage.removeItem(`same-side.outgoing-invite.${session.user.id}`);setLink(null);setCopied(false);}
     catch(cause){setError(cause instanceof Error?cause.message:'Please try again.');}
     finally{setBusy(false);}
   }
