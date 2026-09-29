@@ -178,14 +178,10 @@ export default function Today(){
    <View accessibilityLabel="Day 1 Move waiting for both partners" style={s.lockedMove}>
     <View style={s.lockedMoveTop}><Text style={s.waitingLabel}>YOUR FIRST MOVE</Text><Text style={s.lockedDay}>DAY 1 · WAITING</Text></View>
     <View style={s.lockedCopy}>
-     <View style={[s.lockedLine,{width:'72%'}]}/>
-     <View style={[s.lockedLine,s.lockedLineTitle,{width:'88%'}]}/>
-     <View style={[s.lockedLine,s.lockedLineTitle,{width:'61%'}]}/>
-     <View style={[s.lockedLine,{width:'94%',marginTop:10}]}/>
-     <View style={[s.lockedLine,{width:'80%'}]}/>
+     <Text style={s.lockedPreviewTitle}>Notice one specific effort</Text>
+     <Text style={s.lockedPreviewBody}>Your partner makes today — something small that can be easy to miss.</Text>
+     <Text style={s.lockedPreviewFade}>When you notice it, let them know you saw it.</Text>
     </View>
-    <View style={s.lockedRule}/>
-    <View style={s.lockedWhy}><LeafMark/><Text style={s.lockedWhyText}>A small Move, just for you</Text></View>
     <View style={s.dormantAction}><Text style={s.dormantActionText}>Begins when you’re both ready</Text></View>
    </View>
 
@@ -414,12 +410,10 @@ const s=StyleSheet.create({
  lockedMoveTop:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginBottom:24},
  waitingLabel:{fontSize:9.5,lineHeight:13,letterSpacing:1.25,fontWeight:'600',color:theme.colors.sageMid},
  lockedDay:{fontSize:9.5,lineHeight:14,letterSpacing:1.15,fontWeight:'500',color:theme.colors.mutedSoft},
- lockedCopy:{gap:10,opacity:.62},
- lockedLine:{height:7,borderRadius:6,backgroundColor:theme.colors.line},
- lockedLineTitle:{height:17,backgroundColor:theme.colors.lineStrong},
- lockedRule:{height:1,backgroundColor:theme.colors.line,marginTop:26,marginBottom:16,opacity:.75},
- lockedWhy:{flexDirection:'row',alignItems:'center',gap:8,minHeight:34},
- lockedWhyText:{fontSize:13.5,color:theme.colors.muted,flex:1,fontWeight:'500'},
+ lockedCopy:{gap:8,paddingBottom:8},
+ lockedPreviewTitle:{fontFamily:theme.fonts.heading,fontSize:24,lineHeight:30,color:theme.colors.ink,fontWeight:'600',opacity:.82},
+ lockedPreviewBody:{fontSize:14.5,lineHeight:23,color:theme.colors.inkSoft,opacity:.42,maxWidth:'94%'},
+ lockedPreviewFade:{fontSize:14.5,lineHeight:23,color:theme.colors.inkSoft,opacity:.14,maxWidth:'88%'},
  dormantAction:{minHeight:48,borderRadius:theme.radius.button,backgroundColor:theme.colors.sageWash,marginTop:14,paddingHorizontal:18,alignItems:'center',justifyContent:'center'},
  dormantActionText:{fontSize:13,fontWeight:'500',color:theme.colors.sageMid},
  unlockPanel:{gap:10,paddingVertical:2},
