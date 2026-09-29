@@ -133,9 +133,9 @@ const nav=StyleSheet.create({
   tabActive:{backgroundColor:'transparent'},
   tabPressed:{opacity:.68},
   iconBox:{height:22,alignItems:'center',justifyContent:'center',marginBottom:2},
-  label:{fontSize:10,lineHeight:13,fontWeight:'500',letterSpacing:.06,textAlign:'center'},
+  label:{fontSize:10.5,lineHeight:13.5,fontWeight:'500',letterSpacing:.04,textAlign:'center'},
   labelActive:{fontWeight:'700'},
-  activeMark:{position:'absolute',bottom:0,width:14,height:1.5,borderRadius:2,backgroundColor:'#416B58',opacity:.78},
+  activeMark:{position:'absolute',bottom:2,width:14,height:1.5,borderRadius:2,backgroundColor:'#416B58',opacity:.72},
 
   homeGlyph:{width:22,height:21,position:'relative'},
   homeRoof:{position:'absolute',width:13,height:13,left:4.5,top:1.5,borderLeftWidth:1.8,borderTopWidth:1.8,transform:[{rotate:'45deg'}],borderTopLeftRadius:1.5},
