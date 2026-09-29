@@ -176,7 +176,8 @@ export default function Today(){
 
   {!state.loading&&!state.error&&move&&program&&program.routineActivated&&!joinIntro&&!(state.data?.garden?.bloom&&move.status==='completed')&&<>
    <View pointerEvents="none" style={s.botanicalLayer}>
-    <Image source={require('../../assets/today-botanical-reference.png')} style={s.botanicalImage} resizeMode="contain"/>
+    <Image source={require('../../assets/today-botanical-wash.png')} style={s.botanicalWash} resizeMode="contain"/>
+    <Image source={require('../../assets/today-botanical-main.png')} style={s.botanicalMain} resizeMode="contain"/>
    </View>
 
    <View style={s.dayMeta}>
@@ -238,8 +239,9 @@ const s=StyleSheet.create({
  todayTitle:{fontSize:20,lineHeight:27,color:'#24392F',letterSpacing:-.2,fontWeight:'500'},
  accountButton:{transform:[{scale:.84}],marginRight:-4},
 
- botanicalLayer:{position:'absolute',zIndex:0,right:-72,top:82,width:258,height:438,opacity:.62,overflow:'hidden'},
- botanicalImage:{width:'100%',height:'100%'},
+ botanicalLayer:{position:'absolute',zIndex:0,right:-86,top:72,width:300,height:500,overflow:'visible'},
+ botanicalWash:{position:'absolute',right:-42,top:-24,width:320,height:470,opacity:.24},
+ botanicalMain:{position:'absolute',right:-66,top:8,width:282,height:448,opacity:.68},
 
  dayMeta:{position:'relative',zIndex:2,gap:7,marginTop:0,marginBottom:22},
  dayMetaText:{fontSize:9.5,lineHeight:13,letterSpacing:1.55,fontWeight:'700',color:'#74766D',textTransform:'uppercase'},
@@ -249,14 +251,14 @@ const s=StyleSheet.create({
  progressDotCurrent:{width:18,backgroundColor:'#BFA98A'},
 
  moveHero:{position:'relative',zIndex:2,overflow:'visible'},
- heroCopy:{position:'relative',zIndex:2,maxWidth:272,paddingRight:6},
+ heroCopy:{position:'relative',zIndex:2,maxWidth:268,paddingRight:8},
  heroFlower:{position:'absolute',zIndex:1,right:-56,top:-78,width:238,height:369,opacity:.94},
  heroFlowerImage:{width:'100%',height:'100%'},
  extraMove:{fontSize:9,lineHeight:13,letterSpacing:1.5,fontWeight:'800',color:'#718773',marginBottom:8,textTransform:'uppercase'},
  moveTitle:{fontFamily:theme.fonts.heading,fontSize:37,lineHeight:39.5,color:'#1F3027',letterSpacing:-1.0,maxWidth:230,marginBottom:17,fontWeight:'400'},
  moveTitleCompact:{fontSize:34,lineHeight:36.5,maxWidth:226,letterSpacing:-.85},
  moveTitleLong:{fontSize:31,lineHeight:34,maxWidth:222,letterSpacing:-.65},
- moveBody:{fontSize:14.25,lineHeight:21.25,color:'#25342D',maxWidth:252,letterSpacing:-.02,fontWeight:'400'},
+ moveBody:{fontSize:14.25,lineHeight:21.25,color:'#25342D',maxWidth:248,letterSpacing:-.02,fontWeight:'400'},
 
  whySurface:{position:'relative',zIndex:2,width:'100%',maxWidth:346,alignSelf:'flex-start',minHeight:60,borderRadius:23,borderWidth:1,borderColor:'rgba(210,197,181,0.20)',backgroundColor:'rgba(255,252,247,0.64)',paddingHorizontal:20,paddingVertical:15,marginTop:30,marginBottom:46,shadowColor:'#263A2F',shadowOpacity:.018,shadowRadius:18,shadowOffset:{width:0,height:7},elevation:1},
  whySurfaceOpen:{paddingBottom:18,marginBottom:38},
