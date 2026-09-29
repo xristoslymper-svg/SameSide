@@ -45,7 +45,7 @@ function parse(raw: string | null): Progress | null {
   } catch { return null; }
 }
 
-type Value = { progress: Progress; destination: typeof routes[Step]; busy: boolean; error: string | null; save: (patch: Partial<Omit<Progress, 'version'>>) => Promise<boolean> };
+type Value = { progress: Progress; destination: typeof routes[Step]; busy: boolean; error: string | null; save: (patch: Partial<Omit<Progress, 'version'>>) => Promise<boolean>; resetForTesting: () => Promise<void> };
 const Context = createContext<Value | null>(null);
 
 export function OnboardingProvider({ children }: PropsWithChildren) {
@@ -129,9 +129,16 @@ export function OnboardingProvider({ children }: PropsWithChildren) {
     }
   }
 
+  async function resetForTesting() {
+    await sessionStorage.removeItem(userKey(scope));
+    await sessionStorage.removeItem(draftKey);
+    setProgress({ ...initial, step: 'path' });
+    setLoadedScope(scope);
+  }
+
   if (loadError) return <Screen><Brand/><Notice>{error}</Notice><Button label="Try again" onPress={() => setRetry(value => value + 1)}/></Screen>;
   if (authLoading || loadedScope !== scope) return <Loading/>;
-  return <Context.Provider value={{ progress, destination: routes[progress.step], busy, error, save }}>{children}</Context.Provider>;
+  return <Context.Provider value={{ progress, destination: routes[progress.step], busy, error, save, resetForTesting }}>{children}</Context.Provider>;
 }
 
 export function useOnboarding() {
