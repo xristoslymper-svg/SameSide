@@ -41,7 +41,7 @@ function FloatingTabBar({state,descriptors,navigation}:BottomTabBarProps) {
   const insets=useSafeAreaInsets();
   const visible=state.routes.filter(route=>route.name==='today'||route.name==='garden'||route.name==='roots');
 
-  return <View pointerEvents="box-none" style={[nav.floatingWrap,{bottom:Math.max(insets.bottom,12)+12}]}>
+  return <View pointerEvents="box-none" style={[nav.floatingWrap,{bottom:Math.max(insets.bottom,12)+16}]}>
     <View style={nav.floatingBar}>
       {visible.map(route=>{
         const index=state.routes.findIndex(item=>item.key===route.key);
@@ -84,7 +84,7 @@ export default function ProductLayout() {
       screenOptions={{
         headerShown:false,
         tabBarHideOnKeyboard:true,
-        sceneStyle:{backgroundColor:theme.colors.background,paddingBottom:112},
+        sceneStyle:{backgroundColor:theme.colors.background,paddingBottom:128},
       }}>
       <Tabs.Screen name="today" options={{title:'Today'}}/>
       <Tabs.Screen name="garden" options={{title:'Garden'}}/>
@@ -105,37 +105,37 @@ const nav=StyleSheet.create({
   floatingBar:{
     width:'100%',
     maxWidth:366,
-    height:76,
+    height:66,
     flexDirection:'row',
     alignItems:'stretch',
     paddingHorizontal:8,
-    paddingVertical:7,
-    borderRadius:38,
+    paddingVertical:6,
+    borderRadius:33,
     backgroundColor:'rgba(255,252,247,0.985)',
     borderWidth:1,
     borderColor:'rgba(221,213,201,0.76)',
     shadowColor:'#24352D',
-    shadowOpacity:.09,
-    shadowRadius:22,
-    shadowOffset:{width:0,height:8},
-    elevation:10,
+    shadowOpacity:.055,
+    shadowRadius:18,
+    shadowOffset:{width:0,height:6},
+    elevation:7,
   },
   tab:{
     flex:1,
     minWidth:0,
-    borderRadius:30,
+    borderRadius:26,
     alignItems:'center',
     justifyContent:'center',
-    paddingTop:5,
-    paddingBottom:4,
+    paddingTop:3,
+    paddingBottom:3,
     position:'relative',
   },
-  tabActive:{backgroundColor:'rgba(230,238,231,0.32)'},
+  tabActive:{backgroundColor:'transparent'},
   tabPressed:{opacity:.68},
-  iconBox:{height:24,alignItems:'center',justifyContent:'center',marginBottom:3},
-  label:{fontSize:10.5,lineHeight:14,fontWeight:'500',letterSpacing:.08,textAlign:'center'},
+  iconBox:{height:22,alignItems:'center',justifyContent:'center',marginBottom:2},
+  label:{fontSize:10,lineHeight:13,fontWeight:'500',letterSpacing:.06,textAlign:'center'},
   labelActive:{fontWeight:'700'},
-  activeMark:{position:'absolute',bottom:1,width:16,height:2,borderRadius:2,backgroundColor:'#416B58',opacity:.82},
+  activeMark:{position:'absolute',bottom:0,width:14,height:1.5,borderRadius:2,backgroundColor:'#416B58',opacity:.78},
 
   homeGlyph:{width:22,height:21,position:'relative'},
   homeRoof:{position:'absolute',width:13,height:13,left:4.5,top:1.5,borderLeftWidth:1.8,borderTopWidth:1.8,transform:[{rotate:'45deg'}],borderTopLeftRadius:1.5},
