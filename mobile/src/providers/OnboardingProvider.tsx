@@ -90,12 +90,10 @@ export function OnboardingProvider({ children }: PropsWithChildren) {
                 next = { ...next, path: 'routine', focus: [], step: 'personalize' };
               } else if (relationship.role === 'member_a' && !data.selected_flower) {
                 next = { ...next, path: 'routine', step: 'flower' };
-              } else if (relationship.role === 'member_a' && !activation.activated) {
-                // Person A waits here until Person B joins and completes personalization.
-                next = { ...next, path: 'routine', step: 'invite' };
               } else {
-                // Completed Person A and ready Person B enter the product. Today itself
-                // shows the waiting state when the couple has not activated yet.
+                // Once this account has completed its own setup, enter the product.
+                // Today is the authoritative waiting room: Moves remain locked until
+                // both relationship members have joined and completed personalization.
                 next = { ...next, path: 'routine', step: 'done' };
               }
             } else {
