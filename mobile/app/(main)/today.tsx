@@ -66,6 +66,7 @@ export default function Today(){
  const [error,setError]=useState<string|null>(null);
  const [joinIntro,setJoinIntro]=useState(false);
  const [whyOpen,setWhyOpen]=useState(false);
+ const [journeyOpen,setJourneyOpen]=useState(false);
 
  useEffect(()=>{
   let active=true;
@@ -242,12 +243,21 @@ export default function Today(){
     <View style={[s.primaryButton,s.completedPrimary]}><Text style={s.primaryButtonText}>Done</Text><Text style={s.primaryArrow}>✓</Text></View>
     {move.slot<2&&<Pressable accessibilityRole="button" disabled={busy} onPress={()=>{void oneMore();}} style={({pressed})=>[s.extraAction,pressed&&!busy&&s.extraActionPressed,busy&&s.buttonDisabled]}><Text style={s.extraActionText}>One more Move</Text><Text style={s.extraActionArrow}>→</Text></Pressable>}
    </>}
-    <View style={s.growingTogether}><SproutMark/><Text style={s.growingText}>{move.program_day===1?'1 day together':`${move.program_day} days together`}</Text></View>
+    <Text style={s.enoughNote}>One small moment is enough.</Text>
    </View>
 
+   <Pressable accessibilityRole="button" onPress={()=>router.navigate('/garden')} style={({pressed})=>[s.gardenTeaser,pressed&&s.gardenTeaserPressed]}>
+    <View style={s.gardenIcon}><SproutMark/></View>
+    <View style={s.gardenCopy}><Text style={s.gardenTitle}>Something good is growing.</Text><Text style={s.gardenSubtitle}>Visit your shared garden</Text></View>
+    <Text style={s.gardenArrow}>↗</Text>
+   </Pressable>
+
    {!afterRoutine&&<View style={s.pathCard}>
-    <Text style={s.pathKicker}>THE FOUR WEEKS</Text>
-    <View style={s.goalList}>
+    <Pressable accessibilityRole="button" accessibilityState={{expanded:journeyOpen}} onPress={()=>setJourneyOpen(value=>!value)} style={s.pathHeader}>
+     <Text style={s.pathHeading}>Your four-week journey</Text>
+     <Text style={s.pathToggle}>{journeyOpen?'−':'+'}</Text>
+    </Pressable>
+    {journeyOpen&&<View style={s.goalList}>
      {goals.map((item,index)=>{
       const n=index+1;
       const current=n===goal;
@@ -264,7 +274,7 @@ export default function Today(){
        </View>
       </View>;
      })}
-    </View>
+    </View>}
    </View>}
 
    {error&&<View style={s.errorWrap}><Notice>{error}</Notice><Button label="Try again" secondary disabled={busy} onPress={()=>{setError(null);void state.refresh();}}/></View>}
@@ -331,6 +341,17 @@ const s=StyleSheet.create({
 
  growingTogether:{position:'relative',zIndex:2,minHeight:24,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:8,marginTop:14,marginBottom:0},
  growingText:{fontSize:11.5,lineHeight:18,color:theme.colors.muted},
+ enoughNote:{position:'relative',zIndex:2,textAlign:'center',fontSize:12.5,lineHeight:19,color:theme.colors.muted,marginTop:14},
+ gardenTeaser:{position:'relative',zIndex:2,minHeight:88,flexDirection:'row',alignItems:'center',paddingVertical:18,gap:14},
+ gardenTeaserPressed:{opacity:.68},
+ gardenIcon:{width:48,height:48,borderRadius:24,backgroundColor:theme.colors.sageWash,alignItems:'center',justifyContent:'center'},
+ gardenCopy:{flex:1,minWidth:0},
+ gardenTitle:{fontSize:14.5,lineHeight:20,color:theme.colors.ink,fontWeight:'500'},
+ gardenSubtitle:{fontSize:13,lineHeight:19,color:theme.colors.muted,marginTop:2},
+ gardenArrow:{fontSize:23,lineHeight:26,color:theme.colors.sage,fontWeight:'300',paddingHorizontal:4},
+ pathHeader:{minHeight:48,flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:16},
+ pathHeading:{fontSize:15,lineHeight:22,color:theme.colors.ink,fontWeight:'500'},
+ pathToggle:{fontSize:27,lineHeight:30,color:theme.colors.inkSoft,fontWeight:'300'},
 
  completedState:{paddingTop:2},
  completedHero:{position:'relative',minHeight:350,overflow:'hidden',paddingTop:12},
