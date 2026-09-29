@@ -139,3 +139,8 @@ export async function leaveRelationship() {
   if (error || !data) throw new Error('We could not disconnect this relationship. Please try again.');
   return data as string;
 }
+
+export async function developmentResetMySameSideData() {
+  const { data, error } = await client().rpc('development_reset_my_sameside_data');
+  if (error || data !== true) throw new Error('We could not reset your SameSide test data. Please try again.');
+}
