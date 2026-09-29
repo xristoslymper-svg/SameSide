@@ -23,10 +23,14 @@ function LeafMark(){
  return <View style={s.leafMark} accessible={false}><View style={s.leafBlade}/><View style={s.leafStem}/></View>;
 }
 
+function SproutMark(){
+ return <View style={s.sprout} accessible={false}><View style={s.sproutStem}/><View style={[s.sproutLeaf,{left:0,borderTopLeftRadius:8,borderBottomRightRadius:8}]}/><View style={[s.sproutLeaf,{right:0,top:3,borderTopRightRadius:8,borderBottomLeftRadius:8}]}/></View>;
+}
+
 function WeekProgress({day}:{day:number}){
  const within=((Math.max(1,day)-1)%7)+1;
  return <View style={s.weekProgress} accessibilityLabel={`Day ${day}`}>
-  {Array.from({length:7},(_,index)=><View key={index} style={[s.progressDot,index<within&&s.progressDotFilled,index===within-1&&s.progressDotCurrent]}/>)}
+  {Array.from({length:7},(_,index)=><View key={index} style={[s.progressDot,index<within&&s.progressDotFilled,index===within-1&&s.progressDotCurrent,index>within-1&&{opacity:Math.max(.3,1-(index-within+1)*.17)}]}/>)}
  </View>;
 }
 
@@ -135,8 +139,8 @@ export default function Today(){
  const growthState=state.data?.garden?sharedGrowth(state.data.garden.stage_key,displayDay):undefined;
  const primary=!move||move.slot===0;
  const moveTitleLength=move?.task_title?.length??0;
- const compactTitle=moveTitleLength>20;
- const longTitle=moveTitleLength>30;
+ const compactTitle=moveTitleLength>18;
+ const longTitle=moveTitleLength>28;
 
  return <Screen compact>
   <View pointerEvents="none" style={s.paperWashTop}/>
@@ -194,7 +198,7 @@ export default function Today(){
    </View>
 
    <Pressable accessibilityRole="button" accessibilityState={{expanded:whyOpen}} onPress={()=>setWhyOpen(value=>!value)} style={[s.whySurface,whyOpen&&s.whySurfaceOpen]}>
-    <View style={s.whyHeader}><View style={s.whyTitleRow}><LeafMark/><Text style={s.whyLabel}>Why this Move?</Text></View><Text style={s.whyChevron}>{whyOpen?'⌃':'⌄'}</Text></View>
+    <View style={s.whyHeader}><View style={s.whyTitleRow}><View style={s.whyIcon}><LeafMark/></View><Text style={s.whyLabel}>Why this Move?</Text></View><Text style={s.whyChevron}>{whyOpen?'⌃':'⌄'}</Text></View>
     {whyOpen&&<Text style={s.whyBody}>{why}</Text>}
    </Pressable>
 
@@ -202,7 +206,7 @@ export default function Today(){
     <View style={[s.primaryButton,s.completedPrimary]}><Text style={s.primaryButtonText}>Completed</Text><Text style={s.primaryArrow}>✓</Text></View>
     {move.slot<2&&<Pressable accessibilityRole="button" disabled={busy} onPress={()=>{void oneMore();}} style={({pressed})=>[s.extraAction,pressed&&!busy&&s.extraActionPressed,busy&&s.buttonDisabled]}><Text style={s.extraActionText}>Show me another Move</Text><Text style={s.extraActionArrow}>→</Text></Pressable>}
    </>}
-    <View style={s.growingTogether}><LeafMark/><Text style={s.growingText}>{move.program_day===1?'1 day together':`${move.program_day} days together`}</Text></View>
+    <View style={s.growingTogether}><SproutMark/><Text style={s.growingText}>{move.program_day===1?'1 day together':`${move.program_day} days together`}</Text></View>
    </View>
 
    {!afterRoutine&&<View style={s.pathCard}>
@@ -233,51 +237,55 @@ export default function Today(){
 }
 
 const s=StyleSheet.create({
- paperWashTop:{position:'absolute',width:330,height:330,borderRadius:180,backgroundColor:theme.colors.rose,opacity:.055,top:72,right:-230},
- paperWashBottom:{position:'absolute',width:360,height:210,borderRadius:190,backgroundColor:theme.colors.sand,opacity:.22,bottom:-94,left:-165},
+ paperWashTop:{position:'absolute',width:420,height:420,borderRadius:210,backgroundColor:'#F0D9D0',opacity:.32,top:-40,right:-250},
+ paperWashBottom:{position:'absolute',width:460,height:300,borderRadius:230,backgroundColor:'#C9CDB8',opacity:.38,bottom:-120,right:-190},
 
  topBar:{position:'relative',zIndex:3,minHeight:40,flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginTop:0,marginBottom:18,paddingHorizontal:2},
- todayTitle:{fontSize:20,lineHeight:27,color:'#24392F',letterSpacing:-.2,fontWeight:'500'},
+ todayTitle:{fontSize:24,lineHeight:30,color:'#1E2F26',letterSpacing:-.3,fontWeight:'400'},
  accountButton:{transform:[{scale:.84}],marginRight:-4},
 
  heroStage:{position:'relative',zIndex:1,overflow:'visible',paddingBottom:4},
- heroArtWrap:{position:'absolute',zIndex:0,right:-76,top:18,width:438,height:650,overflow:'hidden'},
- heroArt:{width:'100%',height:'100%',opacity:.46},
+ heroArtWrap:{position:'absolute',zIndex:0,right:-70,top:-6,width:440,height:660,overflow:'hidden'},
+ heroArt:{width:'100%',height:'100%',opacity:.92},
 
- dayMeta:{position:'relative',zIndex:2,gap:7,marginTop:0,marginBottom:26},
- dayMetaText:{fontSize:9.5,lineHeight:13,letterSpacing:1.55,fontWeight:'700',color:'#74766D',textTransform:'uppercase'},
- weekProgress:{flexDirection:'row',alignItems:'center',gap:5},
- progressDot:{width:5.5,height:5.5,borderRadius:3,backgroundColor:'#E4DCCD'},
- progressDotFilled:{backgroundColor:'#47705C'},
- progressDotCurrent:{width:18,backgroundColor:'#BFA98A'},
+ dayMeta:{position:'relative',zIndex:2,gap:12,marginTop:0,marginBottom:30},
+ dayMetaText:{fontSize:11,lineHeight:15,letterSpacing:1.8,fontWeight:'500',color:'#8A8A7E',textTransform:'uppercase'},
+ weekProgress:{flexDirection:'row',alignItems:'center',gap:6},
+ progressDot:{width:6,height:6,borderRadius:3,backgroundColor:'#E2D8C6'},
+ progressDotFilled:{backgroundColor:'#2F5F49'},
+ progressDotCurrent:{width:46,backgroundColor:'#D8BE96'},
 
  moveHero:{position:'relative',zIndex:2,overflow:'visible'},
- heroCopy:{position:'relative',zIndex:2,maxWidth:274,paddingRight:4},
+ heroCopy:{position:'relative',zIndex:2,maxWidth:300,paddingRight:4},
  heroFlower:{position:'absolute',zIndex:1,right:-56,top:-78,width:238,height:369,opacity:.94},
  heroFlowerImage:{width:'100%',height:'100%'},
  extraMove:{fontSize:9,lineHeight:13,letterSpacing:1.5,fontWeight:'800',color:'#718773',marginBottom:8,textTransform:'uppercase'},
- moveTitle:{fontFamily:theme.fonts.heading,fontSize:39,lineHeight:41.5,color:'#1F3027',letterSpacing:-1.05,maxWidth:242,marginBottom:18,fontWeight:'400'},
- moveTitleCompact:{fontSize:36,lineHeight:38.5,maxWidth:236,letterSpacing:-.9},
- moveTitleLong:{fontSize:33,lineHeight:36,maxWidth:230,letterSpacing:-.7},
- moveBody:{fontSize:14.5,lineHeight:22,color:'#25342D',maxWidth:258,letterSpacing:-.02,fontWeight:'400'},
+ moveTitle:{fontFamily:theme.fonts.heading,fontSize:47,lineHeight:51,color:'#1B2A22',letterSpacing:-1.5,maxWidth:262,marginBottom:22,fontWeight:'400'},
+ moveTitleCompact:{fontSize:42,lineHeight:46,maxWidth:262,letterSpacing:-1.2},
+ moveTitleLong:{fontSize:36,lineHeight:40,maxWidth:270,letterSpacing:-.9},
+ moveBody:{fontSize:16.5,lineHeight:25.5,color:'#2B3A32',maxWidth:296,letterSpacing:-.1,fontWeight:'400'},
 
- whySurface:{position:'relative',zIndex:2,width:'100%',maxWidth:350,alignSelf:'center',minHeight:60,borderRadius:23,borderWidth:1,borderColor:'rgba(210,197,181,0.16)',backgroundColor:'rgba(255,252,247,0.72)',paddingHorizontal:20,paddingVertical:15,marginTop:38,marginBottom:48,shadowColor:'#263A2F',shadowOpacity:.018,shadowRadius:18,shadowOffset:{width:0,height:7},elevation:1},
- whySurfaceOpen:{paddingBottom:18,marginBottom:42},
+ whySurface:{position:'relative',zIndex:2,width:'100%',maxWidth:350,alignSelf:'center',minHeight:68,borderRadius:34,borderWidth:1,borderColor:'rgba(255,255,255,0.75)',backgroundColor:'rgba(255,253,249,0.66)',paddingHorizontal:20,paddingVertical:16,marginTop:44,marginBottom:64,shadowColor:'#3B4A3A',shadowOpacity:.10,shadowRadius:26,shadowOffset:{width:0,height:12},elevation:3},
+ whySurfaceOpen:{borderRadius:30,paddingBottom:20,marginBottom:52},
  whyHeader:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,minHeight:28},
- whyTitleRow:{flexDirection:'row',alignItems:'center',gap:12},
- whyLabel:{fontSize:14.5,lineHeight:20,fontWeight:'600',color:'#203229'},
- whyChevron:{fontSize:17,lineHeight:20,color:'#4B5E53'},
- whyBody:{fontSize:13.5,lineHeight:20.5,color:'#536158',marginTop:13,paddingRight:6},
+ whyIcon:{width:30,height:30,borderRadius:15,backgroundColor:'#E3EAD9',alignItems:'center',justifyContent:'center'},
+ whyTitleRow:{flexDirection:'row',alignItems:'center',gap:14},
+ whyLabel:{fontSize:16,lineHeight:22,fontWeight:'600',color:'#1E2F26'},
+ whyChevron:{fontSize:18,lineHeight:22,color:'#3F5147'},
+ whyBody:{fontSize:14.5,lineHeight:22,color:'#4E5C53',marginTop:14,paddingRight:6},
 
  leafMark:{width:20,height:20,position:'relative'},
- leafBlade:{position:'absolute',width:13,height:8,borderTopLeftRadius:12,borderBottomRightRadius:12,backgroundColor:'#E2E9DF',transform:[{rotate:'-30deg'}],top:3,left:4,borderWidth:1,borderColor:'#78917B'},
- leafStem:{position:'absolute',width:1.2,height:12,backgroundColor:'#78917B',transform:[{rotate:'35deg'}],left:9,top:8,borderRadius:2},
+ leafBlade:{position:'absolute',width:13,height:8,borderTopLeftRadius:12,borderBottomRightRadius:12,backgroundColor:'#CBD8C2',transform:[{rotate:'-30deg'}],top:3,left:4,borderWidth:1,borderColor:'#5F7F66'},
+ leafStem:{position:'absolute',width:1.2,height:12,backgroundColor:'#5F7F66',transform:[{rotate:'35deg'}],left:9,top:8,borderRadius:2},
 
- primaryButton:{position:'relative',zIndex:2,width:'92%',maxWidth:332,alignSelf:'center',minHeight:52,borderRadius:999,backgroundColor:'#285A43',flexDirection:'row',alignItems:'center',justifyContent:'center',paddingHorizontal:26,shadowColor:'#20372A',shadowOpacity:.05,shadowRadius:16,shadowOffset:{width:0,height:7},elevation:3},
+ sprout:{width:16,height:16},
+ sproutStem:{position:'absolute',left:7.4,bottom:1,width:1.3,height:11,borderRadius:1,backgroundColor:'#7C8F80'},
+ sproutLeaf:{position:'absolute',top:1,width:8,height:6,backgroundColor:'#A9BBA4'},
+ primaryButton:{position:'relative',zIndex:2,width:'92%',maxWidth:332,alignSelf:'center',minHeight:58,borderRadius:999,backgroundColor:'#2A5A44',flexDirection:'row',alignItems:'center',justifyContent:'center',gap:12,paddingHorizontal:26,shadowColor:'#1F3D2E',shadowOpacity:.22,shadowRadius:22,shadowOffset:{width:0,height:12},elevation:6},
  primaryButtonPressed:{transform:[{scale:.987}],opacity:.95},
  completedPrimary:{opacity:.93,shadowOpacity:.055,elevation:2},
- primaryButtonText:{fontSize:15.5,lineHeight:21,fontWeight:'500',color:theme.colors.white,letterSpacing:.02},
- primaryArrow:{position:'absolute',right:36,fontSize:17,lineHeight:20,color:theme.colors.white,fontWeight:'400'},
+ primaryButtonText:{fontSize:17,lineHeight:22,fontWeight:'500',color:theme.colors.white,letterSpacing:.1},
+ primaryArrow:{fontSize:19,lineHeight:22,color:theme.colors.white,fontWeight:'300'},
  buttonDisabled:{opacity:.55},
 
  extraAction:{position:'relative',zIndex:2,alignSelf:'center',minHeight:34,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:6,paddingHorizontal:14,marginTop:10},
@@ -285,8 +293,8 @@ const s=StyleSheet.create({
  extraActionText:{fontSize:13,lineHeight:19,color:'#567460',fontWeight:'600'},
  extraActionArrow:{fontSize:15,lineHeight:19,color:'#567460'},
 
- growingTogether:{position:'relative',zIndex:2,minHeight:36,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:7,marginTop:20,marginBottom:0},
- growingText:{fontSize:11.5,lineHeight:17,color:'#78917B'},
+ growingTogether:{position:'relative',zIndex:2,minHeight:36,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:8,marginTop:26,marginBottom:0},
+ growingText:{fontSize:12.5,lineHeight:18,color:'#7C8F80'},
 
  completedState:{paddingTop:2},
  completedHero:{position:'relative',minHeight:350,overflow:'hidden',paddingTop:12},
