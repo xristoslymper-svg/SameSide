@@ -161,12 +161,45 @@ export default function Today(){
    <Button label="Start from here" onPress={()=>{void dismissJoinIntro();}}/>
   </View>}
 
-  {!state.loading&&!state.error&&program&&!program.routineActivated&&<View style={s.editorialState}>
-   <Text style={s.stateKicker}>THE ROUTINE</Text>
-   <Text style={s.stateTitle}>{program.memberCount<2?'Your Routine is ready':'Almost ready'}</Text>
-   <Text style={s.stateBody}>{program.memberCount<2?'Your first day begins when your partner joins and completes their setup.':'Your partner has joined. Day 1 begins as soon as both personalization profiles are ready.'}</Text>
-   {flower&&<View style={s.stateFlower}><BotanicalFlower flower={flower.id} size={180}/></View>}
-   {program.role==='member_a'&&program.memberCount<2&&<Button label="Invite your partner" onPress={()=>router.push('/invite-partner')}/>}
+  {!state.loading&&!state.error&&program&&!program.routineActivated&&<View style={s.lockedRoutine}>
+   <View style={s.lockedIntro}>
+    <Text style={s.stateKicker}>THE ROUTINE · DAY 1</Text>
+    <Text style={s.stateTitle}>{program.memberCount<2?'Your first Move is waiting for both of you.':'You’re connected. One last step.'}</Text>
+    <Text style={s.stateBody}>{program.memberCount<2?'The Routine begins together. Invite your partner; Day 1 unlocks only when you have both joined and finished setup.':'Your partner has joined. Day 1 will unlock automatically as soon as both of your setups are complete.'}</Text>
+   </View>
+
+   <View accessibilityLabel="Day 1 Move locked" style={s.lockedMove}>
+    <View style={s.lockedMoveTop}>
+     <View style={s.lockBadge}><Text style={s.lockIcon}>⌑</Text><Text style={s.lockBadgeText}>LOCKED</Text></View>
+     <Text style={s.lockedDay}>DAY 1</Text>
+    </View>
+    <View style={s.lockedCopy}>
+     <View style={[s.lockedLine,{width:'72%'}]}/>
+     <View style={[s.lockedLine,s.lockedLineTitle,{width:'88%'}]}/>
+     <View style={[s.lockedLine,s.lockedLineTitle,{width:'61%'}]}/>
+     <View style={[s.lockedLine,{width:'94%',marginTop:10}]}/>
+     <View style={[s.lockedLine,{width:'80%'}]}/>
+    </View>
+    <View style={s.lockedRule}/>
+    <View style={s.lockedWhy}><LeafMark/><Text style={s.lockedWhyText}>Why this Move?</Text><Text style={s.lockedWhyLock}>⌑</Text></View>
+    <View style={s.lockedAction}><Text style={s.lockedActionText}>Complete Move</Text><Text style={s.lockedActionLock}>⌑</Text></View>
+   </View>
+
+   <View style={s.unlockPanel}>
+    <Text style={s.unlockTitle}>{program.memberCount<2?'Unlock Day 1 together':'Waiting for both setups'}</Text>
+    <Text style={s.unlockBody}>{program.memberCount<2?'Your partner needs to join this relationship before either of you can receive a Move.':'No action is needed here. This screen checks automatically and unlocks for both of you when setup is complete.'}</Text>
+    {program.role==='member_a'&&program.memberCount<2&&<Button label="Invite your partner" onPress={()=>router.push({pathname:'/invite-partner',params:{returnTo:'today'}})}/>}
+   </View>
+
+   <View style={[s.pathCard,s.lockedPath]}>
+    <Text style={s.pathKicker}>THE FOUR WEEKS</Text>
+    <View style={s.goalList}>
+     {goals.map((item,index)=><View key={item.title} style={s.goalRow}>
+      <View style={s.goalNumber}><Text style={s.goalNumberText}>{index+1}</Text></View>
+      <View style={s.goalCopy}><Text style={s.goalLabel}>{index===0?'STARTS WHEN YOU’RE BOTH READY':'LOCKED'}</Text><Text style={s.goalTitle}>{item.title}</Text></View>
+     </View>)}
+    </View>
+   </View>
   </View>}
 
   {!state.loading&&!state.error&&program&&program.routineActivated&&state.data?.garden?.bloom&&(!move||move.status==='completed')&&<View style={s.routineComplete}>
@@ -340,6 +373,29 @@ const s=StyleSheet.create({
  stateTitle:{fontFamily:theme.fonts.heading,fontSize:32,lineHeight:39,color:theme.colors.ink,letterSpacing:-0.8,maxWidth:undefined, fontWeight: '400'},
  stateBody:{fontSize:15,lineHeight:23,color:theme.colors.muted,maxWidth:undefined},
  stateFlower:{height:180,overflow:'hidden',alignItems:'center',justifyContent:'center'},
+
+ lockedRoutine:{paddingBottom:18,gap:22},
+ lockedIntro:{gap:10,paddingTop:4},
+ lockedMove:{position:'relative',overflow:'hidden',backgroundColor:theme.colors.card,borderWidth:1,borderColor:theme.colors.line,borderRadius:theme.radius.card,padding:22,opacity:.82},
+ lockedMoveTop:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginBottom:24},
+ lockBadge:{flexDirection:'row',alignItems:'center',gap:7,borderRadius:999,backgroundColor:theme.colors.cardWarm,paddingHorizontal:10,paddingVertical:6},
+ lockIcon:{fontSize:14,color:theme.colors.muted,fontWeight:'700'},
+ lockBadgeText:{fontSize:9.5,lineHeight:13,letterSpacing:1.2,fontWeight:'700',color:theme.colors.muted},
+ lockedDay:{fontSize:10,lineHeight:14,letterSpacing:1.4,fontWeight:'600',color:theme.colors.mutedSoft},
+ lockedCopy:{gap:10},
+ lockedLine:{height:8,borderRadius:6,backgroundColor:theme.colors.line},
+ lockedLineTitle:{height:18,backgroundColor:theme.colors.lineStrong},
+ lockedRule:{height:1,backgroundColor:theme.colors.line,marginTop:26,marginBottom:16},
+ lockedWhy:{flexDirection:'row',alignItems:'center',gap:8,minHeight:34},
+ lockedWhyText:{fontSize:14,color:theme.colors.muted,flex:1,fontWeight:'500'},
+ lockedWhyLock:{fontSize:14,color:theme.colors.mutedSoft},
+ lockedAction:{minHeight:52,borderRadius:theme.radius.button,backgroundColor:theme.colors.line,marginTop:16,paddingHorizontal:18,flexDirection:'row',alignItems:'center',justifyContent:'space-between'},
+ lockedActionText:{fontSize:14,fontWeight:'600',color:theme.colors.muted},
+ lockedActionLock:{fontSize:15,color:theme.colors.muted},
+ unlockPanel:{gap:10,paddingVertical:2},
+ unlockTitle:{fontFamily:theme.fonts.heading,fontSize:23,lineHeight:29,color:theme.colors.ink,fontWeight:'400'},
+ unlockBody:{fontSize:14.5,lineHeight:23,color:theme.colors.muted,marginBottom:2},
+ lockedPath:{opacity:.72,marginTop:2},
 
  routineComplete:{paddingTop:14,paddingBottom:16,gap:16},
  bloomArt:{height:235,alignItems:'center',justifyContent:'center',overflow:'hidden',marginTop:-12,marginBottom:-16},
