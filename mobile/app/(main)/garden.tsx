@@ -21,7 +21,7 @@ export default function Garden(){
   <View style={local.intro}><Text style={local.title}>Our Garden</Text><Text style={local.subtitle}>Small moments. A stronger us.</Text></View>
   <View style={local.gardenCanvas}>
    <View style={local.canvasHeader}><View><Text style={styles.eyebrow}>THE ROUTINE</Text><Text style={local.flowerName}>{flower?flower.name:'Your flower'}</Text></View>{state.data&&<View style={local.stagePill}><Text style={local.stagePillText}>{stage.bloom?'IN BLOOM':`WEEK ${state.data.program.week} OF 4`}</Text></View>}</View>
-   <View style={local.flowerWrap}><BotanicalFlower flower={flower?.id??'cosmos'} state={stage} size={Math.min(width-68,330)} label={flower?undefined:state.loading?'Botanical flower loading':'Botanical preview — choose your shared flower'}/></View>
+   <View style={local.flowerWrap}><BotanicalFlower flower={flower?.id??'cosmos'} state={stage} size={Math.min(width-88,280)} label={flower?undefined:state.loading?'Botanical flower loading':'Botanical preview — choose your shared flower'}/></View>
    <Text style={local.stageTitle}>{waiting?'Your flower is waiting for Day 1.':flower?stage.title:'Choose what you’ll grow together.'}</Text>
    {flower&&<Text style={local.meaning}>{flower.meaning}</Text>}
   </View>
@@ -40,11 +40,11 @@ export default function Garden(){
 }
 
 const local=StyleSheet.create({
- intro:{marginTop:24,marginBottom:24},
+ intro:{marginTop:26,marginBottom:24},
  title:{fontFamily:theme.fonts.heading,fontSize:32,lineHeight:39,color:theme.colors.ink,letterSpacing:-0.8, fontWeight: '400'},
- subtitle:{fontSize:13,lineHeight:21,color:theme.colors.muted,marginTop:6},
+ subtitle:{fontSize:15,lineHeight:23,color:theme.colors.muted,marginTop:6},
  gardenCanvas:{backgroundColor:theme.colors.sageWash,borderRadius:theme.radius.card,paddingTop:22,paddingHorizontal:20,paddingBottom:22,borderWidth:0,borderColor:theme.colors.lineStrong,...theme.shadow.card, shadowOpacity: 0, elevation: 0},
- canvasHeader:{flexDirection:'row',alignItems:'flex-start',justifyContent:'space-between',gap:14},
+ canvasHeader:{flexWrap:'wrap',flexDirection:'row',alignItems:'flex-start',justifyContent:'space-between',gap:14},
  flowerName:{fontFamily:theme.fonts.heading,fontSize:28,lineHeight:35,color:theme.colors.ink,marginTop:7,textTransform:'capitalize'},
  stagePill:{backgroundColor:theme.colors.card,borderRadius:999,paddingHorizontal:10,paddingVertical:7,borderWidth:0,borderColor:theme.colors.lineStrong},
  stagePillText:{fontSize:10,letterSpacing:0.8,fontWeight:'600',color:theme.colors.sage},

@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect,useState } from 'react';
-import { Modal, Pressable, Text, View } from 'react-native';
+import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { Button, Notice, styles } from './ui';
 import { getRelationshipOverview,leaveRelationship,type RelationshipOverview } from '../features/relationships';
 import { useAuth } from '../providers/AuthProvider';
@@ -29,11 +29,11 @@ export function AccountMenu() {
   const relationshipTitle=relationship?.partnerName?`You & ${relationship.partnerName}`:relationship?.hasDeparture?'This shared space is no longer connected':'Waiting for your partner';
   return <><Pressable accessibilityRole="button" accessibilityLabel="Account" onPress={() => setOpen(true)} style={({pressed})=>({ width:44,height:44,borderRadius:22,alignItems:'center',justifyContent:'center',borderWidth:1,borderColor:theme.colors.line,backgroundColor:pressed?theme.colors.cardWarm:theme.colors.card })}><AccountGlyph/></Pressable>
     {open && <Modal visible transparent animationType="fade" onRequestClose={() => { setOpen(false); setConfirmLeave(false); }}>
-      <View style={{ flex: 1, backgroundColor: '#17231D66', justifyContent: 'center', padding: 24 }}><View accessibilityViewIsModal style={[styles.card, { width: '100%', maxWidth: 420, alignSelf: 'center', borderRadius: theme.radius.large, padding: 22, ...theme.shadow.floating }]}>
+      <ScrollView style={{flex:1,backgroundColor:'#17231D66'}} contentContainerStyle={{flexGrow:1,justifyContent:'center',padding:24}} keyboardShouldPersistTaps="handled"><View accessibilityViewIsModal style={[styles.card, { width: '100%', maxWidth: 420, alignSelf: 'center', borderRadius: theme.radius.large, padding: 22, ...theme.shadow.floating }]}>
         <Text style={[styles.cardTitle,{fontSize:27}]}>Your account</Text><Text style={styles.small}>{session?.user.email}</Text>
         {relationship&&<View style={{marginTop:16,paddingTop:18,borderTopWidth:1,borderTopColor:theme.colors.line,gap:8}}><Text style={styles.eyebrow}>Your relationship</Text><Text style={[styles.cardTitle,{fontSize:20}]}>{relationshipTitle}</Text><Text style={styles.small}>{relationship.partnerActive?'Connected in one shared Routine.':relationship.hasDeparture?'This garden is still here for you. It can’t be connected to a different partner; start fresh when you’re ready.':'The Routine begins once your partner joins and finishes setup.'}</Text>{relationship.role==='member_a'&&relationship.memberCount<2&&!relationship.hasDeparture&&<Button label="Invite your partner" disabled={busy} onPress={()=>{setOpen(false);router.push({pathname:'/invite-partner',params:{returnTo:'today'}});}}/>}{(relationship.partnerName||relationship.hasDeparture)&&!confirmLeave&&<Button label={relationship.hasDeparture?'Start a new relationship':'Leave this relationship'} secondary disabled={busy} onPress={()=>setConfirmLeave(true)}/>} {confirmLeave&&<View style={{gap:10,marginTop:4}}><Notice>{relationship.partnerActive?'This disconnects your accounts. Your partner keeps access to the shared garden, and you can begin a new relationship.':'Starting fresh disconnects you from this old shared space. The existing data is not deleted.'}</Notice><Button label="Confirm and disconnect" busy={busy} onPress={()=>{void disconnect();}}/><Button label="Keep this relationship" secondary disabled={busy} onPress={()=>setConfirmLeave(false)}/></View>}</View>}
         {error && <Notice>{error}</Notice>}<Button label="Sign out" secondary busy={busy} onPress={() => { void signOutAccount(); }}/>
         <Button label="Close" secondary onPress={() => { setOpen(false); setError(null); setConfirmLeave(false); }}/>
-      </View></View>
+      </View></ScrollView>
     </Modal>}</>;
 }

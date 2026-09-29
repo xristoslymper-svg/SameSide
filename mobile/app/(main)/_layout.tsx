@@ -46,7 +46,7 @@ function FloatingTabBar({state,descriptors,navigation}:BottomTabBarProps) {
       {visible.map(route=>{
         const index=state.routes.findIndex(item=>item.key===route.key);
         const focused=state.index===index;
-        const color=focused?'#416B58':'#99968D';
+        const color=focused?theme.colors.sage:theme.colors.muted;
         const label=route.name==='today'?'Today':route.name==='garden'?'Garden':'Roots';
         return <Pressable
           key={route.key}
@@ -133,7 +133,7 @@ const nav=StyleSheet.create({
   tabActive:{backgroundColor:'transparent'},
   tabPressed:{opacity:.68},
   iconBox:{height:22,alignItems:'center',justifyContent:'center',marginBottom:2},
-  label:{fontSize:11,lineHeight:16,fontWeight:'500',letterSpacing:.04,textAlign:'center'},
+  label:{fontSize:12,lineHeight:17,fontWeight:'500',letterSpacing:.04,textAlign:'center'},
   labelActive:{fontWeight:'700'},
   activeMark:{position:'absolute',bottom:1,width:14,height:1.5,borderRadius:2,backgroundColor:theme.colors.sage,opacity:.72},
 

@@ -49,10 +49,10 @@ export function DailyReflection({ value, recent = [] }: { value: Reflection; rec
    <Text style={[styles.small,{color:theme.colors.muted}]}>🔒 Private</Text>
   </View>
   {editing ? <>
-    <TextInput accessibilityLabel="Your private diary entry" multiline editable={!busy} value={text} onChangeText={setText} placeholder="What’s on your mind today?" style={[styles.input, { minHeight: 148, backgroundColor: theme.colors.backgroundElevated, textAlignVertical: 'top' }]}/>
+    <TextInput accessibilityLabel="Your private diary entry" multiline editable={!busy} value={text} onChangeText={setText} placeholder="What’s on your mind today?" style={[styles.input, { minHeight: 164, lineHeight: 25, backgroundColor: theme.colors.backgroundElevated, textAlignVertical: 'top' }]}/>
     <View style={{flexDirection:'row',gap:10,alignItems:'center'}}>
      <View style={{flex:1}}><Button label={saved.text ? 'Save changes' : 'Save entry'} busy={busy} disabled={!text.trim()} onPress={() => { void keep(); }}/></View>
-     {saved.text && <Pressable accessibilityRole="button" disabled={busy} onPress={() => { setText(saved.text!); setEditing(false); }} style={{padding:10}}><Text style={{fontSize:13,fontWeight:'700',color:theme.colors.muted}}>Cancel</Text></Pressable>}
+     {saved.text && <Pressable accessibilityRole="button" disabled={busy} onPress={() => { setText(saved.text!); setEditing(false); }} style={{minHeight:44,justifyContent:'center',padding:10}}><Text style={{fontSize:13,fontWeight:'700',color:theme.colors.muted}}>Cancel</Text></Pressable>}
     </View>
    </>
    : <View style={{gap:11}}>

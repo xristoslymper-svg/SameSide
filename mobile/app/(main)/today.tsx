@@ -152,6 +152,8 @@ export default function Today(){
    <View style={s.accountButton}><AccountMenu/></View>
   </View>
 
+  <View style={s.pageHeading}><Text style={s.todayTitle}>Today</Text><Text style={s.subtitle}>Your daily Move.</Text></View>
+
   <LoadState {...state}/>
 
   {!state.loading&&!state.error&&program&&joinIntro&&<View style={s.editorialState}>
@@ -301,7 +303,9 @@ const s=StyleSheet.create({
  paperWashTop:{position:'absolute',width:420,height:420,borderRadius:210,backgroundColor:'#F0D9D0',opacity:0,top:-40,right:-250},
  paperWashBottom:{position:'absolute',width:460,height:300,borderRadius:230,backgroundColor:'#C9CDB8',opacity:0,bottom:-120,right:-190},
 
- topBar:{position:'relative',zIndex:3,minHeight:52,flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginTop:0,marginBottom:24,paddingHorizontal:0, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: theme.colors.line},
+ topBar:{position:'relative',zIndex:3,minHeight:68,flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginTop:0,marginBottom:26,paddingHorizontal:0, paddingBottom: 18, borderBottomWidth: 1, borderBottomColor: theme.colors.line},
+ pageHeading:{gap:7,marginBottom:24},
+ subtitle:{fontSize:15,lineHeight:23,color:theme.colors.muted},
  todayTitle:{fontSize:32,lineHeight:39,color:theme.colors.ink,letterSpacing:-0.8,fontWeight:'400', fontFamily: theme.fonts.heading},
  accountButton:{transform:[{scale:1}],marginRight:0},
 
@@ -336,7 +340,7 @@ const s=StyleSheet.create({
  whyBody:{fontSize:14,lineHeight:23,color:theme.colors.inkSoft,marginTop:10,paddingRight:0},
 
  leafMark:{width:20,height:20,position:'relative'},
- leafBlade:{position:'absolute',width:13,height:8,borderTopLeftRadius:12,borderBottomRightRadius:12,backgroundColor:'#CBD8C2',transform:[{rotate:'-30deg'}],top:3,left:4,borderWidth:1,borderColor:'#5F7F66'},
+ leafBlade:{position:'absolute',width:13,height:8,borderTopLeftRadius:12,borderBottomRightRadius:12,backgroundColor:'transparent',transform:[{rotate:'-30deg'}],top:3,left:4,borderWidth:1,borderColor:'#5F7F66'},
  leafStem:{position:'absolute',width:1.2,height:12,backgroundColor:'#5F7F66',transform:[{rotate:'35deg'}],left:9,top:8,borderRadius:2},
 
  sprout:{width:16,height:16},
