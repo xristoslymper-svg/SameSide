@@ -186,9 +186,13 @@ export default function Today(){
    </View>
 
    <View style={s.unlockPanel}>
-    <Text style={s.unlockTitle}>{program.memberCount<2?'You’re not alone in this.':'Waiting together'}</Text>
-    <Text style={s.unlockBody}>{program.memberCount<2?'Invite your partner to join you and begin your four-week transformation together.':'No need to refresh or do anything else. Day 1 will begin automatically when both of you are ready.'}</Text>
-    {program.role==='member_a'&&program.memberCount<2&&<Button label="Invite your partner" onPress={()=>router.push({pathname:'/invite-partner',params:{returnTo:'today'}})}/>}
+    <View style={s.unlockCopy}>
+     <Text style={s.unlockTitle}>{program.memberCount<2?'Waiting for your partner':'Almost ready'}</Text>
+     <Text style={s.unlockBody}>{program.memberCount<2?'Day 1 begins when you’re both here.':'Day 1 begins when your partner finishes setup.'}</Text>
+    </View>
+    {program.role==='member_a'&&program.memberCount<2&&<Pressable accessibilityRole="button" onPress={()=>router.push({pathname:'/invite-partner',params:{returnTo:'today'}})} style={({pressed})=>[s.inviteInline,pressed&&s.inviteInlinePressed]}>
+     <Text style={s.inviteInlineText}>Invite</Text><Text style={s.inviteInlineArrow}>→</Text>
+    </Pressable>}
    </View>
 
    <View style={[s.pathCard,s.lockedPath]}>
@@ -400,7 +404,7 @@ const s=StyleSheet.create({
  stateBody:{fontSize:15,lineHeight:23,color:theme.colors.muted,maxWidth:undefined},
  stateFlower:{height:180,overflow:'hidden',alignItems:'center',justifyContent:'center'},
 
- lockedRoutine:{paddingBottom:18,gap:24},
+ lockedRoutine:{paddingBottom:18,gap:18},
  lockedIntro:{gap:10,paddingTop:4},
  readinessCard:{flexDirection:'row',alignItems:'center',paddingVertical:14,paddingHorizontal:4},
  readyPerson:{flexDirection:'row',alignItems:'center',gap:9},
@@ -412,20 +416,25 @@ const s=StyleSheet.create({
  readyDotText:{fontSize:17,lineHeight:19,color:theme.colors.sageMid,fontWeight:'600'},
  readyName:{fontSize:13,lineHeight:17,color:theme.colors.ink,fontWeight:'600'},
  readyState:{fontSize:10.5,lineHeight:15,color:theme.colors.muted,marginTop:1},
- lockedMove:{position:'relative',overflow:'hidden',backgroundColor:theme.colors.card,borderWidth:1,borderColor:theme.colors.line,borderRadius:theme.radius.card,padding:22,opacity:.94},
+ lockedMove:{position:'relative',overflow:'hidden',backgroundColor:'rgba(255,255,255,0.28)',borderWidth:0,borderRadius:theme.radius.card,paddingVertical:20,paddingHorizontal:18,opacity:.96},
  lockedMoveTop:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginBottom:24},
  waitingLabel:{fontSize:9.5,lineHeight:13,letterSpacing:1.25,fontWeight:'600',color:theme.colors.sageMid},
  lockedDay:{fontSize:9.5,lineHeight:14,letterSpacing:1.15,fontWeight:'500',color:theme.colors.mutedSoft},
  lockedCopy:{gap:8,paddingBottom:8},
  lockedPreviewTitle:{fontFamily:theme.fonts.heading,fontSize:28,lineHeight:34,color:theme.colors.ink,fontWeight:'700',opacity:.88,letterSpacing:-0.35},
- lockedPreviewBody:{fontSize:15.5,lineHeight:24,color:theme.colors.inkSoft,opacity:.48,maxWidth:'94%',fontWeight:'400'},
- lockedPreviewFade:{fontSize:15.5,lineHeight:24,color:theme.colors.inkSoft,opacity:.13,maxWidth:'88%',fontWeight:'400'},
+ lockedPreviewBody:{fontSize:15.5,lineHeight:24,color:theme.colors.inkSoft,opacity:.38,maxWidth:'94%',fontWeight:'400'},
+ lockedPreviewFade:{fontSize:15.5,lineHeight:24,color:theme.colors.inkSoft,opacity:.08,maxWidth:'88%',fontWeight:'400'},
  lockedHint:{flexDirection:'row',alignItems:'center',gap:8,marginTop:16,paddingTop:14,borderTopWidth:1,borderTopColor:theme.colors.line},
  lockedHintDot:{width:6,height:6,borderRadius:3,backgroundColor:theme.colors.sageMid,opacity:.65},
  lockedHintText:{fontSize:12.5,lineHeight:18,color:theme.colors.sageMid,fontWeight:'500'},
- unlockPanel:{gap:10,paddingVertical:2},
- unlockTitle:{fontFamily:theme.fonts.heading,fontSize:23,lineHeight:29,color:theme.colors.ink,fontWeight:'400'},
- unlockBody:{fontSize:14.5,lineHeight:23,color:theme.colors.muted,marginBottom:2},
+ unlockPanel:{minHeight:76,flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:16,paddingVertical:15,paddingHorizontal:2,borderTopWidth:1,borderBottomWidth:1,borderColor:theme.colors.line},
+ unlockCopy:{flex:1,gap:3},
+ unlockTitle:{fontFamily:theme.fonts.heading,fontSize:18,lineHeight:24,color:theme.colors.ink,fontWeight:'500'},
+ unlockBody:{fontSize:12.5,lineHeight:18,color:theme.colors.muted},
+ inviteInline:{flexDirection:'row',alignItems:'center',gap:7,paddingVertical:10,paddingLeft:12,paddingRight:4},
+ inviteInlinePressed:{opacity:.55},
+ inviteInlineText:{fontSize:13.5,lineHeight:18,fontWeight:'700',color:theme.colors.sage},
+ inviteInlineArrow:{fontSize:18,lineHeight:20,color:theme.colors.sage,marginTop:-1},
  lockedPath:{opacity:.88,marginTop:2},
  lockedGoalList:{marginTop:18},
 
