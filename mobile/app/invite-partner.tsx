@@ -1,9 +1,7 @@
 import { isDemo, simulateDemoPartnerJoin } from '../src/lib/demo';
 import { useEffect, useState } from 'react';
-import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { Platform, Share, Text, TextInput, View } from 'react-native';
-import { Botanical, Button, Notice, styles } from '../src/components/ui';
-import { FlowScreen } from '../src/components/onboarding';
+import { Botanical, Brand, Button, Notice, Screen, styles } from '../src/components/ui';
 import { useAuth } from '../src/providers/AuthProvider';
 import { useOnboarding } from '../src/providers/OnboardingProvider';
 import { createInvite, getRelationshipState, getRoutineActivationState, invitationUrl, previewInvite, revokeInvites, saveDisplayName } from '../src/features/relationships';
@@ -12,11 +10,7 @@ import { sessionStorage } from '../src/lib/storage';
 
 export default function InvitePartnerScreen() {
   const { session } = useAuth();
-  const { returnTo } = useLocalSearchParams<{ returnTo?: string | string[] }>();
-  // Expo Router may expose repeated/query params as arrays on web. Treat any
-  // explicit Today entry as in-product invitation management.
-  const recovery = Array.isArray(returnTo) ? returnTo.includes('today') : returnTo === 'today';
-  const { save, busy: saving, destination } = useOnboarding();
+  const { save, busy: saving } = useOnboarding();
   const [name, setName] = useState('');
   const [link, setLink] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -110,7 +104,8 @@ export default function InvitePartnerScreen() {
     finally{setBusy(false);}
   }
 
-  return <FlowScreen>
+  return <Screen>
+    <Brand/>
     <Botanical/>
     <Text style={styles.eyebrow}>THE ROUTINE</Text>
     <Text style={styles.title}>{ready?'You’re both ready':joined?'Your partner joined':'Invite your partner'}</Text>
@@ -143,5 +138,5 @@ export default function InvitePartnerScreen() {
 
     {error && <Notice>{error}</Notice>}
     {(joined || link) && <Button label={ready?'See today’s Move':'Continue to Same Side'} secondary={!ready} disabled={saving || busy} onPress={() => { void save({ step: 'done' }); }}/>}
-  </FlowScreen>;
+  </Screen>;
 }
