@@ -192,13 +192,19 @@ export default function Today(){
    </View>
 
    <View style={[s.pathCard,s.lockedPath]}>
-    <Text style={s.pathKicker}>THE FOUR WEEKS</Text>
-    <View style={s.goalList}>
+    <Pressable accessibilityRole="button" accessibilityState={{expanded:journeyOpen}} onPress={()=>setJourneyOpen(value=>!value)} style={s.pathHeader}>
+     <View>
+      <Text style={s.pathKicker}>THE FOUR WEEKS</Text>
+      <Text style={s.pathHeading}>Your four-week journey</Text>
+     </View>
+     <Text style={s.pathToggle}>{journeyOpen?'−':'+'}</Text>
+    </Pressable>
+    {journeyOpen&&<View style={[s.goalList,s.lockedGoalList]}>
      {goals.map((item,index)=><View key={item.title} style={s.goalRow}>
       <View style={s.goalNumber}><Text style={s.goalNumberText}>{index+1}</Text></View>
       <View style={s.goalCopy}><Text style={s.goalLabel}>{index===0?'BEGINS WITH DAY 1':'AHEAD'}</Text><Text style={s.goalTitle}>{item.title}</Text></View>
      </View>)}
-    </View>
+    </View>}
    </View>
   </View>}
 
@@ -421,6 +427,7 @@ const s=StyleSheet.create({
  unlockTitle:{fontFamily:theme.fonts.heading,fontSize:23,lineHeight:29,color:theme.colors.ink,fontWeight:'400'},
  unlockBody:{fontSize:14.5,lineHeight:23,color:theme.colors.muted,marginBottom:2},
  lockedPath:{opacity:.88,marginTop:2},
+ lockedGoalList:{marginTop:18},
 
  routineComplete:{paddingTop:14,paddingBottom:16,gap:16},
  bloomArt:{height:235,alignItems:'center',justifyContent:'center',overflow:'hidden',marginTop:-12,marginBottom:-16},
