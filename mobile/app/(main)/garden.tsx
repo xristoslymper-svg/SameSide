@@ -29,6 +29,7 @@ export default function Garden(){
    <Text style={local.statusKicker}>{waiting?'READY WHEN YOU BOTH ARE':paired?'GROWING TOGETHER':'YOUR GARDEN'}</Text>
    <Text style={local.statusTitle}>{waiting?(paired?'You’re both here. The Routine starts when setup is complete.':'Your partner needs to join before the flower starts growing.'):paired?(partner?`You and ${partner} are growing this together.`:'You are growing this together.'):'Your shared flower is here.'}</Text>
    <Text style={local.statusBody}>{waiting?'Day 1 unlocks for both of you at the same time.':'There’s no streak to protect. Each completed Move gives the garden another reason to grow.'}</Text>
+   {waiting&&state.data?.program.role==='member_a'&&state.data.program.memberCount<2&&<Button label="Invite your partner" onPress={()=>router.push({pathname:'/invite-partner',params:{returnTo:'today'}})}/>} 
    {state.loading&&!state.data&&<Text style={styles.small}>Bringing your flower into view…</Text>}
    {state.error&&<><Notice>{state.error}</Notice><Button label="Try again" secondary onPress={()=>{void state.refresh();}}/></>}
    {state.data&&!flower&&<Button label="Choose your flower" onPress={()=>router.push('/choose-flower?returnTo=garden')}/>} 
