@@ -167,7 +167,7 @@ export default function Today(){
   {!state.loading&&!state.error&&program&&!program.routineActivated&&<>
    <View style={s.heroStage}>
     <View pointerEvents="none" style={s.heroArtWrap} accessible={false}>
-     <Image source={require('../../assets/today-botanical-bespoke.png')} style={s.heroArt} resizeMode="cover"/>
+     <Image source={require('../../assets/today-ivory-botanical-v2.png')} style={s.heroArt} resizeMode="cover"/>
     </View>
 
     <View style={s.dayMeta}>
@@ -235,7 +235,7 @@ export default function Today(){
   {!state.loading&&!state.error&&move&&program&&program.routineActivated&&!joinIntro&&!(state.data?.garden?.bloom&&move.status==='completed')&&<>
    <View style={s.heroStage}>
     <View pointerEvents="none" style={s.heroArtWrap} accessible={false}>
-     <Image source={require('../../assets/today-botanical-bespoke.png')} style={s.heroArt} resizeMode="cover"/>
+     <Image source={require('../../assets/today-ivory-botanical-v2.png')} style={s.heroArt} resizeMode="cover"/>
     </View>
 
     <View style={s.dayMeta}>
@@ -300,41 +300,41 @@ export default function Today(){
 }
 
 const s=StyleSheet.create({
- paperWashTop:{position:'absolute',width:420,height:420,borderRadius:210,backgroundColor:'#F0D9D0',opacity:0,top:-40,right:-250},
- paperWashBottom:{position:'absolute',width:460,height:300,borderRadius:230,backgroundColor:'#C9CDB8',opacity:0,bottom:-120,right:-190},
+ paperWashTop:{position:'absolute',width:360,height:520,borderRadius:210,backgroundColor:'#EBD8BF',opacity:0,top:-60,right:-170},
+ paperWashBottom:{position:'absolute',width:380,height:300,borderRadius:230,backgroundColor:'#CDD1B8',opacity:0,bottom:0,right:-180},
 
- topBar:{position:'relative',zIndex:3,minHeight:68,flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginTop:0,marginBottom:26,paddingHorizontal:0, paddingBottom: 18, borderBottomWidth: 1, borderBottomColor: theme.colors.line},
- pageHeading:{gap:7,marginBottom:24},
- subtitle:{fontSize:15,lineHeight:23,color:theme.colors.muted},
- todayTitle:{fontSize:32,lineHeight:39,color:theme.colors.ink,letterSpacing:-0.8,fontWeight:'400', fontFamily: theme.fonts.heading},
+ topBar:{position:'relative',zIndex:3,minHeight:44,flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginTop:0,marginBottom:12,paddingHorizontal:0, paddingBottom: 0, borderBottomWidth: 0, borderBottomColor: theme.colors.line},
+ pageHeading:{gap:12,marginBottom:30, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline'},
+ subtitle:{fontSize:12,lineHeight:19,color:theme.colors.muted},
+ todayTitle:{fontSize:23,lineHeight:29,color:theme.colors.ink,letterSpacing:-.45,fontWeight:'400', fontFamily: theme.fonts.heading},
  accountButton:{transform:[{scale:1}],marginRight:0},
 
- heroStage:{position:'relative',zIndex:1,overflow:'visible',paddingTop:6,paddingBottom:18},
- heroArtWrap:{position:'absolute',zIndex:0,right:-36,top:-28,width:245,height:330,overflow:'hidden',opacity:.13},
+ heroStage:{position:'relative',zIndex:1,overflow:'visible',paddingTop:0,paddingBottom:18},
+ heroArtWrap:{position:'absolute',zIndex:0,right:-32,top:-30,width:230,height:345,overflow:'visible',opacity:1},
  heroArt:{width:'100%',height:'100%',opacity:1},
 
- dayMeta:{position:'relative',zIndex:2,gap:10,marginTop:0,marginBottom:26},
- dayMetaText:{fontSize:10,lineHeight:15,letterSpacing:1.5,fontWeight:'500',color:theme.colors.muted,textTransform:'uppercase'},
- weekProgress:{flexDirection:'row',alignItems:'center',gap:5},
- progressDot:{width:undefined,height:3,borderRadius:2,backgroundColor:theme.colors.line, flex: 1},
+ dayMeta:{position:'relative',zIndex:2,gap:10,marginTop:0,marginBottom:25},
+ dayMetaText:{fontSize:10,lineHeight:15,letterSpacing:1.35,fontWeight:'500',color:'#707668',textTransform:'uppercase'},
+ weekProgress:{flexDirection:'row',alignItems:'center',gap:5, alignSelf: 'flex-start'},
+ progressDot:{width:7,height:7,borderRadius:4,backgroundColor:'#DED3C3', flex: undefined, flexShrink: 0},
  progressDotFilled:{backgroundColor:theme.colors.sage},
- progressDotCurrent:{width:undefined,backgroundColor:theme.colors.sage},
+ progressDotCurrent:{width:33,backgroundColor:'#C3A985'},
 
- moveHero:{position:'relative',zIndex:2,overflow:'visible'},
- heroCopy:{position:'relative',zIndex:2,maxWidth:undefined,paddingRight:0},
+ moveHero:{position:'relative',zIndex:2,overflow:'visible', minHeight: 205},
+ heroCopy:{position:'relative',zIndex:2,maxWidth:'75%',paddingRight:0},
  heroFlower:{position:'absolute',zIndex:1,right:-56,top:-78,width:238,height:369,opacity:.94},
  heroFlowerImage:{width:'100%',height:'100%'},
  extraMove:{fontSize:10,lineHeight:15,letterSpacing:1.5,fontWeight:'600',color:theme.colors.sage,marginBottom:8,textTransform:'uppercase'},
- moveTitle:{fontFamily:theme.fonts.heading,fontSize:38,lineHeight:44,color:theme.colors.ink,letterSpacing:-1.1,maxWidth:undefined,marginBottom:16,fontWeight:'400'},
- moveTitleCompact:{fontSize:35,lineHeight:41,maxWidth:undefined,letterSpacing:-0.8},
- moveTitleLong:{fontSize:32,lineHeight:38,maxWidth:undefined,letterSpacing:-0.6},
- moveBody:{fontSize:15,lineHeight:24,color:theme.colors.inkSoft,maxWidth:undefined,letterSpacing:0,fontWeight:'400'},
+ moveTitle:{fontFamily:theme.fonts.heading,fontSize:43,lineHeight:46,color:'#203A2C',letterSpacing:-1.7,maxWidth:undefined,marginBottom:17,fontWeight:'400'},
+ moveTitleCompact:{fontSize:38,lineHeight:42,maxWidth:undefined,letterSpacing:-1.3},
+ moveTitleLong:{fontSize:34,lineHeight:39,maxWidth:undefined,letterSpacing:-1},
+ moveBody:{fontSize:15,lineHeight:24,color:'#37483D',maxWidth:undefined,letterSpacing:0,fontWeight:'400'},
 
- whySurface:{position:'relative',zIndex:2,width:'100%',maxWidth:undefined,alignSelf:'center',minHeight:52,borderRadius:0,borderWidth:0,borderColor:theme.colors.line,backgroundColor:'transparent',paddingHorizontal:0,paddingVertical:14,marginTop:24,marginBottom:8,shadowColor:'#3B4A3A',shadowOpacity:0,shadowRadius:26,shadowOffset:{width:0,height:12},elevation:0, borderTopWidth: 1},
- whySurfaceOpen:{borderRadius:0,paddingBottom:18,marginBottom:8},
+ whySurface:{position:'relative',zIndex:2,width:'100%',maxWidth:undefined,alignSelf:'center',minHeight:52,borderRadius:24,borderWidth:1,borderColor:'rgba(255,255,255,.75)',backgroundColor:'rgba(255,252,245,.90)',paddingHorizontal:16,paddingVertical:13,marginTop:22,marginBottom:30,shadowColor:'#85745C',shadowOpacity:.09,shadowRadius:18,shadowOffset:{width:0,height:7},elevation:2, borderTopWidth: 0},
+ whySurfaceOpen:{borderRadius:24,paddingBottom:18,marginBottom:24},
  whyHeader:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,minHeight:28},
- whyIcon:{width:22,height:22,borderRadius:15,backgroundColor:'transparent',alignItems:'center',justifyContent:'center'},
- whyTitleRow:{flexDirection:'row',alignItems:'center',gap:8},
+ whyIcon:{width:26,height:26,borderRadius:13,backgroundColor:'#E8EDDD',alignItems:'center',justifyContent:'center'},
+ whyTitleRow:{flexDirection:'row',alignItems:'center',gap:10},
  whyLabel:{fontSize:14,lineHeight:21,fontWeight:'500',color:theme.colors.ink},
  whyChevron:{fontSize:18,lineHeight:22,color:theme.colors.muted},
  whyBody:{fontSize:14,lineHeight:23,color:theme.colors.inkSoft,marginTop:10,paddingRight:0},
@@ -346,30 +346,30 @@ const s=StyleSheet.create({
  sprout:{width:16,height:16},
  sproutStem:{position:'absolute',left:7.4,bottom:1,width:1.3,height:11,borderRadius:1,backgroundColor:'#7C8F80'},
  sproutLeaf:{position:'absolute',top:1,width:8,height:6,backgroundColor:'#A9BBA4'},
- primaryButton:{position:'relative',zIndex:2,width:'100%',maxWidth:undefined,alignSelf:'center',minHeight:52,borderRadius:theme.radius.button,backgroundColor:theme.colors.sage,flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,paddingHorizontal:18,shadowColor:'#1F3D2E',shadowOpacity:0,shadowRadius:22,shadowOffset:{width:0,height:12},elevation:0, paddingVertical: 14},
+ primaryButton:{position:'relative',zIndex:2,width:'100%',maxWidth:undefined,alignSelf:'center',minHeight:54,borderRadius:999,backgroundColor:'#2E5541',flexDirection:'row',alignItems:'center',justifyContent:'center',gap:12,paddingHorizontal:18,shadowColor:'#34513D',shadowOpacity:.17,shadowRadius:16,shadowOffset:{width:0,height:7},elevation:3, paddingVertical: 14, borderWidth: 1, borderColor: '#476B52'},
  primaryButtonPressed:{transform:[{scale:.987}],opacity:.95},
- completedPrimary:{opacity:1,shadowOpacity:0,elevation:0},
- primaryButtonText:{fontSize:14,lineHeight:22,fontWeight:'600',color:theme.colors.white,letterSpacing:.1},
+ completedPrimary:{opacity:1,shadowOpacity:.1,elevation:2},
+ primaryButtonText:{fontSize:15,lineHeight:22,fontWeight:'500',color:theme.colors.white,letterSpacing:.1},
  primaryArrow:{fontSize:18,lineHeight:22,color:theme.colors.white,fontWeight:'300'},
  buttonDisabled:{opacity:.55},
 
- extraAction:{position:'relative',zIndex:2,alignSelf:'center',minHeight:48,flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:6,paddingHorizontal:18,marginTop:10, width: '100%', paddingVertical: 12, borderRadius: theme.radius.button, borderWidth: 1, borderColor: theme.colors.lineStrong},
+ extraAction:{position:'relative',zIndex:2,alignSelf:'center',minHeight:48,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:12,paddingHorizontal:18,marginTop:10, width: '100%', paddingVertical: 12, borderRadius: 999, borderWidth: 1, borderColor: '#C7CDBB', backgroundColor: 'rgba(255,252,245,.8)'},
  extraActionPressed:{opacity:.65},
  extraActionText:{fontSize:14,lineHeight:19,color:theme.colors.sage,fontWeight:'500'},
  extraActionArrow:{fontSize:15,lineHeight:19,color:theme.colors.sage},
 
  growingTogether:{position:'relative',zIndex:2,minHeight:24,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:8,marginTop:14,marginBottom:0},
  growingText:{fontSize:11.5,lineHeight:18,color:theme.colors.muted},
- enoughNote:{position:'relative',zIndex:2,textAlign:'center',fontSize:12.5,lineHeight:19,color:theme.colors.muted,marginTop:14},
- gardenTeaser:{position:'relative',zIndex:2,minHeight:88,flexDirection:'row',alignItems:'center',paddingVertical:18,gap:14},
+ enoughNote:{position:'relative',zIndex:2,textAlign:'center',fontSize:12,lineHeight:19,color:'#687260',marginTop:16},
+ gardenTeaser:{position:'relative',zIndex:2,minHeight:88,flexDirection:'row',alignItems:'center',paddingVertical:18,gap:12},
  gardenTeaserPressed:{opacity:.68},
- gardenIcon:{width:48,height:48,borderRadius:24,backgroundColor:theme.colors.sageWash,alignItems:'center',justifyContent:'center'},
+ gardenIcon:{width:42,height:42,borderRadius:21,backgroundColor:'#E8ECDD',alignItems:'center',justifyContent:'center'},
  gardenCopy:{flex:1,minWidth:0},
  gardenTitle:{fontSize:14.5,lineHeight:20,color:theme.colors.ink,fontWeight:'500'},
  gardenSubtitle:{fontSize:13,lineHeight:19,color:theme.colors.muted,marginTop:2},
  gardenArrow:{fontSize:23,lineHeight:26,color:theme.colors.sage,fontWeight:'300',paddingHorizontal:4},
  pathHeader:{minHeight:48,flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:16},
- pathHeading:{fontSize:15,lineHeight:22,color:theme.colors.ink,fontWeight:'500'},
+ pathHeading:{fontSize:14,lineHeight:22,color:theme.colors.ink,fontWeight:'400'},
  pathToggle:{fontSize:27,lineHeight:30,color:theme.colors.inkSoft,fontWeight:'300'},
 
  completedState:{paddingTop:2},
@@ -390,7 +390,7 @@ const s=StyleSheet.create({
  flowerActionText:{fontSize:13.5,lineHeight:19,color:theme.colors.inkSoft,fontWeight:'500'},
  flowerActionArrow:{fontSize:16,color:theme.colors.inkSoft,marginLeft:2},
 
- pathCard:{position:'relative',zIndex:2,marginTop:26,marginBottom:12,paddingTop:22,paddingHorizontal:0,paddingBottom:8,borderTopWidth:1,borderTopColor:theme.colors.line},
+ pathCard:{position:'relative',zIndex:2,marginTop:6,marginBottom:12,paddingTop:12,paddingHorizontal:0,paddingBottom:8,borderTopWidth:1,borderTopColor:'#DDDCCF'},
  pathKicker:{fontSize:10,lineHeight:14,letterSpacing:1.65,fontWeight:'600',color:theme.colors.muted,marginBottom:14,paddingHorizontal:0},
  goalList:{gap:2},
  goalRow:{flexDirection:'row',gap:12,paddingVertical:14,paddingHorizontal:12,borderRadius:13,opacity:1},
