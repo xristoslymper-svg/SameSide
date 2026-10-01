@@ -23,17 +23,17 @@ export async function getMove(slot = 0): Promise<Move> {
   if (!move?.id || !move.task_title || !move.task_body) throw new Error('We could not load your move. Please try again.');
   return move;
 }
-export async function getTodayMove(userId: string): Promise<Move> {
+export async function getTodayMove(userId: string, relationshipId: string): Promise<Move> {
   const primary = await getMove();
   if (primary.status !== 'completed') return primary;
   let response = await client().from('task_assignments')
     .select('id,task_title,task_body,task_minutes,task_why,status,program_day,slot,assigned_for_date')
-    .eq('user_id', userId).eq('assigned_for_date', primary.assigned_for_date).eq('contract_version', 1)
+    .eq('relationship_id', relationshipId).eq('user_id', userId).eq('assigned_for_date', primary.assigned_for_date).eq('contract_version', 1)
     .order('slot', { ascending: false }).limit(1).maybeSingle();
   if (response.error?.code === '42703' || response.error?.code === 'PGRST204') {
     response = await client().from('task_assignments')
       .select('id,task_title,task_body,task_minutes,status,program_day,slot,assigned_for_date')
-      .eq('user_id', userId).eq('assigned_for_date', primary.assigned_for_date).eq('contract_version', 1)
+      .eq('relationship_id', relationshipId).eq('user_id', userId).eq('assigned_for_date', primary.assigned_for_date).eq('contract_version', 1)
       .order('slot', { ascending: false }).limit(1).maybeSingle();
   }
   if (response.error) throw new Error('We could not bring up your move. Please try again.');
@@ -90,6 +90,7 @@ export async function getProgram(userId: string) {
   let day = 1;
   let week = 1;
   if (activation.activated) {
+    if (progressError) throw new Error('We could not load your journey dates. Please try again.');
     const progress = Array.isArray(progressData) ? progressData[0] : progressData;
     day = !progressError && progress?.program_day ? Number(progress.program_day) : calendarDay;
     week = !progressError && progress?.week_no ? Number(progress.week_no) : Math.min(4, Math.ceil(Math.min(day,28) / 7));

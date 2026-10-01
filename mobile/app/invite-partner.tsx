@@ -74,7 +74,8 @@ export default function InvitePartnerScreen() {
       if (!relationship) { setError('We could not find your relationship. Please return to Today and try again.'); return; }
       if (relationship.memberCount >= 2) { setJoined(true); setError('Your partner has already joined this relationship.'); return; }
       if (relationship.role === 'member_b') { setError('Only the person who started this relationship can create an invitation.'); return; }
-      await saveDisplayName(session.user.id, name);
+      // Renewing an existing link must not overwrite the already saved name.
+      if (!link) await saveDisplayName(session.user.id, name);
       const nextLink = invitationUrl(await createInvite());
       setLink(nextLink);
       await sessionStorage.setItem(`same-side.outgoing-invite.${session.user.id}`, nextLink);

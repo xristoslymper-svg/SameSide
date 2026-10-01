@@ -52,7 +52,7 @@ export default function OpeningScreen() {
 
 const local=StyleSheet.create({
  screen:{flex:1,position:'relative',backgroundColor:theme.colors.sand},
- content:{...StyleSheet.absoluteFillObject},
+ content:{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0},
  photoContentZone:{flex:1,position:'relative',minHeight:0},
  ctaZone:{flexShrink:0,paddingTop:22,paddingHorizontal:24,backgroundColor:'rgba(247,244,236,.96)',borderTopLeftRadius:32,borderTopRightRadius:32},
  heroTop:{position:'absolute',left:24,right:24,alignItems:'center'},

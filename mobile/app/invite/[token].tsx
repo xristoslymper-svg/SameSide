@@ -37,7 +37,7 @@ export default function InvitationScreen() {
   }
   if (!preview && !error) return <Loading/>;
   const name = preview?.name || 'Your partner';
-  return <Screen><Brand/><Botanical/>{preview?.state === 'ready' ? <>
+  return <Screen><Brand/><Botanical/>{(preview?.state === 'ready' || preview?.state === 'accepted') ? <>
     <Text style={styles.eyebrow}>An invitation for you</Text><Text style={styles.title}>{name} invited you to The Routine</Text>
     <View style={styles.card}><Text style={styles.cardTitle}>Four weeks, done together.</Text>
       <Text style={styles.body}>Join your partner, answer a few questions about what you want more of, and The Routine will shape daily Moves for both of you.</Text></View>

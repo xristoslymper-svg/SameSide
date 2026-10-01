@@ -48,7 +48,7 @@ export default function Roots(){
     </>:<Text style={styles.body}>This check-in has come to a close for The Routine.</Text>}
    </View>
    {error&&<Notice>{error}</Notice>}
-   <DailyReflection value={state.data.reflection} recent={state.data.recent}/>
+   {state.data.reflection&&<DailyReflection value={state.data.reflection} recent={state.data.recent}/>}
    {state.data.program.relationshipClosed&&<View style={local.quietSection}><Text style={styles.eyebrow}>YOUR SHARED SPACE</Text><Text style={local.quietTitle}>This garden is no longer connected.</Text><Text style={local.quietBody}>You can keep this space as it is. If you want to begin with someone new, use Relationship settings in Account to start fresh.</Text></View>}
   </View>}
  </Screen>;

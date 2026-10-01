@@ -53,7 +53,7 @@ export default function Today(){
  const load=useCallback(async()=>{
   const program=await getProgram(session!.user.id);
   if(!program.routineActivated)return{program,garden:null,move:null as Move|null};
-  const [gardenResult,moveResult]=await Promise.allSettled([getGardenState(),getTodayMove(session!.user.id)]);
+  const [gardenResult,moveResult]=await Promise.allSettled([getGardenState(),getTodayMove(session!.user.id,program.relationshipId)]);
   if(gardenResult.status==='rejected')throw gardenResult.reason;
   const garden=gardenResult.value;
   if(moveResult.status==='fulfilled')return{program,garden,move:moveResult.value};
@@ -77,11 +77,6 @@ export default function Today(){
   return()=>{active=false};
  },[state.data?.program,session]);
 
- useEffect(()=>{
-  if(state.loading||state.data?.program?.routineActivated)return;
-  const timer=setInterval(()=>{void state.refresh();},5000);
-  return()=>clearInterval(timer);
- },[state.loading,state.data?.program?.routineActivated]);
 
  async function dismissJoinIntro(){
   const program=state.data?.program;

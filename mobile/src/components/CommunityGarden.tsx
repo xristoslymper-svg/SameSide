@@ -50,7 +50,7 @@ export function CommunityGarden({ visible, close }: { visible: boolean; close: (
 
   return (
     <Modal visible={visible} animationType="fade" transparent={false} onRequestClose={dismiss}>
-      <View style={{ flex: 1, backgroundColor: theme.colors.cream }}>
+      <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
         <View style={{ alignSelf: 'center', width: '100%', maxWidth: 620, flex: 1 }}>
           <ImageBackground
             source={require('../../assets/same-side-community-garden.png')}
@@ -232,7 +232,7 @@ export function CommunityGarden({ visible, close }: { visible: boolean; close: (
 
                   <View style={{ paddingHorizontal: 18, paddingTop: 14 }}>
                     <Text style={{
-                      fontFamily: theme.fonts.serif,
+                      fontFamily: theme.fonts.heading,
                       fontSize: 25,
                       lineHeight: 30,
                       color: '#3F5343',
@@ -242,7 +242,7 @@ export function CommunityGarden({ visible, close }: { visible: boolean; close: (
                     </Text>
 
                     <Text style={{
-                      fontFamily: theme.fonts.serif,
+                      fontFamily: theme.fonts.heading,
                       fontSize: 14.5,
                       lineHeight: 21,
                       fontStyle: 'italic',

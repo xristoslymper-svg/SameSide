@@ -25,8 +25,8 @@ export function OpeningMedia() {
 }
 
 const local = StyleSheet.create({
-  frame: { ...StyleSheet.absoluteFillObject, overflow: 'hidden', backgroundColor: '#E7DED2' },
-  baseImage: { ...StyleSheet.absoluteFillObject, width: '100%', height: '100%' },
+  frame: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', backgroundColor: '#E7DED2' },
+  baseImage: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: '100%', height: '100%' },
   liftedImage: { position: 'absolute', left: 0, right: 0, top: 0, width: '100%', height: '84%' },
   topVeil: { position: 'absolute', left: 0, right: 0, top: 0, height: '30%', backgroundColor: 'transparent' },
 });

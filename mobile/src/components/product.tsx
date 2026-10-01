@@ -1,3 +1,4 @@
+import { useAuth } from '../providers/AuthProvider';
 import { useCallback, useRef, useState } from 'react';
 import { useFocusEffect } from 'expo-router';
 import { AppState, Platform, Text, View } from 'react-native';
@@ -7,6 +8,10 @@ import type { PropsWithChildren } from 'react';
 
 // Reload on tab focus and when returning to the app, without retaining another account's data.
 export function useProductData<T>(load: () => Promise<T>) {
+  const { session } = useAuth();
+  const scope = session?.user.id ?? null;
+  const owner = useRef(scope);
+  const pending = useRef(0);
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -14,7 +19,11 @@ export function useProductData<T>(load: () => Promise<T>) {
   const active = useRef(false);
   const hasData = useRef(false);
   const refresh = useCallback(async () => {
+    if (owner.current !== scope) {
+      owner.current = scope; hasData.current = false; setData(null);
+    }
     const current = ++generation.current;
+    pending.current++;
     const initialLoad = !hasData.current;
     if (initialLoad) setLoading(true);
     setError(null);
@@ -25,14 +34,15 @@ export function useProductData<T>(load: () => Promise<T>) {
         setData(value);
       }
     } catch (cause) {
-      if (active.current && current === generation.current && initialLoad) {
-        setData(null);
+      if (active.current && current === generation.current) {
+        if (initialLoad) setData(null);
         setError(cause instanceof Error ? cause.message : 'Please try again.');
       }
     } finally {
+      pending.current--;
       if (active.current && current === generation.current && initialLoad) setLoading(false);
     }
-  }, [load]);
+  }, [load, scope]);
   const mutate = useCallback((value: T) => {
     // A local mutation is newer than any refresh already in flight.
     // Invalidate those requests so stale server reads cannot overwrite immediate UI state.
@@ -43,12 +53,15 @@ export function useProductData<T>(load: () => Promise<T>) {
   }, []);
   useFocusEffect(useCallback(() => {
     active.current = true; void refresh();
+    const timer = setInterval(() => {
+      if (pending.current === 0 && (Platform.OS === 'web' ? document.visibilityState === 'visible' : AppState.currentState === 'active')) void refresh();
+    }, 15000);
     const subscription = AppState.addEventListener('change', state => { if (state === 'active') void refresh(); });
     const visible = () => { if (document.visibilityState === 'visible') void refresh(); };
     if (Platform.OS === 'web') document.addEventListener('visibilitychange', visible);
-    return () => { active.current = false; generation.current++; subscription.remove(); if (Platform.OS === 'web') document.removeEventListener('visibilitychange', visible); };
+    return () => { active.current = false; generation.current++; clearInterval(timer); subscription.remove(); if (Platform.OS === 'web') document.removeEventListener('visibilitychange', visible); };
   }, [refresh]));
-  return { data, error, loading, refresh, mutate };
+  return { data: owner.current === scope ? data : null, error: owner.current === scope ? error : null, loading: owner.current !== scope || loading, refresh, mutate };
 }
 export function ProductScreen({ title, question, children }: PropsWithChildren<{ title: string; question: string }>) {
   return <Screen><Brand/><Text style={styles.eyebrow}>{title}</Text><Text style={styles.title}>{question}</Text>{children}</Screen>;
