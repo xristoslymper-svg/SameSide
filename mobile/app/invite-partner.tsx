@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { Brand } from '../src/components/ui';
 import { isDemo, simulateDemoPartnerJoin } from '../src/lib/demo';
 import { useEffect, useState } from 'react';
@@ -139,6 +140,6 @@ export default function InvitePartnerScreen() {
     </View>}
 
     {error && <Notice>{error}</Notice>}
-    {(joined || link) && <Button label={ready?'See today’s Move':'Continue to Same Side'} secondary={!ready} disabled={saving || busy} onPress={() => { void save({ step: 'done' }); }}/>}
+    {(joined || link) && <Button label={ready?'See today’s Move':'Continue to Same Side'} secondary={!ready} disabled={saving || busy} onPress={() => { void save({ step: 'done' }).then(saved => { if (saved) router.replace('/welcome'); }); }}/>}
   </Screen>;
 }
