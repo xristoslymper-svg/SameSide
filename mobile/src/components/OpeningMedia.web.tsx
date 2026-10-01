@@ -14,8 +14,8 @@ export function OpeningMedia() {
           left: 0,
           right: 0,
           bottom: 0,
-          height: '31%',
-          background: 'linear-gradient(to bottom, rgba(231,222,210,0) 0%, rgba(231,222,210,0.08) 30%, rgba(46,57,49,0.24) 100%)',
+          height: '100%',
+          background: 'linear-gradient(to bottom, rgba(248,243,235,0.3) 0%, rgba(248,243,235,0) 38%, rgba(231,222,210,0) 69%, rgba(46,57,49,0.24) 100%)',
           pointerEvents: 'none',
         }}
       />
@@ -28,5 +28,5 @@ const local = StyleSheet.create({
   frame: { ...StyleSheet.absoluteFillObject, overflow: 'hidden', backgroundColor: '#E7DED2' },
   baseImage: { ...StyleSheet.absoluteFillObject, width: '100%', height: '100%' },
   liftedImage: { position: 'absolute', left: 0, right: 0, top: 0, width: '100%', height: '84%' },
-  topVeil: { position: 'absolute', left: 0, right: 0, top: 0, height: '26%', backgroundColor: 'rgba(248,243,235,0.035)' },
+  topVeil: { position: 'absolute', left: 0, right: 0, top: 0, height: '30%', backgroundColor: 'transparent' },
 });

@@ -1,7 +1,8 @@
+import { Brand } from '../src/components/ui';
 import { isDemo, simulateDemoPartnerJoin } from '../src/lib/demo';
 import { useEffect, useState } from 'react';
 import { Platform, Share, Text, TextInput, View } from 'react-native';
-import { Botanical, Brand, Button, Notice, Screen, styles } from '../src/components/ui';
+import { Botanical, Button, Notice, Screen, styles } from '../src/components/onboarding-ui';
 import { useAuth } from '../src/providers/AuthProvider';
 import { useOnboarding } from '../src/providers/OnboardingProvider';
 import { createInvite, getRelationshipState, getRoutineActivationState, invitationUrl, previewInvite, revokeInvites, saveDisplayName } from '../src/features/relationships';

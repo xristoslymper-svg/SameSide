@@ -1,7 +1,8 @@
+import { Brand } from '../../src/components/ui';
 import { useEffect, useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from 'react-native';
-import { Botanical, Brand, Button, Loading, Notice, Screen, styles } from '../../src/components/ui';
+import { Botanical, Button, Loading, Notice, Screen, styles } from '../../src/components/onboarding-ui';
 import { useAuth } from '../../src/providers/AuthProvider';
 import { useInvitation } from '../../src/providers/InvitationProvider';
 import { previewInvite, type InvitePreview } from '../../src/features/relationships';

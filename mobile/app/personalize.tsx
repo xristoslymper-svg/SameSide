@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Redirect } from 'expo-router';
 import { Text, View } from 'react-native';
-import { Button, Loading, Notice, styles } from '../src/components/ui';
+import { Button, Loading, Notice, styles } from '../src/components/onboarding-ui';
 import { Choice, FlowScreen } from '../src/components/onboarding';
 import { useOnboarding, type Focus } from '../src/providers/OnboardingProvider';
 import { ensureRelationship, getRelationshipState } from '../src/features/relationships';
@@ -46,7 +46,7 @@ export default function PersonalizeScreen(){
 
  return <FlowScreen>
   <Text style={styles.eyebrow}>{role==='member_b'?'YOUR PART OF THE SETUP':'A LITTLE INTENTION'}</Text>
-  <Text style={[styles.title,{fontSize:36,lineHeight:43,letterSpacing:-0.8}]}>What feels most{'\n'}missing lately?</Text>
+  <Text style={[styles.title,{fontSize:39,lineHeight:45,letterSpacing:-1.2}]}>What feels most{'\n'}missing lately?</Text>
   <Text style={[styles.body,{fontSize:15,lineHeight:24}]}>Choose up to three. We’ll use your answers to personalize the daily actions you both receive.</Text>
   <View style={{gap:10}}>{choices.map(([focus,title])=><Choice compact key={focus} title={title} selected={selected.includes(focus)} disabled={busy} onPress={()=>{void toggle(focus);}}/>)}</View>
   {error&&<Notice>{error}</Notice>}

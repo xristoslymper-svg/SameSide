@@ -2,7 +2,7 @@ import { DemoEntry } from '../src/components/DemoControls';
 import { Redirect } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Button } from '../src/components/ui';
+import { Button } from '../src/components/onboarding-ui';
 import { OpeningMedia } from '../src/components/OpeningMedia';
 import { FlowScreen } from '../src/components/onboarding';
 import { useOnboarding } from '../src/providers/OnboardingProvider';
@@ -54,14 +54,14 @@ const local=StyleSheet.create({
  screen:{flex:1,position:'relative',backgroundColor:theme.colors.sand},
  content:{...StyleSheet.absoluteFillObject},
  photoContentZone:{flex:1,position:'relative',minHeight:0},
- ctaZone:{flexShrink:0,paddingTop:18,paddingHorizontal:24,backgroundColor:'transparent'},
+ ctaZone:{flexShrink:0,paddingTop:22,paddingHorizontal:24,backgroundColor:'rgba(247,244,236,.96)',borderTopLeftRadius:32,borderTopRightRadius:32},
  heroTop:{position:'absolute',left:24,right:24,alignItems:'center'},
  logoMark:{flexDirection:'row',alignItems:'center',justifyContent:'center',height:34,marginBottom:5},
  logoRing:{width:29,height:29,borderRadius:15,borderWidth:1.3,borderColor:theme.colors.ink},
- brandTitle:{fontFamily:theme.fonts.heading,fontSize:36,lineHeight:43,color:theme.colors.ink,letterSpacing:-0.8,textAlign:'center'},
+ brandTitle:{fontFamily:theme.fonts.heading,fontSize:44,lineHeight:51,color:theme.colors.ink,letterSpacing:-1.5,textAlign:'center'},
  motto:{fontFamily:theme.fonts.heading,fontSize:17,lineHeight:25,color:theme.colors.ink,textAlign:'center',marginTop:8},
  tagline:{fontFamily:theme.fonts.heading,fontSize:15,lineHeight:23,color:theme.colors.inkSoft,textAlign:'center',marginTop:5},
  actions:{gap:10},
- secondaryAction:{minHeight:48,borderRadius:theme.radius.button,backgroundColor:theme.colors.card,alignItems:'center',justifyContent:'center',borderWidth:1,borderColor:theme.colors.lineStrong},
+ secondaryAction:{minHeight:48,borderRadius:999,backgroundColor:theme.colors.card,alignItems:'center',justifyContent:'center',borderWidth:1,borderColor:theme.colors.lineStrong},
  secondaryText:{color:theme.colors.ink,fontSize:14,fontWeight:'500'},
 });

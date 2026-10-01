@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { LayoutAnimation, Platform, Pressable, StyleSheet, Text, UIManager, View } from 'react-native';
 import { Redirect } from 'expo-router';
-import { Button, styles } from '../src/components/ui';
+import { Button, styles } from '../src/components/onboarding-ui';
 import { FlowScreen } from '../src/components/onboarding';
 import { useOnboarding } from '../src/providers/OnboardingProvider';
 import { useAuth } from '../src/providers/AuthProvider';
@@ -81,12 +81,12 @@ export default function HowItWorksScreen() {
 }
 
 const s=StyleSheet.create({
-  title:{fontSize:36,lineHeight:43,letterSpacing:-0.8},
+  title:{fontSize:40,lineHeight:46,letterSpacing:-1.3},
   promise:{fontFamily:theme.fonts.heading,fontSize:18,lineHeight:26,color:theme.colors.sageMid,marginTop:-4,marginBottom:8},
-  cards:{gap:14,marginTop:2},
-  card:{paddingHorizontal:21,paddingTop:22,paddingBottom:14,borderRadius:theme.radius.card,backgroundColor:theme.colors.card,borderColor:theme.colors.line,shadowOpacity:0,elevation:0},
+  cards:{gap:18,marginTop:2},
+  card:{paddingHorizontal:21,paddingTop:22,paddingBottom:14,borderRadius:26,backgroundColor:'#FFFCF5',borderColor:'rgba(255,255,255,.8)',shadowOpacity:.075,elevation:2},
   cardOpen:{backgroundColor:theme.colors.card},
-  cardTitle:{fontFamily:theme.fonts.heading,fontSize:24,lineHeight:31,color:theme.colors.ink,fontWeight:'400',letterSpacing:-0.25},
+  cardTitle:{fontFamily:theme.fonts.heading,fontSize:25,lineHeight:32,color:theme.colors.ink,fontWeight:'400',letterSpacing:-0.25},
   cardSummary:{fontSize:14.5,lineHeight:23,color:theme.colors.inkSoft,marginTop:7,maxWidth:330},
   expanded:{marginTop:20,paddingTop:18,borderTopWidth:1,borderTopColor:theme.colors.line,gap:12},
   aboutBody:{fontSize:14,lineHeight:23,color:theme.colors.inkSoft},

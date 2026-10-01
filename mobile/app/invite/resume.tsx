@@ -1,7 +1,8 @@
+import { Brand } from '../../src/components/ui';
 import { useEffect, useRef, useState } from 'react';
 import { Redirect, router } from 'expo-router';
 import { Text, View } from 'react-native';
-import { Botanical, Brand, Button, Loading, Notice, Screen, styles } from '../../src/components/ui';
+import { Botanical, Button, Loading, Notice, Screen, styles } from '../../src/components/onboarding-ui';
 import { useInvitation } from '../../src/providers/InvitationProvider';
 import { useOnboarding } from '../../src/providers/OnboardingProvider';
 import { acceptInvite, getRelationshipState } from '../../src/features/relationships';

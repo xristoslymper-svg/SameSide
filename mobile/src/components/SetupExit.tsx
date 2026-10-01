@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { router } from 'expo-router';
-import { Button, Notice } from './ui';
+import { Button, Notice } from './onboarding-ui';
 import { useAuth } from '../providers/AuthProvider';
 
 // Once setup has created a relationship, exiting must not undo that relationship.

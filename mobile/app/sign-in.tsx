@@ -3,7 +3,7 @@ import { Redirect } from 'expo-router';
 import { useOnboarding } from '../src/providers/OnboardingProvider';
 import { FlowScreen } from '../src/components/onboarding';
 import { Platform, Pressable, Text, TextInput, View } from 'react-native';
-import { Brand, Button, Notice, Screen, styles } from '../src/components/ui';
+import { Brand, Button, Notice, Screen, styles } from '../src/components/onboarding-ui';
 import { useAuth } from '../src/providers/AuthProvider';
 import { useInvitation } from '../src/providers/InvitationProvider';
 import { isConfigured } from '../src/lib/supabase';
@@ -70,20 +70,20 @@ export default function SignInScreen() {
 
 const google = {
   button: {
-    minHeight: 52, borderRadius: theme.radius.button, borderWidth: 1, borderColor: theme.colors.lineStrong,
+    minHeight: 54, borderRadius: 999, borderWidth: 1, borderColor: theme.colors.lineStrong,
     backgroundColor: theme.colors.card, flexDirection: 'row' as const, alignItems: 'center' as const,
-    justifyContent: 'center' as const, paddingHorizontal: 18, position: 'relative' as const,
-    ...theme.shadow.card,
+    justifyContent: 'center' as const, paddingHorizontal: 16, position: 'relative' as const, gap: 10,
+    ...theme.shadow.card, shadowOpacity: 0,
   },
   pressed: { transform: [{ scale: 0.995 }], opacity: 0.92 },
   disabled: { opacity: 0.5 },
   mark: {
-    position: 'absolute' as const, left: 18, width: 28, height: 28, borderRadius: 14,
+    width: 28, height: 28, borderRadius: 14, flexShrink: 0,
     alignItems: 'center' as const, justifyContent: 'center' as const, backgroundColor: theme.colors.backgroundElevated,
     borderWidth: 1, borderColor: theme.colors.line,
   },
   markText: { fontSize: 17, fontWeight: '700' as const, color: '#4285F4' },
-  label: { fontSize: 14, fontWeight: '600' as const, color: theme.colors.ink },
+  label: { fontSize: 14, fontWeight: '600' as const, color: theme.colors.ink, flexShrink: 1, textAlign: 'center' as const },
   divider: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 12, marginVertical: 2 },
   line: { flex: 1, height: 1, backgroundColor: theme.colors.line },
   or: { fontSize: 10, letterSpacing: 1.4, fontWeight: '700' as const, color: theme.colors.mutedSoft },

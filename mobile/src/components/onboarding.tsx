@@ -4,7 +4,7 @@ import { Pressable, Text } from 'react-native';
 import { useOnboarding } from '../providers/OnboardingProvider';
 import { useInvitation } from '../providers/InvitationProvider';
 import { useAuth } from '../providers/AuthProvider';
-import { Brand, Notice, Screen, styles } from './ui';
+import { Brand, Notice, Screen, styles } from './onboarding-ui';
 import { theme } from '../theme';
 
 export function FlowScreen({ children, immersive = false }: PropsWithChildren<{ immersive?: boolean }>) {
@@ -20,7 +20,7 @@ export function Choice({ title, description, selected, disabled, compact = false
   title: string; description?: string; selected: boolean; disabled?: boolean; compact?: boolean; onPress: () => void;
 }) {
   return <Pressable accessibilityRole="radio" accessibilityLabel={title} accessibilityState={{ checked: selected, disabled }} aria-checked={selected} aria-disabled={disabled} disabled={disabled} onPress={onPress}
-    style={({ pressed }) => [styles.card, compact && { paddingVertical: 14, paddingHorizontal: 17, borderRadius: theme.radius.input, gap: 7 }, { borderColor: selected ? theme.colors.sageMid : theme.colors.line, backgroundColor: selected ? theme.colors.sageWash : theme.colors.card, opacity: pressed || disabled ? 0.72 : 1, transform: [{ scale: pressed ? 0.99 : 1 }] }]}>
-    <Text style={[styles.cardTitle, compact && { fontSize: 19, lineHeight: 26 }]}>{title}</Text>{description && <Text style={[styles.body, compact && { fontSize: 14, lineHeight: 21 }]}>{description}</Text>}
+    style={({ pressed }) => [styles.card, compact && { paddingVertical: 16, paddingHorizontal: 17, borderRadius: 22, gap: 7 }, { borderColor: selected ? theme.colors.sageMid : '#E3E2D6', backgroundColor: selected ? theme.colors.sageWash : theme.colors.card, opacity: pressed || disabled ? 0.72 : 1, transform: [{ scale: pressed ? 0.99 : 1 }] }]}>
+    <Text style={[styles.cardTitle, compact && { fontSize: 20, lineHeight: 27 }]}>{title}</Text>{description && <Text style={[styles.body, compact && { fontSize: 14, lineHeight: 21 }]}>{description}</Text>}
   </Pressable>;
 }

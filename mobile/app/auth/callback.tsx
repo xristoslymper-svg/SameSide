@@ -1,6 +1,6 @@
 import { Redirect, router } from 'expo-router';
 import { Text } from 'react-native';
-import { Brand, Button, Notice, Screen, styles } from '../../src/components/ui';
+import { Brand, Button, Notice, Screen, styles } from '../../src/components/onboarding-ui';
 import { useAuth } from '../../src/providers/AuthProvider';
 
 import { useOnboarding } from '../../src/providers/OnboardingProvider';
